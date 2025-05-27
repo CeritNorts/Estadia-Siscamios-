@@ -276,13 +276,14 @@
 
     <div class="profile-container">
         <!-- Header del Perfil -->
-        <div class="profile-header">
+       <div class="profile-header">
             <div class="profile-avatar">
-                {{ substr('Juan Pérez', 0, 1) }}
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
             </div>
-            <h1 class="profile-name">Juan Pérez</h1>
-            <p class="profile-email">juan.perez@ejemplo.com</p>
+            <h1 class="profile-name">{{ Auth::user()->name }}</h1>
+            <p class="profile-email">{{ Auth::user()->email }}</p>
         </div>
+
 
         <div class="profile-sections">
             <!-- Información Personal -->
