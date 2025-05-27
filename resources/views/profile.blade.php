@@ -436,7 +436,6 @@
     <script>
         function confirmDelete() {
             if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-                // Aquí iría la lógica para eliminar la cuenta
                 alert('Funcionalidad de eliminación pendiente de implementar');
             }
         }
