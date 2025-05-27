@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController; // Agregado
 
 /*
 |--------------------------------------------------------------------------
@@ -20,23 +21,20 @@ Route::get('/', function () {
 });
 
 // Rutas de autenticación
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login'); // actualizado para usar controlador
 
 //  Rutas de registro usando el controlador
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-// Estas rutas las agregarás cuando tengas el backend
-// Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/register', [AuthController::class, 'register']);
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Rutas de login y logout 
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Dashboard o página principal después del login
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->middleware('auth')->name('dashboard'); // Protegido por auth
 
 // Ruta del perfil
 Route::get('/profile', function () {
