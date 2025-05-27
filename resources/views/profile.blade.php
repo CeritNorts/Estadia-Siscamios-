@@ -267,7 +267,7 @@
         <div class="navbar-content">
                             <a href="#" class="navbar-brand">Mi App</a>
             <div class="navbar-links">
-                <a href="#">Dashboard</a>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('profile') }}" class="active">Perfil</a>
                 <a href="{{ route('login') }}">Cerrar Sesión</a>
             </div>
