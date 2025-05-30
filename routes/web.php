@@ -41,6 +41,22 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
+Route::get('/camiones', function () {
+    return view('camiones');
+})->name('camiones');
+
+Route::get('/viajes', function () {
+    return view('viajes');
+})->name('viajes');
+
+Route::get('/mantenimiento', function () {
+    return view('mantenimiento');
+})->name('mantenimiento');
+
+Route::get('/conductores', function () {
+    return view('conductores');
+})->name('conductores');
+
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
