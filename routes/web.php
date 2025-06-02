@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController; // Agregado
+use App\Http\Controllers\Auth\LoginController; 
+use App\Http\Controllers\CamionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,3 +61,6 @@ Route::get('/conductores', function () {
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+// Rutas para el controlador de camiones
+Route::resource('camiones', CamionController::class);
