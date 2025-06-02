@@ -524,30 +524,14 @@
 
             // Agregar capa de mapa
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+                
             }).addTo(map);
 
             // Cargar marcadores de camiones
             loadTruckMarkers();
         }
 
-        // Cargar marcadores de camiones
-        function loadTruckMarkers() {
-            // Limpiar marcadores existentes
-            truckMarkers.forEach(marker => map.removeLayer(marker));
-            truckMarkers = [];
-
-            trucksData.forEach(truck => {
-                const icon = getTruckIcon(truck.status);
-                const marker = L.marker([truck.lat, truck.lng], { icon })
-                    .addTo(map)
-                    .bindPopup(createPopupContent(truck));
-
-                // Agregar datos del camión al marcador
-                marker.truckData = truck;
-                truckMarkers.push(marker);
-            });
-        }
+        
 
         // Obtener icono según el estatus
         function getTruckIcon(status) {
