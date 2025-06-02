@@ -450,31 +450,26 @@
         <ul class="sidebar-menu">
             <li>
                 <a href="/dashboard" class="active">
-                    <span class="sidebar-menu-icon"></span>
                     Panel Administrativo
                 </a>
             </li>
             <li>
                 <a href="/camiones">
-                    <span class="sidebar-menu-icon"></span>
                     Camiones
                 </a>
             </li>
             <li>
                 <a href="/viajes">
-                    <span class="sidebar-menu-icon"></span>
                     Viajes
                 </a>
             </li>
             <li>
                 <a href="/mantenimiento">
-                    <span class="sidebar-menu-icon"></span>
                     Mantenimiento
                 </a>
             </li>
             <li>
                 <a href="/conductores">
-                    <span class="sidebar-menu-icon"></span>
                     Conductores
                 </a>
             </li>
