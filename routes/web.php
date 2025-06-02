@@ -46,6 +46,10 @@ Route::get('/camiones', function () {
     return view('camiones');
 })->name('camiones');
 
+Route::get('/registroCamiones', function () {
+    return view('registroCamiones');
+})->name('registroCamiones');
+
 Route::get('/viajes', function () {
     return view('viajes');
 })->name('viajes');
@@ -63,4 +67,4 @@ Route::get('/conductores', function () {
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
 
 // Rutas para el controlador de camiones
-Route::resource('camiones', CamionController::class);
+//  Route::resource('camiones', CamionController::class);
