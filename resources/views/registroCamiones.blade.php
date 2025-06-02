@@ -514,19 +514,6 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="marca">Marca <span class="required-indicator">*</span></label>
-                                <select id="marca" name="marca" required>
-                                    <option value="">Seleccionar marca</option>
-                                    <option value="freightliner">Freightliner</option>
-                                    <option value="kenworth">Kenworth</option>
-                                    <option value="peterbilt">Peterbilt</option>
-                                    <option value="volvo">Volvo</option>
-                                    <option value="mack">Mack</option>
-                                    <option value="international">International</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
                                 <label for="capacidadCarga">Capacidad de Carga (Toneladas) <span class="required-indicator">*</span></label>
                                 <input type="number" id="capacidadCarga" name="capacidadCarga" required step="0.5" placeholder="25.5">
                             </div>
@@ -540,50 +527,10 @@
                                     <option value="inactivo">Inactivo</option>
                                 </select>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="numeroEconomico">Número Económico</label>
-                                <input type="text" id="numeroEconomico" name="numeroEconomico" placeholder="ECO-001">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="color">Color</label>
-                                <input type="text" id="color" name="color" placeholder="Blanco">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="numeroSerie">Número de Serie</label>
-                                <input type="text" id="numeroSerie" name="numeroSerie" placeholder="1FUJGLDR50LM12345">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="tipoCombustible">Tipo de Combustible</label>
-                                <select id="tipoCombustible" name="tipoCombustible">
-                                    <option value="">Seleccionar combustible</option>
-                                    <option value="diesel">Diésel</option>
-                                    <option value="gasolina">Gasolina</option>
-                                    <option value="gas">Gas Natural</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="kilometraje">Kilometraje Actual</label>
-                                <input type="number" id="kilometraje" name="kilometraje" placeholder="150000">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="fechaCompra">Fecha de Compra</label>
-                                <input type="date" id="fechaCompra" name="fechaCompra">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="observaciones">Observaciones</label>
-                            <textarea id="observaciones" name="observaciones" placeholder="Notas adicionales sobre el vehículo..."></textarea>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
+                            <button type="button" class="btn btn-secondary">🗑️ Limpiar</button>
                             <button type="submit" class="btn btn-primary">💾 Guardar Camión</button>
                         </div>
                     </form>
@@ -614,130 +561,6 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
-
-            // Form submission
-            document.getElementById('formRegistroCamion').addEventListener('submit', function(e) {
-                e.preventDefault();
-                guardarCamion();
-            });
-        }
-
-        function guardarCamion() {
-            const formData = new FormData(document.getElementById('formRegistroCamion'));
-            
-            // Validar campos obligatorios
-            const camposObligatorios = ['placa', 'modelo', 'año', 'marca', 'capacidadCarga', 'estado'];
-            let formularioValido = true;
-            
-            camposObligatorios.forEach(campo => {
-                const valor = formData.get(campo);
-                if (!valor || valor.trim() === '') {
-                    formularioValido = false;
-                    document.getElementById(campo).style.borderColor = '#dc3545';
-                } else {
-                    document.getElementById(campo).style.borderColor = '#ddd';
-                }
-            });
-
-            if (!formularioValido) {
-                mostrarNotificacion('Por favor complete todos los campos obligatorios', 'error');
-                return;
-            }
-
-            // Simular guardado
-            const nuevoCamion = {
-                placa: formData.get('placa'),
-                modelo: formData.get('modelo'),
-                año: parseInt(formData.get('año')),
-                marca: formData.get('marca'),
-                capacidadCarga: parseFloat(formData.get('capacidadCarga')),
-                estado: formData.get('estado'),
-                numeroEconomico: formData.get('numeroEconomico') || generarNumeroEconomico(),
-                color: formData.get('color') || 'No especificado',
-                numeroSerie: formData.get('numeroSerie') || '',
-                tipoCombustible: formData.get('tipoCombustible') || 'diesel',
-                kilometraje: parseInt(formData.get('kilometraje')) || 0,
-                fechaCompra: formData.get('fechaCompra') || '',
-                observaciones: formData.get('observaciones') || ''
-            };
-
-            console.log('Camión a guardar:', nuevoCamion);
-
-            // Mostrar mensaje de éxito
-            document.getElementById('successMessage').classList.add('show');
-            
-            // Simular redirección después de guardar
-            setTimeout(() => {
-                if (confirm('Camión registrado exitosamente. ¿Desea agregar otro camión?')) {
-                    limpiarFormulario();
-                    document.getElementById('successMessage').classList.remove('show');
-                } else {
-                    // En la aplicación real: window.location.href = '/camiones';
-                    mostrarNotificacion('Redirigiendo a la lista de camiones...', 'success');
-                }
-            }, 1000);
-        }
-
-        function limpiarFormulario() {
-            document.getElementById('formRegistroCamion').reset();
-            document.getElementById('successMessage').classList.remove('show');
-            
-            // Resetear colores de bordes
-            document.querySelectorAll('input, select, textarea').forEach(field => {
-                field.style.borderColor = '#ddd';
-            });
-        }
-
-        function generarNumeroEconomico() {
-            const numero = Math.floor(Math.random() * 999) + 1;
-            return `ECO-${String(numero).padStart(3, '0')}`;
-        }
-
-        function mostrarNotificacion(mensaje, tipo) {
-            // Crear elemento de notificación
-            const notificacion = document.createElement('div');
-            notificacion.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 1rem 1.5rem;
-                background: ${tipo === 'success' ? '#28a745' : '#dc3545'};
-                color: white;
-                border-radius: 5px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                z-index: 9999;
-                font-weight: 500;
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-            `;
-            notificacion.textContent = mensaje;
-            
-            document.body.appendChild(notificacion);
-            
-            // Animar entrada
-            setTimeout(() => {
-                notificacion.style.transform = 'translateX(0)';
-            }, 100);
-            
-            // Remover después de 3 segundos
-            setTimeout(() => {
-                notificacion.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (document.body.contains(notificacion)) {
-                        document.body.removeChild(notificacion);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        function logout() {
-            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                mostrarNotificacion('Cerrando sesión...', 'success');
-                setTimeout(() => {
-                    // Aquí iría la lógica de logout real
-                    window.location.href = '/login';
-                }, 1000);
-            }
         }
     </script>
 </body>
