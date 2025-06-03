@@ -267,7 +267,7 @@
         <div class="navbar-content">
                             <a href="#" class="navbar-brand">Mi App</a>
             <div class="navbar-links">
-                <a href="#">Dashboard</a>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('profile') }}" class="active">Perfil</a>
                 <a href="{{ route('login') }}">Cerrar Sesión</a>
             </div>
@@ -276,13 +276,14 @@
 
     <div class="profile-container">
         <!-- Header del Perfil -->
-        <div class="profile-header">
+       <div class="profile-header">
             <div class="profile-avatar">
-                {{ substr('Juan Pérez', 0, 1) }}
+                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
             </div>
-            <h1 class="profile-name">Juan Pérez</h1>
-            <p class="profile-email">juan.perez@ejemplo.com</p>
+            <h1 class="profile-name">{{ Auth::user()->name }}</h1>
+            <p class="profile-email">{{ Auth::user()->email }}</p>
         </div>
+
 
         <div class="profile-sections">
             <!-- Información Personal -->
@@ -435,7 +436,6 @@
     <script>
         function confirmDelete() {
             if (confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-                // Aquí iría la lógica para eliminar la cuenta
                 alert('Funcionalidad de eliminación pendiente de implementar');
             }
         }
