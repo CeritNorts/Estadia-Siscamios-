@@ -327,19 +327,30 @@
             color: white;
         }
 
-        /* Success Message */
-        .success-message {
-            background: #d4edda;
-            color: #155724;
+        /* Alert Messages */
+        .alert {
             padding: 1rem;
             border-radius: 5px;
             margin-bottom: 1rem;
-            border: 1px solid #c3e6cb;
-            display: none;
+            border: 1px solid;
         }
 
-        .success-message.show {
-            display: block;
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
 
         /* Mobile Responsive */
@@ -420,7 +431,7 @@
                 <a href="/dashboard">📊 Panel Administrativo</a>
             </li>
             <li>
-                <a href="/camiones" class="active">🚛 Camiones</a>
+                <a href="{{ route('camiones.index') }}" class="active">🚛 Camiones</a>
             </li>
             <li>
                 <a href="/viajes">📋 Viajes</a>
@@ -468,7 +479,7 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="/camiones">Camiones</a>
+                    <a href="{{ route('camiones.index') }}">Camiones</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Registro de Unidades</span>
                 </div>
@@ -479,15 +490,23 @@
                         <h1 class="page-title">Registro de Camiones</h1>
                         <p class="page-subtitle">Agregar nueva unidad a la flotilla</p>
                     </div>
-                    <a href="/camiones" class="btn btn-outline">
+                    <a href="{{ route('camiones.index') }}" class="btn btn-outline">
                         ← Volver a Lista
                     </a>
                 </div>
                 
-                <!-- Success Message -->
-                <div class="success-message" id="successMessage">
-                    ✅ Camión registrado exitosamente
-                </div>
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        ✅ {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-error">
+                        ❌ {{ session('error') }}
+                    </div>
+                @endif
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -496,43 +515,88 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para registrar el camión en el sistema</p>
                     </div>
                     
-                    <form id="formRegistroCamion">
+                    <form action="{{ route('camiones.store') }}" method="POST" id="formRegistroCamion">
+                        @csrf
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="placa">Placa del Vehículo <span class="required-indicator">*</span></label>
-                                <input type="text" id="placa" name="placa" required placeholder="Ej: ABC-1234">
+                                <input type="text" 
+                                       id="placa" 
+                                       name="placa" 
+                                       value="{{ old('placa') }}"
+                                       required 
+                                       placeholder="Ej: ABC-1234"
+                                       class="@error('placa') is-invalid @enderror">
+                                @error('placa')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="modelo">Modelo <span class="required-indicator">*</span></label>
-                                <input type="text" id="modelo" name="modelo" required placeholder="Ej: Freightliner Cascadia">
+                                <input type="text" 
+                                       id="modelo" 
+                                       name="modelo" 
+                                       value="{{ old('modelo') }}"
+                                       required 
+                                       placeholder="Ej: Freightliner Cascadia"
+                                       class="@error('modelo') is-invalid @enderror">
+                                @error('modelo')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
-                                <label for="año">Año <span class="required-indicator">*</span></label>
-                                <input type="number" id="año" name="año" required min="1990" max="2024" placeholder="2020">
+                                <label for="anio">Año <span class="required-indicator">*</span></label>
+                                <input type="number" 
+                                       id="anio" 
+                                       name="anio" 
+                                       value="{{ old('anio') }}"
+                                       required 
+                                       min="2000" 
+                                       max="{{ date('Y') }}" 
+                                       placeholder="{{ date('Y') }}"
+                                       class="@error('anio') is-invalid @enderror">
+                                @error('anio')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
-                                <label for="capacidadCarga">Capacidad de Carga (Toneladas) <span class="required-indicator">*</span></label>
-                                <input type="number" id="capacidadCarga" name="capacidadCarga" required step="0.5" placeholder="25.5">
+                                <label for="capacidad_carga">Capacidad de Carga (Toneladas) <span class="required-indicator">*</span></label>
+                                <input type="number" 
+                                       id="capacidad_carga" 
+                                       name="capacidad_carga" 
+                                       value="{{ old('capacidad_carga') }}"
+                                       required 
+                                       step="0.1" 
+                                       min="0"
+                                       placeholder="25.5"
+                                       class="@error('capacidad_carga') is-invalid @enderror">
+                                @error('capacidad_carga')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="estado">Estado Actual <span class="required-indicator">*</span></label>
-                                <select id="estado" name="estado" required>
+                                <select id="estado" 
+                                        name="estado" 
+                                        required
+                                        class="@error('estado') is-invalid @enderror">
                                     <option value="">Seleccionar estado</option>
-                                    <option value="activo">Activo</option>
-                                    <option value="mantenimiento">En Mantenimiento</option>
-                                    <option value="inactivo">Inactivo</option>
+                                    <option value="activo" {{ old('estado') == 'activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="mantenimiento" {{ old('estado') == 'mantenimiento' ? 'selected' : '' }}>En Mantenimiento</option>
+                                    <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
                                 </select>
+                                @error('estado')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
-
-                        <!-- Soy el mejor del mundo y elezer me ama -->
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary">🗑️ Limpiar</button>
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
                             <button type="submit" class="btn btn-primary">💾 Guardar Camión</button>
                         </div>
                     </form>
@@ -563,6 +627,19 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Estás seguro de que deseas limpiar todos los campos?')) {
+                document.getElementById('formRegistroCamion').reset();
+            }
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                // Aquí podrías redirigir al logout
+                window.location.href = '/logout';
+            }
         }
     </script>
 </body>

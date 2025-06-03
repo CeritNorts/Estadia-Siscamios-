@@ -13,7 +13,7 @@ class CamionController extends Controller
     public function index()
     {
         $camiones = Camion::all();
-        return response()->json($camiones);
+        return view('camiones', compact('camiones'));
     }
 
     /**
@@ -21,7 +21,7 @@ class CamionController extends Controller
      */
     public function create()
     {
-        // Solo necesario si usas vistas Blade.
+        return view('registroCamiones');
     }
 
     /**
@@ -39,10 +39,9 @@ class CamionController extends Controller
 
         $camion = Camion::create($request->all());
 
-        return response()->json([
-            'message' => 'Camión registrado correctamente',
-            'data' => $camion
-        ], 201);
+        // Redirigir a la lista con mensaje de éxito
+        return redirect()->route('camiones.index')
+                         ->with('success', 'Camión registrado correctamente');
     }
 
     /**
@@ -53,10 +52,10 @@ class CamionController extends Controller
         $camion = Camion::find($id);
 
         if (!$camion) {
-            return response()->json(['message' => 'Camión no encontrado'], 404);
+            return redirect()->route('camiones.index')->with('error', 'Camión no encontrado');
         }
 
-        return response()->json($camion);
+        return view('mostrarCamion', compact('camion')); 
     }
 
     /**
@@ -64,7 +63,13 @@ class CamionController extends Controller
      */
     public function edit($id)
     {
-    
+        $camion = Camion::find($id);
+
+        if (!$camion) {
+            return redirect()->route('camiones.index')->with('error', 'Camión no encontrado');
+        }
+
+        return view('editarCamion', compact('camion'));
     }
 
     /**
@@ -75,7 +80,7 @@ class CamionController extends Controller
         $camion = Camion::find($id);
 
         if (!$camion) {
-            return response()->json(['message' => 'Camión no encontrado'], 404);
+            return redirect()->route('camiones.index')->with('error', 'Camión no encontrado');
         }
 
         $request->validate([
@@ -88,10 +93,8 @@ class CamionController extends Controller
 
         $camion->update($request->all());
 
-        return response()->json([
-            'message' => 'Camión actualizado correctamente',
-            'data' => $camion
-        ]);
+        return redirect()->route('camiones.index')
+                         ->with('success', 'Camión actualizado correctamente');
     }
 
     /**
@@ -102,11 +105,12 @@ class CamionController extends Controller
         $camion = Camion::find($id);
 
         if (!$camion) {
-            return response()->json(['message' => 'Camión no encontrado'], 404);
+            return redirect()->route('camiones.index')->with('error', 'Camión no encontrado');
         }
 
         $camion->delete();
 
-        return response()->json(['message' => 'Camión eliminado correctamente']);
+        return redirect()->route('camiones.index')
+                         ->with('success', 'Camión eliminado correctamente');
     }
 }

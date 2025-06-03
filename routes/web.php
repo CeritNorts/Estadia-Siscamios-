@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 // Rutas de autenticación
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login'); // actualizado para usar controlador
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 //  Rutas de registro usando el controlador
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -35,21 +35,21 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Dashboard o página principal después del login
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware('auth')->name('dashboard'); // Protegido por auth
+})->middleware('auth')->name('dashboard');
 
 // Ruta del perfil
 Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
-Route::get('/camiones', function () {
-    return view('camiones');
-})->name('camiones');
+// Rutas para el controlador de camiones (USAR SOLO ESTAS)
+Route::resource('camiones', CamionController::class);
 
-Route::get('/registroCamiones', function () {
-    return view('registroCamiones');
-})->name('registroCamiones');
+// ELIMINAR ESTAS RUTAS - YA ESTÁN CUBIERTAS POR EL RESOURCE:
+// Route::get('/camiones', function () { return view('camiones'); })->name('camiones');
+// Route::get('/registroCamiones', function () { return view('registroCamiones'); })->name('registroCamiones');
 
+// Otras rutas que aún no tienen controlador
 Route::get('/viajes', function () {
     return view('viajes');
 })->name('viajes');
@@ -65,6 +65,3 @@ Route::get('/conductores', function () {
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
-
-// Rutas para el controlador de camiones
-Route::resource('camiones', CamionController::class);
