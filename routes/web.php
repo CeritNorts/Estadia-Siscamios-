@@ -67,4 +67,4 @@ Route::get('/conductores', function () {
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
 
 // Rutas para el controlador de camiones
-//  Route::resource('camiones', CamionController::class);
+Route::resource('camiones', CamionController::class);
