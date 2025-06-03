@@ -732,7 +732,7 @@
                         <h1 class="page-title">Gestión de Camiones</h1>
                         <p class="page-subtitle">Administra y supervisa toda tu flotilla vehicular</p>
                     </div>
-                    <button class="btn btn-primary" onclick="abrirModalNuevoCamion()">
+                    <button class="btn btn-primary" onclick="window.location.href='/registroCamiones'">
                         ➕ Nuevo Camión
                     </button>
                 </div>
@@ -793,9 +793,6 @@
                                         <th>Año</th>
                                         <th>Capacidad</th>
                                         <th>Estado</th>
-                                        <th>Conductor</th>
-                                        <th>Kilometraje</th>
-                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="trucksTableBody">
