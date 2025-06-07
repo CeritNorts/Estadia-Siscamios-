@@ -42,8 +42,13 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
+// Ruta del perfil
+Route::get('/camiones', function () {
+    return view('camiones');
+})->name('camiones.index');
+
 // Rutas para el controlador de camiones (USAR SOLO ESTAS)
-Route::resource('camiones', CamionController::class);
+ Route::resource('camiones', CamionController::class);
 
 // ELIMINAR ESTAS RUTAS - YA ESTÁN CUBIERTAS POR EL RESOURCE:
 // Route::get('/camiones', function () { return view('camiones'); })->name('camiones');
@@ -54,13 +59,25 @@ Route::get('/viajes', function () {
     return view('viajes');
 })->name('viajes');
 
+Route::get('/asignarViaje', function () {
+    return view('asignarViaje');
+})->name('asignarViaje');
+
 Route::get('/mantenimiento', function () {
     return view('mantenimiento');
 })->name('mantenimiento');
 
+Route::get('/registrarMantenimiento', function () {
+    return view('registrarMantenimiento');
+})->name('registrarMantenimiento');
+
 Route::get('/conductores', function () {
     return view('conductores');
 })->name('conductores');
+
+Route::get('/registrarConductor', function () {
+    return view('registrarConductor');
+})->name('registrarConductor');
 
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -559,7 +559,7 @@
             <div class="user-info">
                 <div class="user-avatar">AD</div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
