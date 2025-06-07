@@ -150,8 +150,32 @@
         /* Content Area */
         .content {
             flex: 1;
-            padding: 1.5rem;
+            padding: 2rem;
             overflow-y: auto;
+        }
+
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1rem;
         }
 
         /* Dashboard Stats */
@@ -198,298 +222,85 @@
         .stat-retrasados { color: #dc3545; }
         .stat-combustible { color: #6f42c1; }
 
-        /* View Toggle */
-        .view-toggle {
-            display: flex;
+        /* Tabs */
+        .tabs-container {
             background: white;
             border-radius: 10px;
-            padding: 0.5rem;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .view-btn {
+        .tabs-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-button {
             flex: 1;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             background: none;
             border: none;
-            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 500;
             color: #666;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            border-bottom: 3px solid transparent;
         }
 
-        .view-btn.active {
-            background: #667eea;
-            color: white;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
-        }
-
-        .view-btn:hover:not(.active) {
-            background: #f8f9fa;
-        }
-
-        /* Quick Filters */
-        .quick-filters {
+        .tab-button.active {
             background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .filter-label {
-            font-weight: 500;
-            color: #333;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .filter-btn:hover:not(.active) {
-            background: #f0f0f0;
-        }
-
-        .filter-input {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            min-width: 150px;
-        }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        /* Cards View */
-        .cards-view {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .viaje-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .viaje-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1rem;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .ruta-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .ciudad {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .arrow {
             color: #667eea;
-            font-weight: bold;
+            border-bottom-color: #667eea;
         }
 
-        .viaje-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .detail-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
-
-        .detail-label {
-            font-size: 0.8rem;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .detail-value {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .progress-section {
-            margin-top: 1rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
+        .tab-button:hover:not(.active) {
             background: #e9ecef;
-            border-radius: 3px;
-            overflow: hidden;
-            margin: 0.5rem 0;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.3s ease;
+        .tab-content {
+            display: none;
+            padding: 2rem;
         }
 
-        .card-footer {
-            padding: 1rem 1.5rem;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .tab-content.active {
+            display: block;
         }
 
-        .combustible-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .fuel-icon {
-            color: #ffc107;
-        }
-
-        /* Status Badges */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-programado { background: #e3f2fd; color: #1565c0; }
-        .status-transito { background: #fff8e1; color: #f57c00; }
-        .status-entregado { background: #e8f5e8; color: #2e7d32; }
-        .status-retrasado { background: #ffebee; color: #c62828; }
-        .status-espera { background: #f3e5f5; color: #7b1fa2; }
-
-        /* Table View */
-        .table-view {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
+        /* Table Styles */
         .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1.5rem;
         }
 
         .table-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.5rem;
             color: #333;
+            font-weight: 600;
         }
 
         .table-actions {
             display: flex;
             gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
         }
 
-        .btn-primary {
-            background: #667eea;
-            color: white;
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            min-width: 200px;
         }
 
-        .btn-primary:hover {
-            background: #5a6fd8;
-            transform: translateY(-1px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: #667eea;
-            border: 1px solid #667eea;
-        }
-
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .table {
@@ -519,85 +330,103 @@
             font-size: 0.9rem;
         }
 
-        /* Timeline View */
-        .timeline-view {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 1rem;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(180deg, #667eea, #764ba2);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 2rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-left: 1rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -1.75rem;
-            top: 1.5rem;
-            width: 12px;
-            height: 12px;
-            background: #667eea;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px #667eea;
-        }
-
-        .timeline-time {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-content {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            background: #667eea;
-            color: white;
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
             transition: all 0.3s ease;
-            z-index: 1000;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-programado { background: #e3f2fd; color: #1565c0; }
+        .status-transito { background: #fff8e1; color: #f57c00; }
+        .status-entregado { background: #e8f5e8; color: #2e7d32; }
+        .status-retrasado { background: #ffebee; color: #c62828; }
+        .status-espera { background: #f3e5f5; color: #7b1fa2; }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
         }
 
         /* Mobile Responsive */
@@ -632,21 +461,26 @@
                 width: 100%;
             }
 
-            .cards-view {
+            .navbar-content {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .dashboard-stats {
                 grid-template-columns: 1fr;
             }
 
-            .viaje-details {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-filters {
+            .tabs-header {
                 flex-direction: column;
-                align-items: stretch;
             }
 
-            .filter-group {
-                justify-content: center;
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
             }
 
             .table-header {
@@ -658,6 +492,16 @@
             .table-actions {
                 justify-content: center;
             }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -690,7 +534,7 @@
             <div class="user-info">
                 <div class="user-avatar">AD</div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Admin User</div>
+                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -717,211 +561,305 @@
         </nav>
 
         <div class="content">
-            <!-- Dashboard Stats -->
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-number stat-programados" id="programados">12</div>
-                    <div class="stat-label">Programados</div>
-                    <div class="stat-sublabel">Próximos 7 días</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number stat-transito" id="transito">8</div>
-                    <div class="stat-label">En Tránsito</div>
-                    <div class="stat-sublabel">Actualmente en ruta</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number stat-entregados" id="entregados">156</div>
-                    <div class="stat-label">Entregados</div>
-                    <div class="stat-sublabel">Este mes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number stat-retrasados" id="retrasados">3</div>
-                    <div class="stat-label">Retrasados</div>
-                    <div class="stat-sublabel">Requieren atención</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number stat-combustible" id="combustible">85%</div>
-                    <div class="stat-label">Eficiencia</div>
-                    <div class="stat-sublabel">Consumo combustible</div>
-                </div>
-            </div>
-
-            <!-- View Toggle -->
-            <div class="view-toggle">
-                <button class="view-btn active" data-view="cards">
-                    🃏 Vista de Tarjetas
-                </button>
-                <button class="view-btn" data-view="table">
-                    📊 Vista de Tabla
-                </button>
-                <button class="view-btn" data-view="timeline">
-                    📅 Línea de Tiempo
-                </button>
-            </div>
-
-            <!-- Quick Filters -->
-            <div class="quick-filters">
-                <div class="filter-group">
-                    <span class="filter-label">Estado:</span>
-                    <button class="filter-btn active" data-filter="todos">Todos</button>
-                    <button class="filter-btn" data-filter="programado">Programados</button>
-                    <button class="filter-btn" data-filter="transito">En Tránsito</button>
-                    <button class="filter-btn" data-filter="entregado">Entregados</button>
-                    <button class="filter-btn" data-filter="retrasado">Retrasados</button>
+            <div class="content-wrapper fade-in">
+                
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Gestión de Viajes</h1>
+                        <p class="page-subtitle">Administra y supervisa todos los viajes de la flotilla</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="window.location.href='/asignarViaje'">
+                        ➕ Asignar Nuevo Viaje
+                    </button>
                 </div>
                 
-                <div class="filter-group">
-                    <span class="filter-label">Buscar:</span>
-                    <input type="text" class="filter-input" placeholder="Cliente, destino, camión..." id="searchInput">
-                </div>
-                
-                <div class="filter-group">
-                    <span class="filter-label">Fecha:</span>
-                    <input type="date" class="filter-input" id="fechaFiltro">
-                </div>
-            </div>
-
-            <!-- Cards View -->
-            <div class="cards-view" id="cardsView">
-                <!-- Las tarjetas se generarán dinámicamente -->
-            </div>
-
-            <!-- Table View -->
-            <div class="table-view" id="tableView" style="display: none;">
-                <div class="table-header">
-                    <h3 class="table-title">Lista de Viajes</h3>
-                    <div class="table-actions">
-                        <button class="btn btn-outline" onclick="exportarViajes()">📊 Exportar</button>
-                        <button class="btn btn-primary" onclick="nuevoViaje()">➕ Nuevo Viaje</button>
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number stat-programados" id="programados">12</div>
+                        <div class="stat-label">Programados</div>
+                        <div class="stat-sublabel">Próximos 7 días</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-transito" id="transito">8</div>
+                        <div class="stat-label">En Tránsito</div>
+                        <div class="stat-sublabel">Actualmente en ruta</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-entregados" id="entregados">156</div>
+                        <div class="stat-label">Entregados</div>
+                        <div class="stat-sublabel">Este mes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-retrasados" id="retrasados">3</div>
+                        <div class="stat-label">Retrasados</div>
+                        <div class="stat-sublabel">Requieren atención</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-combustible" id="combustible">85%</div>
+                        <div class="stat-label">Eficiencia</div>
+                        <div class="stat-sublabel">Consumo combustible</div>
                     </div>
                 </div>
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID Viaje</th>
-                            <th>Ruta</th>
-                            <th>Camión</th>
-                            <th>Conductor</th>
-                            <th>Cliente</th>
-                            <th>Fecha Salida</th>
-                            <th>Estado</th>
-                            <th>Combustible</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Los datos se cargarán dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
 
-            <!-- Timeline View -->
-            <div class="timeline-view" id="timelineView" style="display: none;">
-                <h3 style="margin-bottom: 2rem; color: #333;">Cronología de Viajes</h3>
-                <div class="timeline" id="timelineContainer">
-                    <!-- Los elementos del timeline se generarán dinámicamente -->
+                <!-- Tabs Container -->
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <button class="tab-button active" data-tab="viajes">📋 Lista de Viajes</button>
+                        <button class="tab-button" data-tab="monitoreo">📡 Monitoreo en Tiempo Real</button>
+                        <button class="tab-button" data-tab="combustible">⛽ Control de Combustible</button>
+                    </div>
+
+                    <!-- Tab: Lista de Viajes -->
+                    <div class="tab-content active" id="viajes">
+                        <div class="table-header">
+                            <h3 class="table-title">Todos los Viajes</h3>
+                            <div class="table-actions">
+                                <input type="text" class="search-input" placeholder="Buscar viaje..." id="searchViajes">
+                                <select class="search-input" style="max-width: 150px;" id="filterEstado">
+                                    <option value="">Todos los estados</option>
+                                    <option value="programado">Programados</option>
+                                    <option value="transito">En Tránsito</option>
+                                    <option value="entregado">Entregados</option>
+                                    <option value="retrasado">Retrasados</option>
+                                </select>
+                                <button class="btn btn-secondary btn-sm">📊 Exportar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Viaje</th>
+                                        <th>Camión</th>
+                                        <th>Conductor</th>
+                                        <th>Cliente</th>
+                                        <th>Ruta</th>
+                                        <th>Fecha Salida</th>
+                                        <th>Fecha Llegada</th>
+                                        <th>Estado</th>
+                                        <th>Progreso</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="viajesTableBody">
+                                    <tr>
+                                        <td><strong>VJ-001</strong></td>
+                                        <td>CAM-001</td>
+                                        <td>Juan Pérez</td>
+                                        <td>Transportes ABC</td>
+                                        <td>Córdoba → México DF</td>
+                                        <td>03/06/2024 06:00</td>
+                                        <td>03/06/2024 14:30</td>
+                                        <td><span class="status-badge status-transito">🚛 En Tránsito</span></td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 65%"></div>
+                                            </div>
+                                            <small>65%</small>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button class="btn btn-secondary btn-sm">👁️</button>
+                                                <button class="btn btn-warning btn-sm">✏️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-002</strong></td>
+                                        <td>CAM-002</td>
+                                        <td>María González</td>
+                                        <td>Logística XYZ</td>
+                                        <td>Veracruz → Puebla</td>
+                                        <td>03/06/2024 08:00</td>
+                                        <td>03/06/2024 12:15</td>
+                                        <td><span class="status-badge status-entregado">✅ Entregado</span></td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 100%"></div>
+                                            </div>
+                                            <small>100%</small>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button class="btn btn-secondary btn-sm">👁️</button>
+                                                <button class="btn btn-warning btn-sm">✏️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-003</strong></td>
+                                        <td>CAM-003</td>
+                                        <td>Carlos López</td>
+                                        <td>Carga Segura SA</td>
+                                        <td>México DF → Guadalajara</td>
+                                        <td>04/06/2024 05:30</td>
+                                        <td>04/06/2024 16:00</td>
+                                        <td><span class="status-badge status-programado">📅 Programado</span></td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 0%"></div>
+                                            </div>
+                                            <small>0%</small>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button class="btn btn-secondary btn-sm">👁️</button>
+                                                <button class="btn btn-warning btn-sm">✏️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-004</strong></td>
+                                        <td>CAM-004</td>
+                                        <td>Ana Martínez</td>
+                                        <td>Express Maya</td>
+                                        <td>Toluca → Mérida</td>
+                                        <td>02/06/2024 04:00</td>
+                                        <td>03/06/2024 18:00</td>
+                                        <td><span class="status-badge status-retrasado">⚠️ Retrasado</span></td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 80%"></div>
+                                            </div>
+                                            <small>80%</small>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button class="btn btn-secondary btn-sm">👁️</button>
+                                                <button class="btn btn-danger btn-sm">🚨</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Monitoreo en Tiempo Real -->
+                    <div class="tab-content" id="monitoreo">
+                        <div class="table-header">
+                            <h3 class="table-title">Monitoreo en Tiempo Real</h3>
+                            <div class="table-actions">
+                                <button class="btn btn-secondary btn-sm">🔄 Actualizar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Viaje</th>
+                                        <th>Camión</th>
+                                        <th>Ubicación Actual</th>
+                                        <th>Velocidad</th>
+                                        <th>Combustible</th>
+                                        <th>Tiempo Restante</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>VJ-001</strong></td>
+                                        <td>CAM-001</td>
+                                        <td>Carretera México-Puebla Km 180</td>
+                                        <td>85 km/h</td>
+                                        <td>45%</td>
+                                        <td>3h 15min</td>
+                                        <td><span class="status-badge status-transito">🚛 En Tránsito</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-004</strong></td>
+                                        <td>CAM-004</td>
+                                        <td>Autopista Mérida Km 45</td>
+                                        <td>0 km/h</td>
+                                        <td>25%</td>
+                                        <td>4h 30min</td>
+                                        <td><span class="status-badge status-retrasado">⚠️ Detenido</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Control de Combustible -->
+                    <div class="tab-content" id="combustible">
+                        <div class="table-header">
+                            <h3 class="table-title">Control de Combustible por Viaje</h3>
+                            <div class="table-actions">
+                                <button class="btn btn-primary btn-sm">⛽ Registrar Carga</button>
+                                <button class="btn btn-secondary btn-sm">📊 Reporte</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Viaje</th>
+                                        <th>Camión</th>
+                                        <th>Combustible Inicial</th>
+                                        <th>Combustible Actual</th>
+                                        <th>Consumo</th>
+                                        <th>Eficiencia</th>
+                                        <th>Costo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>VJ-001</strong></td>
+                                        <td>CAM-001</td>
+                                        <td>100%</td>
+                                        <td>45%</td>
+                                        <td>55%</td>
+                                        <td>12.5 km/l</td>
+                                        <td>$1,250.00</td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm">⛽ Cargar</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-002</strong></td>
+                                        <td>CAM-002</td>
+                                        <td>90%</td>
+                                        <td>65%</td>
+                                        <td>25%</td>
+                                        <td>15.2 km/l</td>
+                                        <td>$890.00</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm">✅ Completo</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>VJ-004</strong></td>
+                                        <td>CAM-004</td>
+                                        <td>95%</td>
+                                        <td>25%</td>
+                                        <td>70%</td>
+                                        <td>8.9 km/l</td>
+                                        <td>$2,100.00</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm">🚨 Crítico</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <button class="fab" onclick="nuevoViaje()" title="Nuevo Viaje">
-        ➕
-    </button>
-
     <script>
-        // Datos simulados de viajes
-        const viajesData = [
-            {
-                id: 'VJ-001',
-                origen: 'Córdoba, Ver.',
-                destino: 'México, DF',
-                camion: 'CAM-001',
-                conductor: 'Juan Pérez',
-                cliente: 'Transportes ABC',
-                fechaSalida: '2024-06-03',
-                horaSalida: '06:00',
-                fechaLlegada: '2024-06-03',
-                horaLlegada: '14:30',
-                estado: 'transito',
-                progreso: 65,
-                combustibleInicial: 100,
-                combustibleActual: 45,
-                distancia: 420,
-                carga: 'Electrodomésticos',
-                peso: 18.5
-            },
-            {
-                id: 'VJ-002',
-                origen: 'Veracruz, Ver.',
-                destino: 'Puebla, Pue.',
-                camion: 'CAM-002',
-                conductor: 'María González',
-                cliente: 'Logística XYZ',
-                fechaSalida: '2024-06-03',
-                horaSalida: '08:00',
-                fechaLlegada: '2024-06-03',
-                horaLlegada: '12:15',
-                estado: 'entregado',
-                progreso: 100,
-                combustibleInicial: 90,
-                combustibleActual: 65,
-                distancia: 280,
-                carga: 'Materiales de construcción',
-                peso: 25.0
-            },
-            {
-                id: 'VJ-003',
-                origen: 'México, DF',
-                destino: 'Guadalajara, Jal.',
-                camion: 'CAM-003',
-                conductor: 'Carlos López',
-                cliente: 'Carga Segura SA',
-                fechaSalida: '2024-06-04',
-                horaSalida: '05:30',
-                fechaLlegada: '2024-06-04',
-                horaLlegada: '16:00',
-                estado: 'programado',
-                progreso: 0,
-                combustibleInicial: 100,
-                combustibleActual: 100,
-                distancia: 540,
-                carga: 'Productos químicos',
-                peso: 22.8
-            },
-            {
-                id: 'VJ-004',
-                origen: 'Toluca, Edo. Méx.',
-                destino: 'Mérida, Yuc.',
-                camion: 'CAM-004',
-                conductor: 'Ana Martínez',
-                cliente: 'Express Maya',
-                fechaSalida: '2024-06-02',
-                horaSalida: '04:00',
-                fechaLlegada: '2024-06-03',
-                horaLlegada: '18:00',
-                estado: 'retrasado',
-                progreso: 80,
-                combustibleInicial: 95,
-                combustibleActual: 25,
-                distancia: 950,
-                carga: 'Alimentos perecederos',
-                peso: 20.5
-            }
-        ];
-
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
-        function initializeApp() {
             setupEventListeners();
-            cargarViajes();
-            actualizarEstadisticas();
-        }
+        });
 
         function setupEventListeners() {
             // Sidebar toggle
@@ -939,355 +877,66 @@
                 overlay.classList.remove('active');
             });
 
-            // View toggle
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const view = this.getAttribute('data-view');
-                    cambiarVista(view);
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    cambiarTab(tabId);
                 });
             });
 
-            // Filters
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const filter = this.getAttribute('data-filter');
-                    filtrarViajes(filter);
+            // Search functionality
+            if (document.getElementById('searchViajes')) {
+                document.getElementById('searchViajes').addEventListener('input', function() {
+                    filtrarViajes(this.value);
                 });
-            });
+            }
 
-            // Search
-            document.getElementById('searchInput').addEventListener('input', function() {
-                buscarViajes(this.value);
-            });
-
-            // Date filter
-            document.getElementById('fechaFiltro').addEventListener('change', function() {
-                filtrarPorFecha(this.value);
-            });
-        }
-
-        function cambiarVista(vista) {
-            // Actualizar botones
-            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[data-view="${vista}"]`).classList.add('active');
-
-            // Ocultar todas las vistas
-            document.getElementById('cardsView').style.display = 'none';
-            document.getElementById('tableView').style.display = 'none';
-            document.getElementById('timelineView').style.display = 'none';
-
-            // Mostrar vista seleccionada
-            switch(vista) {
-                case 'cards':
-                    document.getElementById('cardsView').style.display = 'grid';
-                    break;
-                case 'table':
-                    document.getElementById('tableView').style.display = 'block';
-                    cargarTablaViajes();
-                    break;
-                case 'timeline':
-                    document.getElementById('timelineView').style.display = 'block';
-                    cargarTimeline();
-                    break;
+            // Filter by status
+            if (document.getElementById('filterEstado')) {
+                document.getElementById('filterEstado').addEventListener('change', function() {
+                    filtrarPorEstado(this.value);
+                });
             }
         }
 
-        function cargarViajes() {
-            const container = document.getElementById('cardsView');
-            container.innerHTML = '';
+        function cambiarTab(tabId) {
+            // Remover active de todos los botones y contenidos
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-            viajesData.forEach(viaje => {
-                const card = crearTarjetaViaje(viaje);
-                container.appendChild(card);
-            });
+            // Activar el tab seleccionado
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
         }
 
-        function crearTarjetaViaje(viaje) {
-            const card = document.createElement('div');
-            card.className = 'viaje-card';
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-title">${viaje.id}</div>
-                    <span class="status-badge status-${viaje.estado}">
-                        ${getStatusIcon(viaje.estado)} ${getStatusLabel(viaje.estado)}
-                    </span>
-                </div>
-                <div class="card-body">
-                    <div class="ruta-info">
-                        <span class="ciudad">${viaje.origen}</span>
-                        <span class="arrow">→</span>
-                        <span class="ciudad">${viaje.destino}</span>
-                    </div>
-                    
-                    <div class="viaje-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Camión</span>
-                            <span class="detail-value">${viaje.camion}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Conductor</span>
-                            <span class="detail-value">${viaje.conductor}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Cliente</span>
-                            <span class="detail-value">${viaje.cliente}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Carga</span>
-                            <span class="detail-value">${viaje.carga}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Salida</span>
-                            <span class="detail-value">${formatearFecha(viaje.fechaSalida)} ${viaje.horaSalida}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Llegada Est.</span>
-                            <span class="detail-value">${formatearFecha(viaje.fechaLlegada)} ${viaje.horaLlegada}</span>
-                        </div>
-                    </div>
-                    
-                    ${viaje.estado !== 'programado' ? `
-                    <div class="progress-section">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.9rem; color: #666;">Progreso del viaje</span>
-                            <span style="font-size: 0.9rem; font-weight: 600; color: #333;">${viaje.progreso}%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${viaje.progreso}%"></div>
-                        </div>
-                    </div>
-                    ` : ''}
-                </div>
-                <div class="card-footer">
-                    <div class="combustible-info">
-                        <span class="fuel-icon">⛽</span>
-                        <span>${viaje.combustibleActual}% / ${viaje.combustibleInicial}%</span>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="verDetalles('${viaje.id}')">
-                            👁️ Ver
-                        </button>
-                        <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editarViaje('${viaje.id}')">
-                            ✏️ Editar
-                        </button>
-                    </div>
-                </div>
-            `;
-            return card;
-        }
-
-        function cargarTablaViajes() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            viajesData.forEach(viaje => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${viaje.id}</strong></td>
-                    <td>${viaje.origen} → ${viaje.destino}</td>
-                    <td>${viaje.camion}</td>
-                    <td>${viaje.conductor}</td>
-                    <td>${viaje.cliente}</td>
-                    <td>${formatearFecha(viaje.fechaSalida)} ${viaje.horaSalida}</td>
-                    <td><span class="status-badge status-${viaje.estado}">${getStatusLabel(viaje.estado)}</span></td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 0.8rem;">⛽</span>
-                            <span>${viaje.combustibleActual}%</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" onclick="verDetalles('${viaje.id}')">Ver</button>
-                            <button class="btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" onclick="editarViaje('${viaje.id}')">Editar</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function cargarTimeline() {
-            const container = document.getElementById('timelineContainer');
-            container.innerHTML = '';
-
-            // Ordenar viajes por fecha
-            const viajesOrdenados = [...viajesData].sort((a, b) => new Date(a.fechaSalida) - new Date(b.fechaSalida));
-
-            viajesOrdenados.forEach(viaje => {
-                const item = document.createElement('div');
-                item.className = 'timeline-item';
-                item.innerHTML = `
-                    <div class="timeline-time">${formatearFecha(viaje.fechaSalida)} - ${viaje.horaSalida}</div>
-                    <div class="timeline-content">
-                        <div>
-                            <div style="font-weight: 600; margin-bottom: 0.5rem;">${viaje.id} - ${viaje.origen} → ${viaje.destino}</div>
-                            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
-                                ${viaje.camion} | ${viaje.conductor} | ${viaje.cliente}
-                            </div>
-                            <div style="font-size: 0.8rem; color: #666;">
-                                Carga: ${viaje.carga} (${viaje.peso} ton) | Distancia: ${viaje.distancia} km
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: end; gap: 0.5rem;">
-                            <span class="status-badge status-${viaje.estado}">${getStatusLabel(viaje.estado)}</span>
-                            <div style="font-size: 0.8rem; color: #666;">⛽ ${viaje.combustibleActual}%</div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function getStatusIcon(estado) {
-            const icons = {
-                'programado': '📅',
-                'transito': '🚛',
-                'entregado': '✅',
-                'retrasado': '⚠️',
-                'espera': '⏱️'
-            };
-            return icons[estado] || '📋';
-        }
-
-        function getStatusLabel(estado) {
-            const labels = {
-                'programado': 'Programado',
-                'transito': 'En Tránsito',
-                'entregado': 'Entregado',
-                'retrasado': 'Retrasado',
-                'espera': 'En Espera'
-            };
-            return labels[estado] || estado;
-        }
-
-        function formatearFecha(fecha) {
-            const opciones = { month: 'short', day: 'numeric' };
-            return new Date(fecha).toLocaleDateString('es-ES', opciones);
-        }
-
-        function actualizarEstadisticas() {
-            const stats = {
-                programados: 0,
-                transito: 0,
-                entregados: 0,
-                retrasados: 0,
-                combustiblePromedio: 0
-            };
-
-            viajesData.forEach(viaje => {
-                stats[viaje.estado]++;
-                stats.combustiblePromedio += viaje.combustibleActual;
-            });
-
-            stats.combustiblePromedio = Math.round(stats.combustiblePromedio / viajesData.length);
-
-            document.getElementById('programados').textContent = stats.programados;
-            document.getElementById('transito').textContent = stats.transito;
-            document.getElementById('entregados').textContent = stats.entregados;
-            document.getElementById('retrasados').textContent = stats.retrasados;
-            document.getElementById('combustible').textContent = stats.combustiblePromedio + '%';
-        }
-
-        function filtrarViajes(filtro) {
-            const cards = document.querySelectorAll('.viaje-card');
+        function filtrarViajes(termino) {
+            const rows = document.querySelectorAll('#viajesTableBody tr');
             
-            cards.forEach(card => {
-                const statusBadge = card.querySelector('.status-badge');
-                const estado = statusBadge.className.split('status-')[1].split(' ')[0];
-                
-                if (filtro === 'todos' || estado === filtro) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        function buscarViajes(termino) {
-            const cards = document.querySelectorAll('.viaje-card');
-            
-            cards.forEach(card => {
-                const texto = card.textContent.toLowerCase();
+            rows.forEach(row => {
+                const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
-                    card.style.display = 'block';
+                    row.style.display = '';
                 } else {
-                    card.style.display = 'none';
+                    row.style.display = 'none';
                 }
             });
         }
 
-        function filtrarPorFecha(fecha) {
-            if (!fecha) {
-                cargarViajes();
-                return;
-            }
-
-            const viajesFiltrados = viajesData.filter(viaje => 
-                viaje.fechaSalida === fecha || viaje.fechaLlegada === fecha
-            );
-
-            const container = document.getElementById('cardsView');
-            container.innerHTML = '';
-
-            viajesFiltrados.forEach(viaje => {
-                const card = crearTarjetaViaje(viaje);
-                container.appendChild(card);
-            });
-        }
-
-        function verDetalles(viajeId) {
-            const viaje = viajesData.find(v => v.id === viajeId);
-            if (viaje) {
-                alert(`Detalles del viaje ${viajeId}:\n\nRuta: ${viaje.origen} → ${viaje.destino}\nCamión: ${viaje.camion}\nConductor: ${viaje.conductor}\nCliente: ${viaje.cliente}\nEstado: ${getStatusLabel(viaje.estado)}\nProgreso: ${viaje.progreso}%\nCombustible: ${viaje.combustibleActual}%`);
-            }
-        }
-
-        function editarViaje(viajeId) {
-            alert(`Función de edición para el viaje ${viajeId} - Por implementar`);
-        }
-
-        function nuevoViaje() {
-            alert('Función para crear nuevo viaje - Por implementar');
-        }
-
-        function exportarViajes() {
-            const csv = convertirViajesACSV(viajesData);
-            descargarCSV(csv, 'viajes_data.csv');
-            alert('Datos de viajes exportados exitosamente');
-        }
-
-        function convertirViajesACSV(data) {
-            const headers = ['ID', 'Origen', 'Destino', 'Camión', 'Conductor', 'Cliente', 'Fecha Salida', 'Estado', 'Progreso', 'Combustible'];
-            const rows = data.map(viaje => [
-                viaje.id,
-                viaje.origen,
-                viaje.destino,
-                viaje.camion,
-                viaje.conductor,
-                viaje.cliente,
-                viaje.fechaSalida,
-                viaje.estado,
-                viaje.progreso + '%',
-                viaje.combustibleActual + '%'
-            ]);
+        function filtrarPorEstado(estado) {
+            const rows = document.querySelectorAll('#viajesTableBody tr');
             
-            return [headers, ...rows].map(row => row.join(',')).join('\n');
-        }
-
-        function descargarCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', filename);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            rows.forEach(row => {
+                const statusBadge = row.querySelector('.status-badge');
+                if (statusBadge) {
+                    const estadoViaje = statusBadge.className.split('status-')[1].split(' ')[0];
+                    if (!estado || estadoViaje === estado) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
         }
 
         function logout() {
@@ -1295,3 +944,6 @@
                 alert('Cerrando sesión...');
             }
         }
+    </script>
+</body>
+</html>
