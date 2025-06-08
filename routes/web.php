@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController; 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CamionController;
+use App\Http\Controllers\ViajeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,22 +43,13 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
-// Ruta del perfil
-Route::get('/camiones', function () {
-    return view('camiones');
-})->name('camiones.index');
 
-// Rutas para el controlador de camiones (USAR SOLO ESTAS)
- Route::resource('camiones', CamionController::class);
+// Rutas para el controlador de camiones 
+Route::resource('camiones', CamionController::class);
 
-// ELIMINAR ESTAS RUTAS - YA ESTÁN CUBIERTAS POR EL RESOURCE:
-// Route::get('/camiones', function () { return view('camiones'); })->name('camiones');
-// Route::get('/registroCamiones', function () { return view('registroCamiones'); })->name('registroCamiones');
+// Rutas para el controlador de viajes
+Route::resource('viajes', ViajeController::class);
 
-// Otras rutas que aún no tienen controlador
-Route::get('/viajes', function () {
-    return view('viajes');
-})->name('viajes');
 
 Route::get('/asignarViaje', function () {
     return view('asignarViaje');
