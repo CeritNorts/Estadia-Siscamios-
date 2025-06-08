@@ -9,7 +9,7 @@ class ViajeController extends Controller
 {
     public function index()
     {
-        $viajes = \App\Models\Viaje::with(['camion', 'chofer', 'cliente'])->get();
+        $viajes = Viaje::with(['camion', 'chofer', 'cliente'])->get();
         return view('viajes', compact('viajes'));
     }
 
