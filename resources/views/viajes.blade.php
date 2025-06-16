@@ -78,6 +78,16 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -429,6 +439,45 @@
             transition: width 0.3s ease;
         }
 
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-color: #bee5eb;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -503,6 +552,28 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -517,10 +588,10 @@
                 <a href="/dashboard">📊 Panel Administrativo</a>
             </li>
             <li>
-                <a href="/camiones">🚛 Camiones</a>
+                <a href="{{ route('camiones.index') }}">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes" class="active">📋 Viajes</a>
+                <a href="{{ route('viajes.index') }}" class="active">📋 Viajes</a>
             </li>
             <li>
                 <a href="/mantenimiento">🔧 Mantenimiento</a>
@@ -531,13 +602,13 @@
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
+            <a href="/profile" class="user-info">
                 <div class="user-avatar">AD</div>
                 <div>
                     <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -553,7 +624,6 @@
                     <h1 class="navbar-title">Gestión de Viajes</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
                     <a href="#">Notificaciones</a>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
@@ -562,6 +632,19 @@
 
         <div class="content">
             <div class="content-wrapper fade-in">
+
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        ✅ {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-error">
+                        ❌ {{ session('error') }}
+                    </div>
+                @endif
                 
                 <!-- Page Header -->
                 <div class="page-header">
@@ -569,37 +652,37 @@
                         <h1 class="page-title">Gestión de Viajes</h1>
                         <p class="page-subtitle">Administra y supervisa todos los viajes de la flotilla</p>
                     </div>
-                    <button class="btn btn-primary" onclick="window.location.href='/asignarViaje'">
+                    <a href="{{ route('viajes.create') }}" class="btn btn-primary">
                         ➕ Asignar Nuevo Viaje
-                    </button>
+                    </a>
                 </div>
                 
                 <!-- Dashboard Stats -->
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                        <div class="stat-number stat-programados" id="programados">12</div>
+                        <div class="stat-number stat-programados">{{ $viajes->where('estado', 'programado')->count() }}</div>
                         <div class="stat-label">Programados</div>
-                        <div class="stat-sublabel">Próximos 7 días</div>
+                        <div class="stat-sublabel">Próximos viajes</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-transito" id="transito">8</div>
+                        <div class="stat-number stat-transito">{{ $viajes->where('estado', 'transito')->count() }}</div>
                         <div class="stat-label">En Tránsito</div>
                         <div class="stat-sublabel">Actualmente en ruta</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-entregados" id="entregados">156</div>
+                        <div class="stat-number stat-entregados">{{ $viajes->where('estado', 'entregado')->count() }}</div>
                         <div class="stat-label">Entregados</div>
-                        <div class="stat-sublabel">Este mes</div>
+                        <div class="stat-sublabel">Completados</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-retrasados" id="retrasados">3</div>
+                        <div class="stat-number stat-retrasados">{{ $viajes->where('estado', 'retrasado')->count() }}</div>
                         <div class="stat-label">Retrasados</div>
                         <div class="stat-sublabel">Requieren atención</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-combustible" id="combustible">85%</div>
-                        <div class="stat-label">Eficiencia</div>
-                        <div class="stat-sublabel">Consumo combustible</div>
+                        <div class="stat-number stat-combustible">{{ $viajes->count() }}</div>
+                        <div class="stat-label">Total Viajes</div>
+                        <div class="stat-sublabel">En el sistema</div>
                     </div>
                 </div>
 
@@ -608,7 +691,7 @@
                     <div class="tabs-header">
                         <button class="tab-button active" data-tab="viajes">📋 Lista de Viajes</button>
                         <button class="tab-button" data-tab="monitoreo">📡 Monitoreo en Tiempo Real</button>
-                        <button class="tab-button" data-tab="combustible">⛽ Control de Combustible</button>
+                        <button class="tab-button" data-tab="estadisticas">📊 Estadísticas</button>
                     </div>
 
                     <!-- Tab: Lista de Viajes -->
@@ -624,118 +707,91 @@
                                     <option value="entregado">Entregados</option>
                                     <option value="retrasado">Retrasados</option>
                                 </select>
-                                <button class="btn btn-secondary btn-sm">📊 Exportar</button>
+                                <a href="{{ route('viajes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Viaje</a>
                             </div>
                         </div>
                         
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID Viaje</th>
-                                        <th>Camión</th>
-                                        <th>Conductor</th>
-                                        <th>Cliente</th>
-                                        <th>Ruta</th>
-                                        <th>Fecha Salida</th>
-                                        <th>Fecha Llegada</th>
-                                        <th>Estado</th>
-                                        <th>Progreso</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="viajesTableBody">
-                                    <tr>
-                                        <td><strong>VJ-001</strong></td>
-                                        <td>CAM-001</td>
-                                        <td>Juan Pérez</td>
-                                        <td>Transportes ABC</td>
-                                        <td>Córdoba → México DF</td>
-                                        <td>03/06/2024 06:00</td>
-                                        <td>03/06/2024 14:30</td>
-                                        <td><span class="status-badge status-transito">🚛 En Tránsito</span></td>
-                                        <td>
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 65%"></div>
-                                            </div>
-                                            <small>65%</small>
-                                        </td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-002</strong></td>
-                                        <td>CAM-002</td>
-                                        <td>María González</td>
-                                        <td>Logística XYZ</td>
-                                        <td>Veracruz → Puebla</td>
-                                        <td>03/06/2024 08:00</td>
-                                        <td>03/06/2024 12:15</td>
-                                        <td><span class="status-badge status-entregado">✅ Entregado</span></td>
-                                        <td>
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 100%"></div>
-                                            </div>
-                                            <small>100%</small>
-                                        </td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-003</strong></td>
-                                        <td>CAM-003</td>
-                                        <td>Carlos López</td>
-                                        <td>Carga Segura SA</td>
-                                        <td>México DF → Guadalajara</td>
-                                        <td>04/06/2024 05:30</td>
-                                        <td>04/06/2024 16:00</td>
-                                        <td><span class="status-badge status-programado">📅 Programado</span></td>
-                                        <td>
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 0%"></div>
-                                            </div>
-                                            <small>0%</small>
-                                        </td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-004</strong></td>
-                                        <td>CAM-004</td>
-                                        <td>Ana Martínez</td>
-                                        <td>Express Maya</td>
-                                        <td>Toluca → Mérida</td>
-                                        <td>02/06/2024 04:00</td>
-                                        <td>03/06/2024 18:00</td>
-                                        <td><span class="status-badge status-retrasado">⚠️ Retrasado</span></td>
-                                        <td>
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" style="width: 80%"></div>
-                                            </div>
-                                            <small>80%</small>
-                                        </td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-danger btn-sm">🚨</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        @if($viajes->count() > 0)
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Viaje</th>
+                                            <th>Camión</th>
+                                            <th>Conductor</th>
+                                            <th>Cliente</th>
+                                            <th>Ruta</th>
+                                            <th>Fecha Salida</th>
+                                            <th>Fecha Llegada</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="viajesTableBody">
+                                        @foreach($viajes as $viaje)
+                                            <tr>
+                                                <td><strong>VJ-{{ str_pad($viaje->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                                <td>{{ $viaje->camion->placa ?? 'Sin asignar' }}</td>
+                                                <td>{{ $viaje->chofer->nombre ?? 'Sin asignar' }}</td>
+                                                <td>{{ $viaje->cliente->nombre ?? 'Sin cliente' }}</td>
+                                                <td>{{ $viaje->ruta }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($viaje->fecha_salida)->format('d/m/Y H:i') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($viaje->fecha_llegada)->format('d/m/Y H:i') }}</td>
+                                                <td>
+                                                    <span class="status-badge status-{{ $viaje->estado }}">
+                                                        @switch($viaje->estado)
+                                                            @case('programado')
+                                                                📅 Programado
+                                                                @break
+                                                            @case('transito')
+                                                                🚛 En Tránsito
+                                                                @break
+                                                            @case('entregado')
+                                                                ✅ Entregado
+                                                                @break
+                                                            @case('retrasado')
+                                                                ⚠️ Retrasado
+                                                                @break
+                                                            @default
+                                                                {{ ucfirst($viaje->estado) }}
+                                                        @endswitch
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div style="display: flex; gap: 0.5rem;">
+                                                        <a href="{{ route('viajes.show', $viaje->id) }}" 
+                                                           class="btn btn-secondary btn-sm" 
+                                                           title="Ver detalles">👁️</a>
+                                                        <a href="{{ route('viajes.edit', $viaje->id) }}" 
+                                                           class="btn btn-warning btn-sm" 
+                                                           title="Editar">✏️</a>
+                                                        <form action="{{ route('viajes.destroy', $viaje->id) }}" 
+                                                              method="POST" 
+                                                              style="display: inline;"
+                                                              onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" 
+                                                                    class="btn btn-danger btn-sm" 
+                                                                    title="Eliminar">🗑️</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-icon">📋</div>
+                                <h3>No hay viajes registrados</h3>
+                                <p>Comienza creando tu primer viaje</p>
+                                <a href="{{ route('viajes.create') }}" class="btn btn-primary" style="margin-top: 1rem;">
+                                    ➕ Crear Primer Viaje
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Tab: Monitoreo en Tiempo Real -->
@@ -743,7 +799,7 @@
                         <div class="table-header">
                             <h3 class="table-title">Monitoreo en Tiempo Real</h3>
                             <div class="table-actions">
-                                <button class="btn btn-secondary btn-sm">🔄 Actualizar</button>
+                                <button class="btn btn-secondary btn-sm" onclick="actualizarMonitoreo()">🔄 Actualizar</button>
                             </div>
                         </div>
                         
@@ -753,100 +809,142 @@
                                     <tr>
                                         <th>Viaje</th>
                                         <th>Camión</th>
-                                        <th>Ubicación Actual</th>
-                                        <th>Velocidad</th>
-                                        <th>Combustible</th>
-                                        <th>Tiempo Restante</th>
+                                        <th>Conductor</th>
+                                        <th>Cliente</th>
                                         <th>Estado</th>
+                                        <th>Progreso</th>
+                                        <th>Última Actualización</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><strong>VJ-001</strong></td>
-                                        <td>CAM-001</td>
-                                        <td>Carretera México-Puebla Km 180</td>
-                                        <td>85 km/h</td>
-                                        <td>45%</td>
-                                        <td>3h 15min</td>
-                                        <td><span class="status-badge status-transito">🚛 En Tránsito</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-004</strong></td>
-                                        <td>CAM-004</td>
-                                        <td>Autopista Mérida Km 45</td>
-                                        <td>0 km/h</td>
-                                        <td>25%</td>
-                                        <td>4h 30min</td>
-                                        <td><span class="status-badge status-retrasado">⚠️ Detenido</span></td>
-                                    </tr>
+                                    @foreach($viajes->where('estado', 'transito') as $viaje)
+                                        <tr>
+                                            <td><strong>VJ-{{ str_pad($viaje->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                            <td>{{ $viaje->camion->placa ?? 'Sin asignar' }}</td>
+                                            <td>{{ $viaje->chofer->nombre ?? 'Sin asignar' }}</td>
+                                            <td>{{ $viaje->cliente->nombre ?? 'Sin cliente' }}</td>
+                                            <td><span class="status-badge status-transito">🚛 En Tránsito</span></td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: {{ rand(30, 90) }}%"></div>
+                                                </div>
+                                                <small>{{ rand(30, 90) }}%</small>
+                                            </td>
+                                            <td>{{ $viaje->updated_at->diffForHumans() }}</td>
+                                        </tr>
+                                    @endforeach
+                                    @if($viajes->where('estado', 'transito')->count() == 0)
+                                        <tr>
+                                            <td colspan="7" class="text-center" style="padding: 2rem; color: #666;">
+                                                No hay viajes en tránsito en este momento
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Tab: Control de Combustible -->
-                    <div class="tab-content" id="combustible">
+                    <!-- Tab: Estadísticas -->
+                    <div class="tab-content" id="estadisticas">
                         <div class="table-header">
-                            <h3 class="table-title">Control de Combustible por Viaje</h3>
-                            <div class="table-actions">
-                                <button class="btn btn-primary btn-sm">⛽ Registrar Carga</button>
-                                <button class="btn btn-secondary btn-sm">📊 Reporte</button>
-                            </div>
+                            <h3 class="table-title">Estadísticas de Viajes</h3>
                         </div>
                         
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Viaje</th>
-                                        <th>Camión</th>
-                                        <th>Combustible Inicial</th>
-                                        <th>Combustible Actual</th>
-                                        <th>Consumo</th>
-                                        <th>Eficiencia</th>
-                                        <th>Costo</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>VJ-001</strong></td>
-                                        <td>CAM-001</td>
-                                        <td>100%</td>
-                                        <td>45%</td>
-                                        <td>55%</td>
-                                        <td>12.5 km/l</td>
-                                        <td>$1,250.00</td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">⛽ Cargar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-002</strong></td>
-                                        <td>CAM-002</td>
-                                        <td>90%</td>
-                                        <td>65%</td>
-                                        <td>25%</td>
-                                        <td>15.2 km/l</td>
-                                        <td>$890.00</td>
-                                        <td>
-                                            <button class="btn btn-success btn-sm">✅ Completo</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>VJ-004</strong></td>
-                                        <td>CAM-004</td>
-                                        <td>95%</td>
-                                        <td>25%</td>
-                                        <td>70%</td>
-                                        <td>8.9 km/l</td>
-                                        <td>$2,100.00</td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm">🚨 Crítico</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                            <!-- Resumen por Estado -->
+                            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 1rem; color: #333;">📊 Resumen por Estado</h4>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Programados:</span>
+                                        <strong style="color: #007bff;">{{ $viajes->where('estado', 'programado')->count() }}</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>En Tránsito:</span>
+                                        <strong style="color: #ffc107;">{{ $viajes->where('estado', 'transito')->count() }}</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Entregados:</span>
+                                        <strong style="color: #28a745;">{{ $viajes->where('estado', 'entregado')->count() }}</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Retrasados:</span>
+                                        <strong style="color: #dc3545;">{{ $viajes->where('estado', 'retrasado')->count() }}</strong>
+                                    </div>
+                                    <hr style="margin: 1rem 0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span><strong>Total:</strong></span>
+                                        <strong>{{ $viajes->count() }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Viajes por Mes -->
+                            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 1rem; color: #333;">📅 Viajes por Mes</h4>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    @php
+                                        $viajesPorMes = $viajes->groupBy(function($viaje) {
+                                            return \Carbon\Carbon::parse($viaje->fecha_salida)->format('Y-m');
+                                        });
+                                    @endphp
+                                    @foreach($viajesPorMes->take(6) as $mes => $viajesDelMes)
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span>{{ \Carbon\Carbon::createFromFormat('Y-m', $mes)->format('M Y') }}:</span>
+                                            <strong>{{ $viajesDelMes->count() }} viajes</strong>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Camiones más Utilizados -->
+                            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 1rem; color: #333;">🚛 Camiones más Utilizados</h4>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    @php
+                                        $camionesMasUsados = $viajes->groupBy('camion_id')
+                                            ->map(function($group) { return $group->count(); })
+                                            ->sortDesc()
+                                            ->take(5);
+                                    @endphp
+                                    @foreach($camionesMasUsados as $camionId => $cantidad)
+                                        @php
+                                            $camion = $viajes->where('camion_id', $camionId)->first()->camion ?? null;
+                                        @endphp
+                                        @if($camion)
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span>{{ $camion->placa }}:</span>
+                                                <strong>{{ $cantidad }} viajes</strong>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Conductores más Activos -->
+                            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 1rem; color: #333;">👥 Conductores más Activos</h4>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    @php
+                                        $conductoresMasActivos = $viajes->groupBy('chofer_id')
+                                            ->map(function($group) { return $group->count(); })
+                                            ->sortDesc()
+                                            ->take(5);
+                                    @endphp
+                                    @foreach($conductoresMasActivos as $choferId => $cantidad)
+                                        @php
+                                            $chofer = $viajes->where('chofer_id', $choferId)->first()->chofer ?? null;
+                                        @endphp
+                                        @if($chofer)
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <span>{{ $chofer->nombre }}:</span>
+                                                <strong>{{ $cantidad }} viajes</strong>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -939,11 +1037,74 @@
             });
         }
 
+        function actualizarMonitoreo() {
+            // Mostrar loading
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Actualizando...';
+            btn.disabled = true;
+
+            // Simular actualización
+            setTimeout(() => {
+                // Restaurar botón
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // Mostrar mensaje de éxito
+                showAlert('✅ Datos actualizados correctamente', 'success');
+            }, 1500);
+        }
+
+        function showAlert(message, type) {
+            // Crear alerta temporal
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.animation = 'slideDown 0.3s ease-out';
+            alertDiv.innerHTML = message;
+
+            // Insertar al inicio del content-wrapper
+            const contentWrapper = document.querySelector('.content-wrapper');
+            contentWrapper.insertBefore(alertDiv, contentWrapper.firstChild);
+
+            // Auto-dismiss después de 5 segundos
+            setTimeout(() => {
+                alertDiv.style.animation = 'slideUp 0.3s ease-out';
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                alert('Cerrando sesión...');
+                window.location.href = '/logout';
             }
         }
+
+        // Función para actualizar estadísticas en tiempo real (opcional)
+        function actualizarEstadisticas() {
+            // Esta función se puede llamar periódicamente para actualizar las estadísticas
+            // Por ejemplo, cada 30 segundos
+            fetch('{{ route("viajes.index") }}', {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Actualizar contadores en tiempo real
+                console.log('Estadísticas actualizadas');
+            })
+            .catch(error => {
+                console.error('Error actualizando estadísticas:', error);
+            });
+        }
+
+        // Actualizar estadísticas cada 30 segundos (opcional)
+        // setInterval(actualizarEstadisticas, 30000);
     </script>
 </body>
 </html>

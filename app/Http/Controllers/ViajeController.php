@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Viaje;
+use App\Models\Camion;
+use App\Models\Chofer;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class ViajeController extends Controller
@@ -11,6 +14,18 @@ class ViajeController extends Controller
     {
         $viajes = Viaje::with(['camion', 'chofer', 'cliente'])->get();
         return view('viajes', compact('viajes'));
+    }
+
+    /**
+     * Muestra el formulario para crear un nuevo viaje.
+     */
+    public function create()
+    {
+        $camiones = Camion::all(); // Obtener todos los camiones
+        $choferes = Chofer::all();  // Obtener todos los choferes
+        $clientes = Cliente::all(); // Obtener todos los clientes
+        
+        return view('asignarViaje', compact('camiones', 'choferes', 'clientes'));
     }
 
     public function store(Request $request)
@@ -36,6 +51,19 @@ class ViajeController extends Controller
         return $viaje
             ? response()->json($viaje)
             : response()->json(['message' => 'Viaje no encontrado'], 404);
+    }
+
+    /**
+     * Muestra el formulario para editar un viaje.
+     */
+    public function edit($id)
+    {
+        $viaje = Viaje::findOrFail($id);
+        $camiones = Camion::all();
+        $choferes = Chofer::all();
+        $clientes = Cliente::all();
+        
+        return view('viajes.edit', compact('viaje', 'camiones', 'choferes', 'clientes'));
     }
 
     public function update(Request $request, $id)
