@@ -9,6 +9,8 @@ class Chofer extends Model
 {
     use HasFactory;
 
+    protected $table = 'choferes';
+
     protected $fillable = [
         'nombre',
         'telefono',
