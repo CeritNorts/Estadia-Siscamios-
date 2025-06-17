@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('camion_id')->constrained('camiones')->onDelete('cascade');
 
             $table->string('tipo');
-            $table->text('url');
-            $table->dateTime('vencimiento');
+            $table->string('url');
+            $table->date('vencimiento')->nullable();
 
             $table->timestamps();
         });

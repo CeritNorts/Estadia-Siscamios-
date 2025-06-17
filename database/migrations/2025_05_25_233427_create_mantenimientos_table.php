@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreignId('camion_id')->constrained('camiones')->onDelete('cascade');
 
             $table->string('tipo');
-            $table->text('descripcion');
-            $table->dateTime('fecha');
-            $table->decimal('costo', 10, 2); // Precisión 10, escala 2 para dinero
-            $table->string('proveedor');
+            $table->text('descripcion')->nullable();
+            $table->date('fecha');
+            $table->decimal('costo', 10, 2)->nullable();
+            $table->string('proveedor')->nullable();
 
             $table->timestamps();
         });
