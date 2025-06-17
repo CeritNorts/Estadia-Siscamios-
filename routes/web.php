@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CamionController;
 use App\Http\Controllers\ViajeController;
+use App\Http\Controllers\CombustibleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,9 @@ Route::resource('camiones', CamionController::class);
 
 // Rutas para el controlador de viajes
 Route::resource('viajes', ViajeController::class);
+
+// Rutas para el controlador de combustible
+Route::resource('combustibles', CombustibleController::class);
 
 
 Route::get('/asignarViaje', function () {
