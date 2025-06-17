@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -216,11 +217,25 @@
             font-size: 0.8rem;
         }
 
-        .stat-programado { color: #007bff; }
-        .stat-proceso { color: #ffc107; }
-        .stat-completado { color: #28a745; }
-        .stat-urgente { color: #dc3545; }
-        .stat-costo { color: #6f42c1; }
+        .stat-programado {
+            color: #007bff;
+        }
+
+        .stat-proceso {
+            color: #ffc107;
+        }
+
+        .stat-completado {
+            color: #28a745;
+        }
+
+        .stat-urgente {
+            color: #dc3545;
+        }
+
+        .stat-costo {
+            color: #6f42c1;
+        }
 
         /* Tabs */
         .tabs-container {
@@ -408,11 +423,30 @@
             text-transform: uppercase;
         }
 
-        .status-programado { background: #e3f2fd; color: #1565c0; }
-        .status-proceso { background: #fff8e1; color: #f57c00; }
-        .status-completado { background: #e8f5e8; color: #2e7d32; }
-        .status-urgente { background: #ffebee; color: #c62828; }
-        .status-pendiente { background: #f3e5f5; color: #7b1fa2; }
+        .status-programado {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-proceso {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-completado {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-urgente {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-pendiente {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
 
         /* Alert Cards */
         .alert-card {
@@ -509,11 +543,19 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
@@ -732,7 +774,7 @@
                         </div>
                     </div>
 
-                    <!-- Tab: Mantenimiento Preventivo -->
+                   <!-- Tab: Mantenimiento Preventivo -->
                     <div class="tab-content" id="preventivo">
                         <div class="table-header">
                             <h3 class="table-title">Programación de Mantenimientos Preventivos</h3>
@@ -793,7 +835,7 @@
                         </div>
                     </div>
 
-                    <!-- Tab: Control de Documentos -->
+                    <<!-- Tab: Control de Documentos -->
                     <div class="tab-content" id="documentos">
                         <div class="table-header">
                             <h3 class="table-title">Control de Documentos y Vigencias</h3>
@@ -872,7 +914,7 @@
 
     <script>
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
         });
 
@@ -882,19 +924,19 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
 
-            overlay.addEventListener('click', function() {
+            overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
             // Tab navigation
             document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const tabId = this.getAttribute('data-tab');
                     cambiarTab(tabId);
                 });
@@ -902,14 +944,14 @@
 
             // Search functionality
             if (document.getElementById('searchMantenimientos')) {
-                document.getElementById('searchMantenimientos').addEventListener('input', function() {
+                document.getElementById('searchMantenimientos').addEventListener('input', function () {
                     filtrarMantenimientos(this.value);
                 });
             }
 
             // Filter by type
             if (document.getElementById('filterTipo')) {
-                document.getElementById('filterTipo').addEventListener('change', function() {
+                document.getElementById('filterTipo').addEventListener('change', function () {
                     filtrarPorTipo(this.value);
                 });
             }
@@ -927,7 +969,7 @@
 
         function filtrarMantenimientos(termino) {
             const rows = document.querySelectorAll('#mantenimientos tbody tr');
-            
+
             rows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
@@ -940,7 +982,7 @@
 
         function filtrarPorTipo(tipo) {
             const rows = document.querySelectorAll('#mantenimientos tbody tr');
-            
+
             rows.forEach(row => {
                 const tipoCell = row.cells[2].textContent.toLowerCase();
                 if (!tipo || tipoCell.includes(tipo.toLowerCase())) {
@@ -958,4 +1000,5 @@
         }
     </script>
 </body>
+
 </html>

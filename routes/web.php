@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CamionController;
 use App\Http\Controllers\ViajeController;
 use App\Http\Controllers\CombustibleController;
+use App\Http\Controllers\MantenimientoController;
+use App\Http\Controllers\DocumentoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,12 @@ Route::resource('viajes', ViajeController::class);
 
 // Rutas para el controlador de combustible
 Route::resource('combustibles', CombustibleController::class);
+
+// Rutas para el controlador de mantenimientos
+Route::resource('mantenimientos', MantenimientoController::class);
+
+// Rutas para el controlador de documentos
+Route::resource('documentos', DocumentoController::class);
 
 
 Route::get('/asignarViaje', function () {
