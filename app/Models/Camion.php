@@ -16,5 +16,13 @@ class Camion extends Model
         'estado',
     ];
 
-   
+    public function mantenimientos()
+    {
+        return $this->hasMany(Mantenimiento::class);
+    }
+
+    public function documentos()
+    {
+        return $this->hasMany(Documento::class);
+    }
 }
