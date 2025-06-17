@@ -14,7 +14,7 @@ class CombustibleController extends Controller
     public function index()
     {
         $combustibles = Combustible::with('viaje')->get();
-        return view('combustible.index', compact('combustibles'));
+        return view('combustible', compact('combustibles'));
     }
 
     /**
