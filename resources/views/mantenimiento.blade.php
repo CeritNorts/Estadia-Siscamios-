@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Siscamino - Gestión de Mantenimiento</title>
     <style>
         * {
@@ -553,6 +554,26 @@
                 transform: translateY(0);
             }
         }
+
+        /* Success/Error Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
     </style>
 </head>
 
@@ -565,25 +586,25 @@
         
         <ul class="sidebar-menu">
             <li>
-                <a href="/dashboard">📊 Panel Administrativo</a>
+                <a href="{{ route('dashboard') }}">📊 Panel Administrativo</a>
             </li>
             <li>
-                <a href="/camiones">🚛 Camiones</a>
+                <a href="{{ route('camiones.index') }}">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes">📋 Viajes</a>
+                <a href="{{ route('viajes.index') }}">📋 Viajes</a>
             </li>
             <li>
-                <a href="/mantenimiento" class="active">🔧 Mantenimiento</a>
+                <a href="{{ route('mantenimiento') }}" class="active">🔧 Mantenimiento</a>
             </li>
             <li>
-                <a href="/conductores">👥 Conductores</a>
+                <a href="{{ route('conductores.index') }}">👥 Conductores</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">{{ substr(Auth::user()->name, 0, 2) }}</div>
                 <div>
                     <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
@@ -604,9 +625,12 @@
                     <h1 class="navbar-title">Gestión de Mantenimiento</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
+                    <a href="{{ route('profile.edit') }}">Perfil</a>
                     <a href="#">Notificaciones</a>
-                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <a href="#" onclick="this.closest('form').submit();">Cerrar Sesión</a>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -614,52 +638,62 @@
         <div class="content">
             <div class="content-wrapper fade-in">
                 
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-error">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
                         <h1 class="page-title">Gestión de Mantenimiento</h1>
                         <p class="page-subtitle">Administra el mantenimiento preventivo y correctivo de la flotilla</p>
                     </div>
-                    <button class="btn btn-primary" onclick="window.location.href='/registrarMantenimiento'">
+                    <a href="{{ route('registrarMantenimiento') }}" class="btn btn-primary">
                         ➕ Registrar Mantenimiento
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Alertas de Mantenimiento -->
-                <div class="alert-card urgent">
-                    <div class="alert-title">🚨 Mantenimientos Urgentes</div>
-                    <p>3 unidades requieren mantenimiento inmediato por kilometraje excedido</p>
-                </div>
-
-                <div class="alert-card">
-                    <div class="alert-title">⚠️ Próximos Vencimientos</div>
-                    <p>5 pólizas de seguro vencen en los próximos 30 días</p>
-                </div>
+                @if($estadisticas['urgentes'] > 0)
+                    <div class="alert-card urgent">
+                        <div class="alert-title">🚨 Mantenimientos Urgentes</div>
+                        <p>{{ $estadisticas['urgentes'] }} unidades requieren mantenimiento inmediato</p>
+                    </div>
+                @endif
                 
                 <!-- Dashboard Stats -->
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                        <div class="stat-number stat-programado" id="programados">8</div>
+                        <div class="stat-number stat-programado">{{ $estadisticas['programados'] }}</div>
                         <div class="stat-label">Programados</div>
                         <div class="stat-sublabel">Próximos 15 días</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-proceso" id="proceso">4</div>
+                        <div class="stat-number stat-proceso">{{ $estadisticas['en_proceso'] }}</div>
                         <div class="stat-label">En Proceso</div>
                         <div class="stat-sublabel">Actualmente en taller</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-completado" id="completados">23</div>
+                        <div class="stat-number stat-completado">{{ $estadisticas['completados'] }}</div>
                         <div class="stat-label">Completados</div>
                         <div class="stat-sublabel">Este mes</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-urgente" id="urgentes">3</div>
+                        <div class="stat-number stat-urgente">{{ $estadisticas['urgentes'] }}</div>
                         <div class="stat-label">Urgentes</div>
                         <div class="stat-sublabel">Requieren atención</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-costo" id="costoTotal">$45,200</div>
+                        <div class="stat-number stat-costo">${{ number_format($estadisticas['costo_total'], 2) }}</div>
                         <div class="stat-label">Costo Total</div>
                         <div class="stat-sublabel">Este mes</div>
                     </div>
@@ -705,70 +739,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($mantenimientos as $mantenimiento)
                                     <tr>
-                                        <td><strong>MNT-001</strong></td>
-                                        <td>CAM-001</td>
-                                        <td><span class="status-badge status-programado">Preventivo</span></td>
-                                        <td>Cambio de aceite y filtros</td>
-                                        <td>15/06/2024</td>
-                                        <td>$2,500.00</td>
-                                        <td>Taller López</td>
-                                        <td><span class="status-badge status-completado">Completado</span></td>
+                                        <td><strong>MNT-{{ str_pad($mantenimiento->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                        <td>{{ $mantenimiento->camion->numero_interno ?? 'N/A' }}</td>
+                                        <td><span class="status-badge status-{{ strtolower(str_replace(' ', '-', $mantenimiento->tipo)) }}">{{ ucfirst($mantenimiento->tipo) }}</span></td>
+                                        <td>{{ $mantenimiento->descripcion }}</td>
+                                        <td>{{ $mantenimiento->fecha_formateada }}</td>
+                                        <td>{{ $mantenimiento->costo_formateado }}</td>
+                                        <td>{{ $mantenimiento->proveedor ?? 'N/A' }}</td>
+                                        <td><span class="status-badge status-{{ $mantenimiento->estado }}">{{ ucfirst($mantenimiento->estado) }}</span></td>
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
+                                                <a href="{{ route('mantenimientos.show', $mantenimiento) }}" class="btn btn-secondary btn-sm">👁️</a>
+                                                <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm">✏️</a>
+                                                <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><strong>MNT-002</strong></td>
-                                        <td>CAM-003</td>
-                                        <td><span class="status-badge status-urgente">Correctivo</span></td>
-                                        <td>Reparación de transmisión</td>
-                                        <td>10/06/2024</td>
-                                        <td>$15,800.00</td>
-                                        <td>Mecánica Industrial</td>
-                                        <td><span class="status-badge status-proceso">En Proceso</span></td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>MNT-003</strong></td>
-                                        <td>CAM-002</td>
-                                        <td><span class="status-badge status-programado">Preventivo</span></td>
-                                        <td>Revisión de frenos</td>
-                                        <td>20/06/2024</td>
-                                        <td>$3,200.00</td>
-                                        <td>AutoServicio Central</td>
-                                        <td><span class="status-badge status-programado">Programado</span></td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-warning btn-sm">✏️</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>MNT-004</strong></td>
-                                        <td>CAM-004</td>
-                                        <td><span class="status-badge status-urgente">Emergencia</span></td>
-                                        <td>Falla en sistema eléctrico</td>
-                                        <td>08/06/2024</td>
-                                        <td>$8,500.00</td>
-                                        <td>Eléctrica Automotriz</td>
-                                        <td><span class="status-badge status-proceso">En Proceso</span></td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <button class="btn btn-secondary btn-sm">👁️</button>
-                                                <button class="btn btn-danger btn-sm">🚨</button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -797,45 +790,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($camiones as $camion)
+                                    @php
+                                        $kmRestantes = ($camion->proximo_mantenimiento ?? 100000) - ($camion->kilometraje_actual ?? 0);
+                                        $estado = $kmRestantes <= 1000 ? 'urgente' : 'normal';
+                                    @endphp
                                     <tr>
-                                        <td><strong>CAM-001</strong></td>
-                                        <td>125,000 km</td>
-                                        <td>130,000 km</td>
-                                        <td>5,000 km</td>
-                                        <td>Mantenimiento Mayor</td>
-                                        <td><span class="status-badge status-programado">Normal</span></td>
+                                        <td><strong>{{ $camion->numero_interno }}</strong></td>
+                                        <td>{{ number_format($camion->kilometraje_actual ?? 0) }} km</td>
+                                        <td>{{ number_format($camion->proximo_mantenimiento ?? 100000) }} km</td>
+                                        <td>{{ number_format($kmRestantes) }} km</td>
+                                        <td>{{ $kmRestantes <= 5000 ? 'Mantenimiento Mayor' : 'Cambio de Aceite' }}</td>
+                                        <td><span class="status-badge status-{{ $estado }}">{{ $estado == 'urgente' ? 'Urgente' : 'Normal' }}</span></td>
                                         <td>
-                                            <button class="btn btn-success btn-sm">📅 Programar</button>
+                                            @if($estado == 'urgente')
+                                                <button class="btn btn-danger btn-sm">🚨 Urgente</button>
+                                            @else
+                                                <button class="btn btn-success btn-sm">📅 Programar</button>
+                                            @endif
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><strong>CAM-002</strong></td>
-                                        <td>98,500 km</td>
-                                        <td>100,000 km</td>
-                                        <td>1,500 km</td>
-                                        <td>Cambio de Aceite</td>
-                                        <td><span class="status-badge status-urgente">Urgente</span></td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm">🚨 Urgente</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>CAM-003</strong></td>
-                                        <td>87,200 km</td>
-                                        <td>90,000 km</td>
-                                        <td>2,800 km</td>
-                                        <td>Revisión General</td>
-                                        <td><span class="status-badge status-programado">Normal</span></td>
-                                        <td>
-                                            <button class="btn btn-success btn-sm">📅 Programar</button>
-                                        </td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <<!-- Tab: Control de Documentos -->
+                    <!-- Tab: Control de Documentos -->
                     <div class="tab-content" id="documentos">
                         <div class="table-header">
                             <h3 class="table-title">Control de Documentos y Vigencias</h3>
@@ -858,50 +839,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($camiones as $camion)
+                                    @if($camion->fecha_seguro)
+                                    @php
+                                        $diasRestantes = \Carbon\Carbon::parse($camion->fecha_seguro)->diffInDays(now(), false);
+                                        $estado = $diasRestantes <= 30 ? ($diasRestantes < 0 ? 'vencido' : 'por-vencer') : 'vigente';
+                                    @endphp
                                     <tr>
-                                        <td><strong>CAM-001</strong></td>
+                                        <td><strong>{{ $camion->numero_interno }}</strong></td>
                                         <td>Póliza de Seguro</td>
-                                        <td>POL-2024-001</td>
-                                        <td>15/08/2024</td>
-                                        <td>68 días</td>
-                                        <td><span class="status-badge status-programado">Vigente</span></td>
+                                        <td>{{ $camion->numero_poliza ?? 'N/A' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($camion->fecha_seguro)->format('d/m/Y') }}</td>
+                                        <td>{{ $diasRestantes < 0 ? abs($diasRestantes) . ' días vencido' : $diasRestantes . ' días' }}</td>
+                                        <td><span class="status-badge status-{{ $estado }}">{{ ucfirst(str_replace('-', ' ', $estado)) }}</span></td>
                                         <td>
-                                            <button class="btn btn-secondary btn-sm">📄</button>
+                                            @if($estado == 'vencido')
+                                                <button class="btn btn-danger btn-sm">🚨 Renovar Ya</button>
+                                            @elseif($estado == 'por-vencer')
+                                                <button class="btn btn-warning btn-sm">⚠️ Renovar</button>
+                                            @else
+                                                <button class="btn btn-secondary btn-sm">📄</button>
+                                            @endif
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><strong>CAM-002</strong></td>
-                                        <td>Tarjeta de Circulación</td>
-                                        <td>TC-2024-002</td>
-                                        <td>25/06/2024</td>
-                                        <td>18 días</td>
-                                        <td><span class="status-badge status-urgente">Por Vencer</span></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm">⚠️ Renovar</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>CAM-003</strong></td>
-                                        <td>Permiso SCT</td>
-                                        <td>SCT-2024-003</td>
-                                        <td>30/12/2024</td>
-                                        <td>205 días</td>
-                                        <td><span class="status-badge status-completado">Vigente</span></td>
-                                        <td>
-                                            <button class="btn btn-secondary btn-sm">📄</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>CAM-004</strong></td>
-                                        <td>Verificación Ambiental</td>
-                                        <td>VA-2024-004</td>
-                                        <td>05/06/2024</td>
-                                        <td>-2 días</td>
-                                        <td><span class="status-badge status-urgente">Vencido</span></td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm">🚨 Renovar Ya</button>
-                                        </td>
-                                    </tr>
+                                    @endif
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -913,6 +875,13 @@
     </div>
 
     <script>
+        // Configuración CSRF para AJAX
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
@@ -955,6 +924,16 @@
                     filtrarPorTipo(this.value);
                 });
             }
+
+            // Auto-hide alerts
+            setTimeout(function() {
+                document.querySelectorAll('.alert').forEach(function(alert) {
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 300);
+                });
+            }, 5000);
         }
 
         function cambiarTab(tabId) {
@@ -993,10 +972,49 @@
             });
         }
 
-        function logout() {
-            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                alert('Cerrando sesión...');
-            }
+        // AJAX Search function (opcional para búsqueda avanzada)
+        function buscarMantenimientos(query) {
+            fetch(`{{ route('mantenimiento.search') }}?q=${encodeURIComponent(query)}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                actualizarTablaMantenimientos(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function actualizarTablaMantenimientos(mantenimientos) {
+            const tbody = document.querySelector('#mantenimientos tbody');
+            tbody.innerHTML = '';
+
+            mantenimientos.forEach(mantenimiento => {
+                const row = `
+                    <tr>
+                        <td><strong>MNT-${String(mantenimiento.id).padStart(3, '0')}</strong></td>
+                        <td>${mantenimiento.camion ? mantenimiento.camion.numero_interno : 'N/A'}</td>
+                        <td><span class="status-badge status-${mantenimiento.tipo.toLowerCase().replace(' ', '-')}">${mantenimiento.tipo}</span></td>
+                        <td>${mantenimiento.descripcion || ''}</td>
+                        <td>${new Date(mantenimiento.fecha).toLocaleDateString('es-ES')}</td>
+                        <td>${parseFloat(mantenimiento.costo || 0).toLocaleString('es-ES', {minimumFractionDigits: 2})}</td>
+                        <td>${mantenimiento.proveedor || 'N/A'}</td>
+                        <td><span class="status-badge status-${mantenimiento.estado}">${mantenimiento.estado}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="/mantenimientos/${mantenimiento.id}" class="btn btn-secondary btn-sm">👁️</a>
+                                <a href="/mantenimientos/${mantenimiento.id}/edit" class="btn btn-warning btn-sm">✏️</a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
         }
     </script>
 </body>
