@@ -44,7 +44,7 @@ Route::get('/dashboard', function () {
 // Ruta del perfil
 Route::get('/profile', function () {
     return view('profile');
-})->name('profile');
+})->name('profile.edit');
 
 
 // Rutas para el controlador de camiones 
@@ -56,28 +56,23 @@ Route::resource('viajes', ViajeController::class);
 // Rutas para el controlador de combustible
 Route::resource('combustibles', CombustibleController::class);
 
-// Rutas para el controlador de mantenimientos
-Route::resource('mantenimientos', MantenimientoController::class);
-
 // Rutas para el controlador de documentos
 Route::resource('documentos', DocumentoController::class);
 
 
-Route::get('/asignarViaje', function () {
-    return view('asignarViaje');
-})->name('asignarViaje');
+Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
-Route::get('/mantenimiento', function () {
-    return view('mantenimiento');
-})->name('mantenimiento');
-
-Route::get('/registrarMantenimiento', function () {
-    return view('registrarMantenimiento');
-})->name('registrarMantenimiento');
+   // Mantenimiento routes
+    Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');
+    Route::get('/registrarMantenimiento', [MantenimientoController::class, 'create'])->name('registrarMantenimiento');
+    Route::get('/mantenimiento/search', [MantenimientoController::class, 'search'])->name('mantenimiento.search');
+    
+    // Resource routes para mantenimientos
+    Route::resource('mantenimientos', MantenimientoController::class);
 
 Route::get('/conductores', function () {
     return view('conductores');
-})->name('conductores');
+})->name('conductores.index');
 
 Route::get('/registrarConductor', function () {
     return view('registrarConductor');

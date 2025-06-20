@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Siscamino - Registrar Mantenimiento</title>
     <style>
         * {
@@ -327,6 +328,31 @@
             color: white;
         }
 
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .error-list {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -402,16 +428,16 @@
         
         <ul class="sidebar-menu">
             <li>
-                <a href="/dashboard">📊 Panel Administrativo</a>
+                <a href="{{ route('dashboard') }}">📊 Panel Administrativo</a>
             </li>
             <li>
-                <a href="/camiones">🚛 Camiones</a>
+                <a href="{{ route('camiones.index') }}">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes">📋 Viajes</a>
+                <a href="{{ route('viajes.index') }}">📋 Viajes</a>
             </li>
             <li>
-                <a href="/mantenimiento" class="active">🔧 Mantenimiento</a>
+                <a href="{{ route('mantenimiento') }}" class="active">🔧 Mantenimiento</a>
             </li>
             <li>
                 <a href="/conductores">👥 Conductores</a>
@@ -420,9 +446,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">{{ substr(Auth::user()->name ?? 'AD', 0, 2) }}</div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name ?? 'Administrador' }}</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -441,7 +467,7 @@
                     <h1 class="navbar-title">Registrar Mantenimiento</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
+                    <a href="#">Perfil</a>
                     <a href="#">Notificaciones</a>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
@@ -453,10 +479,34 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="/mantenimiento">Mantenimiento</a>
+                    <a href="{{ route('mantenimiento') }}">Mantenimiento</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Registrar Mantenimiento</span>
                 </div>
+
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        ✅ {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-error">
+                        ❌ {{ session('error') }}
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="alert alert-error">
+                        <strong>Por favor corrige los siguientes errores:</strong>
+                        <ul class="error-list">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Page Header -->
                 <div class="page-header">
@@ -464,7 +514,7 @@
                         <h1 class="page-title">Registrar Mantenimiento</h1>
                         <p class="page-subtitle">Complete la información del servicio de mantenimiento</p>
                     </div>
-                    <a href="/mantenimiento" class="btn btn-outline">
+                    <a href="{{ route('mantenimiento') }}" class="btn btn-outline">
                         ← Volver a Mantenimiento
                     </a>
                 </div>
@@ -476,17 +526,20 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para registrar el mantenimiento</p>
                     </div>
                     
-                    <form id="formRegistrarMantenimiento">
+                    <!-- ✅ FORMULARIO CORREGIDO CON LARAVEL -->
+                    <form method="POST" action="{{ route('mantenimientos.store') }}">
+                        @csrf
+                        
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="idCamion">ID del Camión <span class="required-indicator">*</span></label>
-                                <select id="idCamion" name="idCamion" required>
+                                <label for="camion_id">Camión <span class="required-indicator">*</span></label>
+                                <select id="camion_id" name="camion_id" required>
                                     <option value="">Seleccionar camión</option>
-                                    <option value="CAM-001">CAM-001 - Freightliner Cascadia</option>
-                                    <option value="CAM-002">CAM-002 - Kenworth T680</option>
-                                    <option value="CAM-003">CAM-003 - Volvo VNL</option>
-                                    <option value="CAM-004">CAM-004 - Peterbilt 579</option>
-                                    <option value="CAM-005">CAM-005 - Mack Anthem</option>
+                                    @foreach($camiones as $camion)
+                                        <option value="{{ $camion->id }}" {{ old('camion_id') == $camion->id ? 'selected' : '' }}>
+                                            {{ $camion->numero_interno ?? $camion->placa }} - {{ $camion->marca }} {{ $camion->modelo }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             
@@ -494,49 +547,67 @@
                                 <label for="tipo">Tipo de Mantenimiento <span class="required-indicator">*</span></label>
                                 <select id="tipo" name="tipo" required>
                                     <option value="">Seleccionar tipo</option>
-                                    <option value="preventivo">Preventivo</option>
-                                    <option value="correctivo">Correctivo</option>
-                                    <option value="emergencia">Emergencia</option>
-                                    <option value="revision">Revisión General</option>
+                                    <option value="preventivo" {{ old('tipo') == 'preventivo' ? 'selected' : '' }}>Preventivo</option>
+                                    <option value="correctivo" {{ old('tipo') == 'correctivo' ? 'selected' : '' }}>Correctivo</option>
+                                    <option value="emergencia" {{ old('tipo') == 'emergencia' ? 'selected' : '' }}>Emergencia</option>
+                                    <option value="revision" {{ old('tipo') == 'revision' ? 'selected' : '' }}>Revisión General</option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="fecha">Fecha del Mantenimiento <span class="required-indicator">*</span></label>
-                                <input type="date" id="fecha" name="fecha" required>
+                                <input type="date" id="fecha" name="fecha" value="{{ old('fecha') }}" required>
                             </div>
-                            
+
                             <div class="form-group">
-                                <label for="costo">Costo del Mantenimiento <span class="required-indicator">*</span></label>
-                                <input type="number" id="costo" name="costo" required step="0.01" placeholder="2500.00">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="proveedor">Proveedor/Taller <span class="required-indicator">*</span></label>
-                                <select id="proveedor" name="proveedor" required>
-                                    <option value="">Seleccionar proveedor</option>
-                                    <option value="taller-lopez">Taller López</option>
-                                    <option value="mecanica-industrial">Mecánica Industrial</option>
-                                    <option value="autoservicio-central">AutoServicio Central</option>
-                                    <option value="electrica-automotriz">Eléctrica Automotriz</option>
-                                    <option value="refacciones-garcia">Refacciones García</option>
-                                    <option value="otro">Otro (especificar en descripción)</option>
+                                <label for="estado">Estado <span class="required-indicator">*</span></label>
+                                <select id="estado" name="estado" required>
+                                    <option value="">Seleccionar estado</option>
+                                    <option value="programado" {{ old('estado') == 'programado' ? 'selected' : '' }}>Programado</option>
+                                    <option value="en_proceso" {{ old('estado') == 'en_proceso' ? 'selected' : '' }}>En Proceso</option>
+                                    <option value="completado" {{ old('estado') == 'completado' ? 'selected' : '' }}>Completado</option>
+                                    <option value="urgente" {{ old('estado') == 'urgente' ? 'selected' : '' }}>Urgente</option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
+                                <label for="costo">Costo del Mantenimiento</label>
+                                <input type="number" id="costo" name="costo" step="0.01" min="0" value="{{ old('costo') }}" placeholder="2500.00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="proveedor">Proveedor/Taller</label>
+                                <input type="text" id="proveedor" name="proveedor" value="{{ old('proveedor') }}" placeholder="Nombre del taller o proveedor">
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="kilometraje">Kilometraje Actual</label>
-                                <input type="number" id="kilometraje" name="kilometraje" placeholder="125000">
+                                <input type="number" id="kilometraje" name="kilometraje" min="0" value="{{ old('kilometraje') }}" placeholder="125000">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fecha_inicio">Fecha de Inicio</label>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ old('fecha_inicio') }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fecha_fin">Fecha de Finalización</label>
+                                <input type="date" id="fecha_fin" name="fecha_fin" value="{{ old('fecha_fin') }}">
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="descripcion">Descripción del Mantenimiento <span class="required-indicator">*</span></label>
-                            <textarea id="descripcion" name="descripcion" required placeholder="Describa detalladamente el tipo de mantenimiento realizado, piezas cambiadas, problemas encontrados, etc..."></textarea>
+                            <textarea id="descripcion" name="descripcion" required placeholder="Describa detalladamente el tipo de mantenimiento realizado, piezas cambiadas, problemas encontrados, etc...">{{ old('descripcion') }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones</label>
+                            <textarea id="observaciones" name="observaciones" placeholder="Observaciones adicionales...">{{ old('observaciones') }}</textarea>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary">🗑️ Limpiar</button>
+                            <button type="reset" class="btn btn-secondary">🗑️ Limpiar</button>
                             <button type="submit" class="btn btn-primary">🔧 Registrar Mantenimiento</button>
                         </div>
                     </form>
@@ -550,6 +621,7 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            setDefaultDate();
         });
 
         function setupEventListeners() {
@@ -567,11 +639,29 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+
+            // Sincronizar fechas
+            const fechaInicio = document.getElementById('fecha_inicio');
+            const fechaFin = document.getElementById('fecha_fin');
+            
+            fechaInicio.addEventListener('change', function() {
+                if (this.value && !fechaFin.value) {
+                    fechaFin.value = this.value;
+                }
+            });
+        }
+
+        function setDefaultDate() {
+            const fechaInput = document.getElementById('fecha');
+            if (!fechaInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
         }
 
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                alert('Cerrando sesión...');
+                window.location.href = '/logout';
             }
         }
     </script>

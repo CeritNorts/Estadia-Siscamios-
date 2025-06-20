@@ -29,7 +29,11 @@ class ViajeController extends Controller
     }
 
     public function store(Request $request)
-    {
+{
+    // Debug: Ver qué datos llegan
+    \Log::info('Datos del formulario:', $request->all());
+    
+    try {
         $request->validate([
             'camion_id' => 'required|exists:camiones,id',
             'chofer_id' => 'required|exists:choferes,id',
@@ -39,18 +43,29 @@ class ViajeController extends Controller
             'fecha_llegada' => 'required|date|after_or_equal:fecha_salida',
             'estado' => 'required|string',
         ]);
-
+        
+        \Log::info('Validación pasada, creando viaje...');
+        
         $viaje = Viaje::create($request->all());
-
-        return response()->json(['message' => 'Viaje registrado', 'data' => $viaje], 201);
+        
+        \Log::info('Viaje creado:', $viaje->toArray());
+        
+        return redirect()->route('viajes.index')->with('success', 'Viaje registrado correctamente');
+        
+    } catch (\Exception $e) {
+        \Log::error('Error creando viaje: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Error al crear el viaje: ' . $e->getMessage());
     }
-
+}
     public function show($id)
     {
         $viaje = Viaje::with(['camion', 'chofer', 'cliente'])->find($id);
-        return $viaje
-            ? response()->json($viaje)
-            : response()->json(['message' => 'Viaje no encontrado'], 404);
+        
+        if (!$viaje) {
+            return redirect()->route('viajes.index')->with('error', 'Viaje no encontrado');
+        }
+        
+        return view('viajes.show', compact('viaje'));
     }
 
     /**
@@ -70,32 +85,32 @@ class ViajeController extends Controller
     {
         $viaje = Viaje::find($id);
         if (!$viaje) {
-            return response()->json(['message' => 'Viaje no encontrado'], 404);
+            return redirect()->route('viajes.index')->with('error', 'Viaje no encontrado');
         }
 
         $request->validate([
-            'camion_id' => 'sometimes|exists:camiones,id',
-            'chofer_id' => 'sometimes|exists:choferes,id',
-            'cliente_id' => 'sometimes|exists:clientes,id',
-            'ruta' => 'sometimes|string',
-            'fecha_salida' => 'sometimes|date',
-            'fecha_llegada' => 'sometimes|date',
-            'estado' => 'sometimes|string',
+            'camion_id' => 'required|exists:camiones,id',
+            'chofer_id' => 'required|exists:choferes,id',
+            'cliente_id' => 'required|exists:clientes,id',
+            'ruta' => 'required|string',
+            'fecha_salida' => 'required|date',
+            'fecha_llegada' => 'required|date|after_or_equal:fecha_salida',
+            'estado' => 'required|string',
         ]);
 
         $viaje->update($request->all());
 
-        return response()->json(['message' => 'Viaje actualizado', 'data' => $viaje]);
+        return redirect()->route('viajes.index')->with('success', 'Viaje actualizado correctamente');
     }
 
     public function destroy($id)
     {
         $viaje = Viaje::find($id);
         if (!$viaje) {
-            return response()->json(['message' => 'Viaje no encontrado'], 404);
+            return redirect()->route('viajes.index')->with('error', 'Viaje no encontrado');
         }
 
         $viaje->delete();
-        return response()->json(['message' => 'Viaje eliminado']);
+        return redirect()->route('viajes.index')->with('success', 'Viaje eliminado correctamente');
     }
 }
