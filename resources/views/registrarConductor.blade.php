@@ -275,6 +275,31 @@
             border-top: 1px solid #eee;
         }
 
+        /* Error Messages */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
         /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
@@ -407,15 +432,27 @@
                 <a href="/mantenimiento">🔧 Mantenimiento</a>
             </li>
             <li>
-                <a href="/conductores" class="active">👥 Conductores</a>
+                <a href="{{ route('conductores.index') }}" class="active">👥 Conductores</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -446,7 +483,7 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="/conductores">Conductores</a>
+                    <a href="{{ route('conductores.index') }}">Conductores</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Registrar Conductor</span>
                 </div>
@@ -457,10 +494,28 @@
                         <h1 class="page-title">Registrar Conductor</h1>
                         <p class="page-subtitle">Complete la información del nuevo conductor</p>
                     </div>
-                    <a href="/conductores" class="btn btn-outline">
+                    <a href="{{ route('conductores.index') }}" class="btn btn-outline">
                         ← Volver a Conductores
                     </a>
                 </div>
+
+                <!-- Mostrar mensajes de éxito -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Mostrar errores generales -->
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin: 0; padding-left: 1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -469,50 +524,100 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para registrar el conductor</p>
                     </div>
                     
-                    <form id="formRegistrarConductor">
+                    <form action="{{ route('choferes.store') }}" method="POST" id="formRegistrarConductor">
+                        @csrf
+                        
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="nombre">Nombre Completo <span class="required-indicator">*</span></label>
-                                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez García">
+                                <input 
+                                    type="text" 
+                                    id="nombre" 
+                                    name="nombre" 
+                                    value="{{ old('nombre') }}"
+                                    required 
+                                    placeholder="Ej: Juan Pérez García"
+                                    class="@error('nombre') border-danger @enderror"
+                                >
+                                @error('nombre')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="telefono">Teléfono <span class="required-indicator">*</span></label>
-                                <input type="tel" id="telefono" name="telefono" required placeholder="Ej: +52 271 123 4567">
+                                <input 
+                                    type="tel" 
+                                    id="telefono" 
+                                    name="telefono" 
+                                    value="{{ old('telefono') }}"
+                                    required 
+                                    placeholder="Ej: +52 271 123 4567"
+                                    class="@error('telefono') border-danger @enderror"
+                                >
+                                @error('telefono')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="licencia">Número de Licencia <span class="required-indicator">*</span></label>
-                                <input type="text" id="licencia" name="licencia" required placeholder="Ej: LIC-2024-001">
+                                <input 
+                                    type="text" 
+                                    id="licencia" 
+                                    name="licencia" 
+                                    value="{{ old('licencia') }}"
+                                    required 
+                                    placeholder="Ej: LIC-2024-001"
+                                    class="@error('licencia') border-danger @enderror"
+                                >
+                                @error('licencia')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="tipoLicencia">Tipo de Licencia</label>
-                                <select id="tipoLicencia" name="tipoLicencia">
+                                <select id="tipoLicencia" name="tipoLicencia" class="@error('tipoLicencia') border-danger @enderror">
                                     <option value="">Seleccionar tipo</option>
-                                    <option value="A">Tipo A - Transporte de Carga</option>
-                                    <option value="B">Tipo B - Transporte de Pasajeros</option>
-                                    <option value="C">Tipo C - Automovilista</option>
+                                    <option value="A" {{ old('tipoLicencia') == 'A' ? 'selected' : '' }}>Tipo A - Transporte de Carga</option>
+                                    <option value="B" {{ old('tipoLicencia') == 'B' ? 'selected' : '' }}>Tipo B - Transporte de Pasajeros</option>
+                                    <option value="C" {{ old('tipoLicencia') == 'C' ? 'selected' : '' }}>Tipo C - Automovilista</option>
                                 </select>
+                                @error('tipoLicencia')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="vencimientoLicencia">Fecha de Vencimiento</label>
-                                <input type="date" id="vencimientoLicencia" name="vencimientoLicencia">
+                                <input 
+                                    type="date" 
+                                    id="vencimientoLicencia" 
+                                    name="vencimientoLicencia"
+                                    value="{{ old('vencimientoLicencia') }}"
+                                    class="@error('vencimientoLicencia') border-danger @enderror"
+                                >
+                                @error('vencimientoLicencia')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
                                 <label for="estado">Estado del Conductor</label>
-                                <select id="estado" name="estado">
-                                    <option value="activo">Activo</option>
-                                    <option value="inactivo">Inactivo</option>
-                                    <option value="suspendido">Suspendido</option>
+                                <select id="estado" name="estado" class="@error('estado') border-danger @enderror">
+                                    <option value="activo" {{ old('estado', 'activo') == 'activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                    <option value="suspendido" {{ old('estado') == 'suspendido' ? 'selected' : '' }}>Suspendido</option>
                                 </select>
+                                @error('estado')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary">🗑️ Limpiar</button>
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
                             <button type="submit" class="btn btn-primary">👥 Registrar Conductor</button>
                         </div>
                     </form>
@@ -543,6 +648,12 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
+                document.getElementById('formRegistrarConductor').reset();
+            }
         }
 
         function logout() {

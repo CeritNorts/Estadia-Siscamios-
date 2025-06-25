@@ -64,8 +64,7 @@ Route::resource('documentos', DocumentoController::class);
 // Rutas para el controlador de clientes
 Route::resource('clientes', ClienteController::class);
 
-// Rutas para el controlador de choferes
-Route::resource('choferes', ChoferController::class);
+
 
 Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
@@ -77,13 +76,15 @@ Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarVi
     // Resource routes para mantenimientos
     Route::resource('mantenimientos', MantenimientoController::class);
 
-Route::get('/conductores', function () {
-    return view('conductores');
-})->name('conductores.index');
+    // Rutas para el controlador de choferes
+Route::resource('choferes', ChoferController::class);
 
-Route::get('/registrarConductor', function () {
-    return view('registrarConductor');
-})->name('registrarConductor');
+// Ruta para mostrar la vista de conductores conectada al controlador
+Route::get('/conductores', [ChoferController::class, 'index'])->name('conductores.index');
+
+// Ruta para mostrar el formulario de registro conectada al controlador
+Route::get('/registrarConductor', [ChoferController::class, 'create'])->name('conductores.create');
+
 
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
