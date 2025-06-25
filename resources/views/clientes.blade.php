@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siscamino - Gestión de Viajes</title>
+    <title>Siscamino - Gestión de Clientes</title>
     <style>
         * {
             margin: 0;
@@ -78,16 +78,6 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            cursor: pointer;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .user-info:hover {
-            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -226,11 +216,10 @@
             font-size: 0.8rem;
         }
 
-        .stat-programados { color: #007bff; }
-        .stat-transito { color: #ffc107; }
-        .stat-entregados { color: #28a745; }
-        .stat-retrasados { color: #dc3545; }
-        .stat-total { color: #6f42c1; }
+        .stat-total { color: #007bff; }
+        .stat-activos { color: #28a745; }
+        .stat-empresas { color: #17a2b8; }
+        .stat-recent { color: #ffc107; }
 
         /* Table Container */
         .table-container {
@@ -364,31 +353,8 @@
             text-transform: uppercase;
         }
 
-        .status-programado { background: #e3f2fd; color: #1565c0; }
-        .status-transito { background: #fff8e1; color: #f57c00; }
-        .status-entregado { background: #e8f5e8; color: #2e7d32; }
-        .status-retrasado { background: #ffebee; color: #c62828; }
-        .status-espera { background: #f3e5f5; color: #7b1fa2; }
-
-        /* Alert Messages */
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
+        .status-activo { background: #e8f5e8; color: #2e7d32; }
+        .status-empresa { background: #e3f2fd; color: #1565c0; }
 
         /* Empty State */
         .empty-state {
@@ -397,10 +363,9 @@
             color: #666;
         }
 
-        .empty-state .empty-icon {
-            font-size: 4rem;
+        .empty-state h3 {
             margin-bottom: 1rem;
-            opacity: 0.5;
+            color: #333;
         }
 
         /* Mobile Responsive */
@@ -490,7 +455,7 @@
                 <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
-                <a href="{{ route('viajes.index') }}" class="active">📋 Viajes</a>
+                <a href="/viajes">📋 Viajes</a>
             </li>
             <li>
                 <a href="/mantenimiento">🔧 Mantenimiento</a>
@@ -499,7 +464,7 @@
                 <a href="/conductores">👥 Conductores</a>
             </li>
             <li>
-                <a href="/clientes">👤 Clientes</a>
+                <a href="/clientes" class="active">👤 Clientes</a>
             </li>
         </ul>
 
@@ -535,9 +500,10 @@
             <div class="navbar-content">
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-                    <h1 class="navbar-title">Gestión de Viajes</h1>
+                    <h1 class="navbar-title">Gestión de Clientes</h1>
                 </div>
                 <div class="navbar-links">
+                    <a href="/profile">Perfil</a>
                     <a href="#">Notificaciones</a>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
@@ -546,181 +512,109 @@
 
         <div class="content">
             <div class="content-wrapper fade-in">
-
-                <!-- Success/Error Messages -->
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        ✅ {{ session('success') }}
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="alert alert-error">
-                        ❌ {{ session('error') }}
-                    </div>
-                @endif
                 
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Gestión de Viajes</h1>
-                        <p class="page-subtitle">Administra y supervisa todos los viajes de la flotilla</p>
+                        <h1 class="page-title">Gestión de Clientes</h1>
+                        <p class="page-subtitle">Administra la información de todos los clientes de la empresa</p>
                     </div>
-                    <a href="{{ route('viajes.create') }}" class="btn btn-primary">
-                        ➕ Asignar Nuevo Viaje
+                    <a href="{{ route('clientes.create') }}" class="btn btn-primary">
+                        ➕ Registrar Cliente
                     </a>
                 </div>
-                
+
                 <!-- Dashboard Stats -->
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                        <div class="stat-number stat-programados">{{ $viajes->where('estado', 'programado')->count() }}</div>
-                        <div class="stat-label">Programados</div>
-                        <div class="stat-sublabel">Próximos viajes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-transito">{{ $viajes->where('estado', 'transito')->count() }}</div>
-                        <div class="stat-label">En Tránsito</div>
-                        <div class="stat-sublabel">Actualmente en ruta</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-entregados">{{ $viajes->where('estado', 'entregado')->count() }}</div>
-                        <div class="stat-label">Entregados</div>
-                        <div class="stat-sublabel">Completados</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-retrasados">{{ $viajes->where('estado', 'retrasado')->count() }}</div>
-                        <div class="stat-label">Retrasados</div>
-                        <div class="stat-sublabel">Requieren atención</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number stat-total">{{ $viajes->count() }}</div>
-                        <div class="stat-label">Total Viajes</div>
+                        <div class="stat-number stat-total">{{ $clientes->count() }}</div>
+                        <div class="stat-label">Total Clientes</div>
                         <div class="stat-sublabel">En el sistema</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-activos">{{ $clientes->count() }}</div>
+                        <div class="stat-label">Activos</div>
+                        <div class="stat-sublabel">Con servicios vigentes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-empresas">{{ $clientes->count() }}</div>
+                        <div class="stat-label">Empresas</div>
+                        <div class="stat-sublabel">Clientes corporativos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-recent">{{ $clientes->where('created_at', '>=', now()->subDays(30))->count() }}</div>
+                        <div class="stat-label">Nuevos este mes</div>
+                        <div class="stat-sublabel">Últimos 30 días</div>
                     </div>
                 </div>
 
                 <!-- Table Container -->
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Lista de Viajes</h3>
+                        <h3 class="table-title">Lista de Clientes</h3>
                         <div class="table-actions">
-                            <input type="text" class="search-input" placeholder="Buscar viaje..." id="searchViajes">
-                            <select class="search-input" style="max-width: 150px;" id="filterEstado">
-                                <option value="">Todos los estados</option>
-                                <option value="programado">Programados</option>
-                                <option value="transito">En Tránsito</option>
-                                <option value="entregado">Entregados</option>
-                                <option value="retrasado">Retrasados</option>
-                                <option value="espera">En Espera</option>
-                            </select>
-                            <a href="{{ route('viajes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Viaje</a>
+                            <input type="text" class="search-input" placeholder="Buscar cliente..." id="searchClientes">
+                            <a href="{{ route('clientes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Cliente</a>
                         </div>
                     </div>
                     
-                    @if($viajes->count() > 0)
+                    @if($clientes->count() > 0)
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>ID Viaje</th>
-                                    <th>Camión</th>
-                                    <th>Conductor</th>
-                                    <th>Cliente</th>
-                                    <th>Ruta</th>
-                                    <th>Fecha Salida</th>
-                                    <th>Fecha Llegada</th>
+                                    <th>ID</th>
+                                    <th>Nombre/Razón Social</th>
+                                    <th>Contacto</th>
+                                    <th>Información del Contrato</th>
+                                    <th>Fecha de Registro</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="viajesTableBody">
-                                @foreach($viajes as $viaje)
-                                    <tr>
-                                        <td><strong>VJ-{{ str_pad($viaje->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
-                                        <td>
-                                            @if($viaje->camion)
-                                                {{ $viaje->camion->placa ?? $viaje->camion->modelo ?? 'CAM-' . str_pad($viaje->camion->id, 3, '0', STR_PAD_LEFT) }}
-                                            @else
-                                                Sin asignar
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($viaje->chofer)
-                                                {{ $viaje->chofer->nombre }}
-                                            @else
-                                                Sin asignar
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($viaje->cliente)
-                                                {{ $viaje->cliente->nombre }}
-                                            @else
-                                                Sin cliente
-                                            @endif
-                                        </td>
-                                        <td>{{ $viaje->ruta }}</td>
-                                        <td>
-                                            <div>{{ \Carbon\Carbon::parse($viaje->fecha_salida)->format('d/m/Y') }}</div>
-                                            <div style="font-size: 0.8rem; color: #666;">{{ \Carbon\Carbon::parse($viaje->fecha_salida)->format('H:i') }}</div>
-                                        </td>
-                                        <td>
-                                            <div>{{ \Carbon\Carbon::parse($viaje->fecha_llegada)->format('d/m/Y') }}</div>
-                                            <div style="font-size: 0.8rem; color: #666;">{{ \Carbon\Carbon::parse($viaje->fecha_llegada)->format('H:i') }}</div>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge status-{{ $viaje->estado }}">
-                                                @switch($viaje->estado)
-                                                    @case('programado')
-                                                        📅 Programado
-                                                        @break
-                                                    @case('transito')
-                                                        🚛 En Tránsito
-                                                        @break
-                                                    @case('entregado')
-                                                        ✅ Entregado
-                                                        @break
-                                                    @case('retrasado')
-                                                        ⚠️ Retrasado
-                                                        @break
-                                                    @case('espera')
-                                                        ⏳ En Espera
-                                                        @break
-                                                    @default
-                                                        {{ ucfirst($viaje->estado) }}
-                                                @endswitch
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div style="display: flex; gap: 0.5rem;">
-                                                <a href="{{ route('viajes.show', $viaje->id) }}" 
-                                                   class="btn btn-secondary btn-sm" 
-                                                   title="Ver detalles">👁️</a>
-                                                <a href="{{ route('viajes.edit', $viaje->id) }}" 
-                                                   class="btn btn-warning btn-sm" 
-                                                   title="Editar">✏️</a>
-                                                <form action="{{ route('viajes.destroy', $viaje->id) }}" 
-                                                      method="POST" 
-                                                      style="display: inline;"
-                                                      onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="btn btn-danger btn-sm" 
-                                                            title="Eliminar">🗑️</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
+                            <tbody>
+                                @foreach($clientes as $cliente)
+                                <tr>
+                                    <td><strong>CLI-{{ str_pad($cliente->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                    <td>
+                                        <div style="font-weight: 500;">{{ $cliente->nombre }}</div>
+                                        <div style="font-size: 0.8rem; color: #666;">Cliente empresarial</div>
+                                    </td>
+                                    <td>
+                                        <div>{{ $cliente->contacto }}</div>
+                                    </td>
+                                    <td>
+                                        <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            {{ $cliente->contrato }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>{{ $cliente->created_at->format('d/m/Y') }}</div>
+                                        <div style="font-size: 0.8rem; color: #666;">{{ $cliente->created_at->diffForHumans() }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-activo">Activo</span>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <a href="{{ route('clientes.show', $cliente) }}" class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
+                                            <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
+                                            <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     @else
                         <div class="empty-state">
-                            <div class="empty-icon">📋</div>
-                            <h3>No hay viajes registrados</h3>
-                            <p>Comienza creando tu primer viaje para ver la información aquí.</p>
-                            <a href="{{ route('viajes.create') }}" class="btn btn-primary" style="margin-top: 1rem;">
-                                ➕ Crear Primer Viaje
+                            <h3>No hay clientes registrados</h3>
+                            <p>Comienza registrando tu primer cliente para ver la información aquí.</p>
+                            <a href="{{ route('clientes.create') }}" class="btn btn-primary" style="margin-top: 1rem;">
+                                ➕ Registrar primer cliente
                             </a>
                         </div>
                     @endif
@@ -753,22 +647,16 @@
             });
 
             // Search functionality
-            if (document.getElementById('searchViajes')) {
-                document.getElementById('searchViajes').addEventListener('input', function() {
-                    filtrarViajes(this.value);
-                });
-            }
-
-            // Filter by status
-            if (document.getElementById('filterEstado')) {
-                document.getElementById('filterEstado').addEventListener('change', function() {
-                    filtrarPorEstado(this.value);
+            const searchInput = document.getElementById('searchClientes');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filtrarClientes(this.value);
                 });
             }
         }
 
-        function filtrarViajes(termino) {
-            const rows = document.querySelectorAll('#viajesTableBody tr');
+        function filtrarClientes(termino) {
+            const rows = document.querySelectorAll('.table tbody tr');
             
             rows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
@@ -780,25 +668,9 @@
             });
         }
 
-        function filtrarPorEstado(estado) {
-            const rows = document.querySelectorAll('#viajesTableBody tr');
-            
-            rows.forEach(row => {
-                const statusBadge = row.querySelector('.status-badge');
-                if (statusBadge) {
-                    const estadoViaje = statusBadge.className.split('status-')[1].split(' ')[0];
-                    if (!estado || estadoViaje === estado) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                }
-            });
-        }
-
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                window.location.href = '/logout';
+                alert('Cerrando sesión...');
             }
         }
     </script>

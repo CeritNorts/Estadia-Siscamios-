@@ -10,12 +10,12 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = Cliente::all();
-        return view('clientes.index', compact('clientes'));
+        return view('clientes', compact('clientes'));
     }
 
     public function create()
     {
-        return view('clientes.create');
+        return view('registrarCliente');
     }
 
     public function store(Request $request)
@@ -24,6 +24,12 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:255',
             'contacto' => 'required|string|max:255',
             'contrato' => 'required|string',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'contacto.required' => 'El contacto es obligatorio.',
+            'contacto.max' => 'El contacto no puede tener más de 255 caracteres.',
+            'contrato.required' => 'El contrato es obligatorio.',
         ]);
 
         Cliente::create($request->all());
@@ -47,6 +53,10 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:255',
             'contacto' => 'required|string|max:255',
             'contrato' => 'required|string',
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'contacto.required' => 'El contacto es obligatorio.',
+            'contrato.required' => 'El contrato es obligatorio.',
         ]);
 
         $cliente->update($request->all());

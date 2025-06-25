@@ -434,6 +434,9 @@
             <li>
                 <a href="{{ route('conductores.index') }}" class="active">👥 Conductores</a>
             </li>
+            <li>
+                <a href="/clientes" class="active">👤 Clientes</a>
+            </li>
         </ul>
 
         <div class="sidebar-footer">
