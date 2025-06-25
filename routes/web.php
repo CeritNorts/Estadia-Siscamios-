@@ -8,6 +8,7 @@ use App\Http\Controllers\ViajeController;
 use App\Http\Controllers\CombustibleController;
 use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\ClienteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,8 @@ Route::resource('combustibles', CombustibleController::class);
 // Rutas para el controlador de documentos
 Route::resource('documentos', DocumentoController::class);
 
+// Rutas para el controlador de clientes
+Route::resource('clientes', ClienteController::class);
 
 Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
