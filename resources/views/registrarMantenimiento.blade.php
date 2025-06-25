@@ -442,6 +442,9 @@
             <li>
                 <a href="/conductores">👥 Conductores</a>
             </li>
+            <li>
+                <a href="/clientes" class="active">👤 Clientes</a>
+            </li>
         </ul>
 
         <div class="sidebar-footer">

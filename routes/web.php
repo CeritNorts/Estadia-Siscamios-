@@ -54,6 +54,7 @@ Route::resource('camiones', CamionController::class);
 
 // Rutas para el controlador de viajes
 Route::resource('viajes', ViajeController::class);
+Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
 // Rutas para el controlador de combustible
 Route::resource('combustibles', CombustibleController::class);
@@ -61,12 +62,14 @@ Route::resource('combustibles', CombustibleController::class);
 // Rutas para el controlador de documentos
 Route::resource('documentos', DocumentoController::class);
 
+
 // Rutas para el controlador de clientes
 Route::resource('clientes', ClienteController::class);
 
+// Rutas específicas para conectar con tus vistas
+Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+Route::get('/registrarCliente', [ClienteController::class, 'create'])->name('clientes.create');
 
-
-Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
    // Mantenimiento routes
     Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');

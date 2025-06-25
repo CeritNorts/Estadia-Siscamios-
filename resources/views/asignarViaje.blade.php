@@ -282,6 +282,31 @@
             border-top: 1px solid #eee;
         }
 
+        /* Error Messages */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
         /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
@@ -425,7 +450,7 @@
                 <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes" class="active">📋 Viajes</a>
+                <a href="{{ route('viajes.index') }}" class="active">📋 Viajes</a>
             </li>
             <li>
                 <a href="/mantenimiento">🔧 Mantenimiento</a>
@@ -433,13 +458,28 @@
             <li>
                 <a href="/conductores">👥 Conductores</a>
             </li>
+            <li>
+                <a href="/clientes">👤 Clientes</a>
+            </li>
         </ul>
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -470,7 +510,7 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="/viajes">Viajes</a>
+                    <a href="{{ route('viajes.index') }}">Viajes</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Asignar Viaje</span>
                 </div>
@@ -481,10 +521,34 @@
                         <h1 class="page-title">Asignar Nuevo Viaje</h1>
                         <p class="page-subtitle">Complete la información para asignar un viaje a la flotilla</p>
                     </div>
-                    <a href="/viajes" class="btn btn-outline">
+                    <a href="{{ route('viajes.index') }}" class="btn btn-outline">
                         ← Volver a Viajes
                     </a>
                 </div>
+
+                <!-- Mostrar mensajes de éxito -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <!-- Mostrar errores generales -->
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin: 0; padding-left: 1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -493,57 +557,72 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para asignar el viaje</p>
                     </div>
                     
-                    <form id="formAsignarViaje">
+                    <form action="{{ route('viajes.store') }}" method="POST" id="formAsignarViaje">
+                        @csrf
+                        
                         <!-- Sección 1: Información Básica -->
                         <div class="form-section">
                             <h3 class="section-title">📋 Información Básica del Viaje</h3>
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="idCamion">ID del Camión <span class="required-indicator">*</span></label>
-                                    <select id="idCamion" name="idCamion" required>
+                                    <label for="camion_id">Camión <span class="required-indicator">*</span></label>
+                                    <select id="camion_id" name="camion_id" required class="@error('camion_id') border-danger @enderror">
                                         <option value="">Seleccionar camión</option>
-                                        <option value="CAM-001">CAM-001 - Freightliner Cascadia</option>
-                                        <option value="CAM-002">CAM-002 - Kenworth T680</option>
-                                        <option value="CAM-003">CAM-003 - Volvo VNL</option>
-                                        <option value="CAM-004">CAM-004 - Peterbilt 579</option>
-                                        <option value="CAM-005">CAM-005 - Mack Anthem</option>
+                                        @foreach($camiones as $camion)
+                                            <option value="{{ $camion->id }}" {{ old('camion_id') == $camion->id ? 'selected' : '' }}>
+                                                {{ $camion->placa ?? $camion->modelo ?? 'CAM-' . str_pad($camion->id, 3, '0', STR_PAD_LEFT) }}
+                                                {{ $camion->marca ? ' - ' . $camion->marca : '' }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    @error('camion_id')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="idChofer">ID del Chofer <span class="required-indicator">*</span></label>
-                                    <select id="idChofer" name="idChofer" required>
+                                    <label for="chofer_id">Chofer/Conductor <span class="required-indicator">*</span></label>
+                                    <select id="chofer_id" name="chofer_id" required class="@error('chofer_id') border-danger @enderror">
                                         <option value="">Seleccionar chofer</option>
-                                        <option value="CH-001">CH-001 - Juan Pérez</option>
-                                        <option value="CH-002">CH-002 - María González</option>
-                                        <option value="CH-003">CH-003 - Carlos López</option>
-                                        <option value="CH-004">CH-004 - Ana Martínez</option>
-                                        <option value="CH-005">CH-005 - Roberto Silva</option>
+                                        @foreach($choferes as $chofer)
+                                            <option value="{{ $chofer->id }}" {{ old('chofer_id') == $chofer->id ? 'selected' : '' }}>
+                                                {{ $chofer->nombre }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    @error('chofer_id')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="idCliente">ID del Cliente <span class="required-indicator">*</span></label>
-                                    <select id="idCliente" name="idCliente" required>
+                                    <label for="cliente_id">Cliente <span class="required-indicator">*</span></label>
+                                    <select id="cliente_id" name="cliente_id" required class="@error('cliente_id') border-danger @enderror">
                                         <option value="">Seleccionar cliente</option>
-                                        <option value="CL-001">CL-001 - Transportes ABC</option>
-                                        <option value="CL-002">CL-002 - Logística XYZ</option>
-                                        <option value="CL-003">CL-003 - Carga Segura SA</option>
-                                        <option value="CL-004">CL-004 - Express Maya</option>
-                                        <option value="CL-005">CL-005 - Distribuidora Nacional</option>
+                                        @foreach($clientes as $cliente)
+                                            <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                                                {{ $cliente->nombre }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    @error('cliente_id')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="estado">Estado del Viaje <span class="required-indicator">*</span></label>
-                                    <select id="estado" name="estado" required>
+                                    <select id="estado" name="estado" required class="@error('estado') border-danger @enderror">
                                         <option value="">Seleccionar estado</option>
-                                        <option value="programado">Programado</option>
-                                        <option value="transito">En Tránsito</option>
-                                        <option value="espera">En Espera</option>
-                                        <option value="entregado">Entregado</option>
-                                        <option value="retrasado">Retrasado</option>
+                                        <option value="programado" {{ old('estado') == 'programado' ? 'selected' : '' }}>Programado</option>
+                                        <option value="transito" {{ old('estado') == 'transito' ? 'selected' : '' }}>En Tránsito</option>
+                                        <option value="espera" {{ old('estado') == 'espera' ? 'selected' : '' }}>En Espera</option>
+                                        <option value="entregado" {{ old('estado') == 'entregado' ? 'selected' : '' }}>Entregado</option>
+                                        <option value="retrasado" {{ old('estado') == 'retrasado' ? 'selected' : '' }}>Retrasado</option>
                                     </select>
+                                    @error('estado')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -553,23 +632,49 @@
                             <h3 class="section-title">📍 Ruta y Programación</h3>
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="origen">Origen <span class="required-indicator">*</span></label>
-                                    <input type="text" id="origen" name="origen" required placeholder="Ej: Córdoba, Veracruz">
+                                    <label for="ruta">Ruta del Viaje <span class="required-indicator">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="ruta" 
+                                        name="ruta" 
+                                        value="{{ old('ruta') }}"
+                                        required 
+                                        placeholder="Ej: Córdoba, Veracruz → México, DF"
+                                        class="@error('ruta') border-danger @enderror"
+                                    >
+                                    @error('ruta')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="destino">Destino <span class="required-indicator">*</span></label>
-                                    <input type="text" id="destino" name="destino" required placeholder="Ej: México, DF">
+                                    <label for="fecha_salida">Fecha y Hora de Salida <span class="required-indicator">*</span></label>
+                                    <input 
+                                        type="datetime-local" 
+                                        id="fecha_salida" 
+                                        name="fecha_salida" 
+                                        value="{{ old('fecha_salida') }}"
+                                        required
+                                        class="@error('fecha_salida') border-danger @enderror"
+                                    >
+                                    @error('fecha_salida')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="fechaSalida">Fecha de Salida <span class="required-indicator">*</span></label>
-                                    <input type="datetime-local" id="fechaSalida" name="fechaSalida" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="fechaLlegada">Fecha de Llegada <span class="required-indicator">*</span></label>
-                                    <input type="datetime-local" id="fechaLlegada" name="fechaLlegada" required>
+                                    <label for="fecha_llegada">Fecha y Hora de Llegada <span class="required-indicator">*</span></label>
+                                    <input 
+                                        type="datetime-local" 
+                                        id="fecha_llegada" 
+                                        name="fecha_llegada" 
+                                        value="{{ old('fecha_llegada') }}"
+                                        required
+                                        class="@error('fecha_llegada') border-danger @enderror"
+                                    >
+                                    @error('fecha_llegada')
+                                        <div class="error-message">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -577,11 +682,19 @@
                         <!-- Observaciones -->
                         <div class="form-group">
                             <label for="observaciones">Observaciones del Viaje</label>
-                            <textarea id="observaciones" name="observaciones" placeholder="Instrucciones especiales, notas de entrega, etc..."></textarea>
+                            <textarea 
+                                id="observaciones" 
+                                name="observaciones" 
+                                placeholder="Instrucciones especiales, notas de entrega, carga especial, etc..."
+                                class="@error('observaciones') border-danger @enderror"
+                            >{{ old('observaciones') }}</textarea>
+                            @error('observaciones')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary">🗑️ Limpiar</button>
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
                             <button type="submit" class="btn btn-primary">📋 Asignar Viaje</button>
                         </div>
                     </form>
@@ -595,6 +708,7 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            setMinDateTime();
         });
 
         function setupEventListeners() {
@@ -612,6 +726,32 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+
+            // Validación de fechas
+            const fechaSalida = document.getElementById('fecha_salida');
+            const fechaLlegada = document.getElementById('fecha_llegada');
+
+            fechaSalida.addEventListener('change', function() {
+                fechaLlegada.min = this.value;
+                if (fechaLlegada.value && fechaLlegada.value < this.value) {
+                    fechaLlegada.value = '';
+                    alert('La fecha de llegada debe ser posterior a la fecha de salida');
+                }
+            });
+        }
+
+        function setMinDateTime() {
+            const now = new Date();
+            const formattedNow = now.toISOString().slice(0, 16);
+            document.getElementById('fecha_salida').min = formattedNow;
+            document.getElementById('fecha_llegada').min = formattedNow;
+        }
+
+        function limpiarFormulario() {
+            if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
+                document.getElementById('formAsignarViaje').reset();
+                setMinDateTime();
+            }
         }
 
         function logout() {

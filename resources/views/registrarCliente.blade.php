@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siscamino - Registro de Camiones</title>
+    <title>Siscamino - Registrar Cliente</title>
     <style>
         * {
             margin: 0;
@@ -155,29 +155,11 @@
         }
 
         .content-wrapper {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        /* Page Header */
-        .page-header {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-            color: #666;
-            font-size: 1rem;
-        }
-
+        /* Breadcrumb */
         .breadcrumb {
             display: flex;
             align-items: center;
@@ -198,6 +180,25 @@
 
         .breadcrumb-separator {
             color: #999;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1rem;
         }
 
         /* Form Container */
@@ -239,6 +240,10 @@
             flex-direction: column;
         }
 
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
         .form-group label {
             margin-bottom: 0.5rem;
             font-weight: 500;
@@ -246,7 +251,6 @@
         }
 
         .form-group input,
-        .form-group select,
         .form-group textarea {
             padding: 0.75rem;
             border: 1px solid #ddd;
@@ -255,17 +259,16 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
         .form-group input:focus,
-        .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
         }
 
         .required-indicator {
@@ -280,6 +283,31 @@
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid #eee;
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
         }
 
         /* Buttons */
@@ -325,32 +353,6 @@
         .btn-outline:hover {
             background: #667eea;
             color: white;
-        }
-
-        /* Alert Messages */
-        .alert {
-            padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            border: 1px solid;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
         }
 
         /* Mobile Responsive */
@@ -431,7 +433,7 @@
                 <a href="/dashboard">📊 Panel Administrativo</a>
             </li>
             <li>
-                <a href="{{ route('camiones.index') }}" class="active">🚛 Camiones</a>
+                <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
                 <a href="/viajes">📋 Viajes</a>
@@ -449,9 +451,21 @@
 
         <div class="sidebar-footer">
             <div class="user-info">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -467,7 +481,7 @@
             <div class="navbar-content">
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-                    <h1 class="navbar-title">Registro de Camiones</h1>
+                    <h1 class="navbar-title">Registrar Cliente</h1>
                 </div>
                 <div class="navbar-links">
                     <a href="/profile">Perfil</a>
@@ -482,125 +496,105 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="{{ route('camiones.index') }}">Camiones</a>
+                    <a href="{{ route('clientes.index') }}">Clientes</a>
                     <span class="breadcrumb-separator">›</span>
-                    <span>Registro de Unidades</span>
+                    <span>Registrar Cliente</span>
                 </div>
 
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Registro de Camiones</h1>
-                        <p class="page-subtitle">Agregar nueva unidad a la flotilla</p>
+                        <h1 class="page-title">Registrar Cliente</h1>
+                        <p class="page-subtitle">Complete la información del nuevo cliente</p>
                     </div>
-                    <a href="{{ route('camiones.index') }}" class="btn btn-outline">
-                        ← Volver a Lista
+                    <a href="{{ route('clientes.index') }}" class="btn btn-outline">
+                        ← Volver a Clientes
                     </a>
                 </div>
-                
-                <!-- Success/Error Messages -->
+
+                <!-- Mostrar mensajes de éxito -->
                 @if(session('success'))
                     <div class="alert alert-success">
-                        ✅ {{ session('success') }}
+                        {{ session('success') }}
                     </div>
                 @endif
 
-                @if(session('error'))
-                    <div class="alert alert-error">
-                        ❌ {{ session('error') }}
+                <!-- Mostrar errores generales -->
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin: 0; padding-left: 1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
 
                 <!-- Form Container -->
                 <div class="form-container">
                     <div class="form-header">
-                        <h2 class="form-title">Información del Vehículo</h2>
-                        <p class="form-description">Complete todos los campos obligatorios (*) para registrar el camión en el sistema</p>
+                        <h2 class="form-title">Información del Cliente</h2>
+                        <p class="form-description">Complete todos los campos obligatorios (*) para registrar el cliente</p>
                     </div>
                     
-                    <form action="{{ route('camiones.store') }}" method="POST" id="formRegistroCamion">
+                    <form action="{{ route('clientes.store') }}" method="POST" id="formRegistrarCliente">
                         @csrf
+                        
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="placa">Placa del Vehículo <span class="required-indicator">*</span></label>
-                                <input type="text" 
-                                       id="placa" 
-                                       name="placa" 
-                                       value="{{ old('placa') }}"
-                                       required 
-                                       placeholder="Ej: ABC-1234"
-                                       class="@error('placa') is-invalid @enderror">
-                                @error('placa')
+                                <label for="nombre">Nombre/Razón Social <span class="required-indicator">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="nombre" 
+                                    name="nombre" 
+                                    value="{{ old('nombre') }}"
+                                    required 
+                                    placeholder="Ej: Juan Pérez García / Empresa S.A. de C.V."
+                                    class="@error('nombre') border-danger @enderror"
+                                >
+                                @error('nombre')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
                             
                             <div class="form-group">
-                                <label for="modelo">Modelo <span class="required-indicator">*</span></label>
-                                <input type="text" 
-                                       id="modelo" 
-                                       name="modelo" 
-                                       value="{{ old('modelo') }}"
-                                       required 
-                                       placeholder="Ej: Freightliner Cascadia"
-                                       class="@error('modelo') is-invalid @enderror">
-                                @error('modelo')
+                                <label for="contacto">Información de Contacto <span class="required-indicator">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="contacto" 
+                                    name="contacto" 
+                                    value="{{ old('contacto') }}"
+                                    required 
+                                    placeholder="Ej: +52 271 123 4567 / contacto@empresa.com"
+                                    class="@error('contacto') border-danger @enderror"
+                                >
+                                @error('contacto')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
                             
-                            <div class="form-group">
-                                <label for="anio">Año <span class="required-indicator">*</span></label>
-                                <input type="number" 
-                                       id="anio" 
-                                       name="anio" 
-                                       value="{{ old('anio') }}"
-                                       required 
-                                       min="2000" 
-                                       max="{{ date('Y') }}" 
-                                       placeholder="{{ date('Y') }}"
-                                       class="@error('anio') is-invalid @enderror">
-                                @error('anio')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="capacidad_carga">Capacidad de Carga (Toneladas) <span class="required-indicator">*</span></label>
-                                <input type="number" 
-                                       id="capacidad_carga" 
-                                       name="capacidad_carga" 
-                                       value="{{ old('capacidad_carga') }}"
-                                       required 
-                                       step="0.1" 
-                                       min="0"
-                                       placeholder="25.5"
-                                       class="@error('capacidad_carga') is-invalid @enderror">
-                                @error('capacidad_carga')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="estado">Estado Actual <span class="required-indicator">*</span></label>
-                                <select id="estado" 
-                                        name="estado" 
-                                        required
-                                        class="@error('estado') is-invalid @enderror">
-                                    <option value="">Seleccionar estado</option>
-                                    <option value="activo" {{ old('estado') == 'activo' ? 'selected' : '' }}>Activo</option>
-                                    <option value="mantenimiento" {{ old('estado') == 'mantenimiento' ? 'selected' : '' }}>En Mantenimiento</option>
-                                    <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-                                </select>
-                                @error('estado')
+                            <div class="form-group full-width">
+                                <label for="contrato">Información del Contrato <span class="required-indicator">*</span></label>
+                                <textarea 
+                                    id="contrato" 
+                                    name="contrato" 
+                                    required 
+                                    placeholder="Detalles del contrato: servicios requeridos, frecuencia de viajes, rutas principales, términos especiales, etc."
+                                    class="@error('contrato') border-danger @enderror"
+                                >{{ old('contrato') }}</textarea>
+                                @error('contrato')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
-                            <button type="submit" class="btn btn-primary">💾 Guardar Camión</button>
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
+                                🗑️ Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                👤 Registrar Cliente
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -630,18 +624,48 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+
+            // Contador de caracteres para el textarea
+            const contratoTextarea = document.getElementById('contrato');
+            contratoTextarea.addEventListener('input', function() {
+                const maxLength = 1000;
+                const currentLength = this.value.length;
+                
+                // Agregar contador si no existe
+                let counter = document.getElementById('contrato-counter');
+                if (!counter) {
+                    counter = document.createElement('div');
+                    counter.id = 'contrato-counter';
+                    counter.style.cssText = 'font-size: 0.8rem; color: #666; text-align: right; margin-top: 0.25rem;';
+                    this.parentNode.appendChild(counter);
+                }
+                
+                counter.textContent = `${currentLength} / ${maxLength} caracteres`;
+                
+                if (currentLength > maxLength * 0.9) {
+                    counter.style.color = '#dc3545';
+                } else {
+                    counter.style.color = '#666';
+                }
+            });
         }
 
         function limpiarFormulario() {
-            if (confirm('¿Estás seguro de que deseas limpiar todos los campos?')) {
-                document.getElementById('formRegistroCamion').reset();
+            if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
+                document.getElementById('formRegistrarCliente').reset();
+                
+                // Limpiar contador de caracteres si existe
+                const counter = document.getElementById('contrato-counter');
+                if (counter) {
+                    counter.textContent = '0 / 1000 caracteres';
+                    counter.style.color = '#666';
+                }
             }
         }
 
         function logout() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                // Aquí podrías redirigir al logout
-                window.location.href = '/logout';
+            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
+                alert('Cerrando sesión...');
             }
         }
     </script>
