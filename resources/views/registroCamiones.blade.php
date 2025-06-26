@@ -426,24 +426,35 @@
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
         
-        <ul class="sidebar-menu">
+         <ul class="sidebar-menu">
             <li>
-                <a href="/dashboard">📊 Panel Administrativo</a>
+                <a href="/dashboard">
+                    📊 Panel Administrativo
+                </a>
             </li>
             <li>
-                <a href="{{ route('camiones.index') }}" class="active">🚛 Camiones</a>
+                <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes">📋 Viajes</a>
+                <a href="/viajes">
+                    📋 Viajes
+                </a>
             </li>
             <li>
-                <a href="/mantenimiento">🔧 Mantenimiento</a>
+                <a href="/mantenimiento">
+                    🔧 Mantenimiento
+                </a>
             </li>
             <li>
-                <a href="/conductores">👥 Conductores</a>
+                <a href="/conductores">
+                    👥 Conductores
+                </a>
             </li>
             <li>
-                <a href="/clientes" class="active">👤 Clientes</a>
+                <a href="/clientes">👤 Clientes</a>
+            </li>
+            <li>
+                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
             </li>
         </ul>
 

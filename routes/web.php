@@ -48,6 +48,18 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile.edit');
 
+// Ruta principal del combustible (actualizada para usar el controlador)
+Route::get('/combustible', [CombustibleController::class, 'index'])->name('combustible');
+
+// Rutas para el controlador de combustible
+Route::resource('combustibles', CombustibleController::class);
+
+// Ruta adicional para exportar reportes
+Route::get('/combustibles/export', [CombustibleController::class, 'export'])->name('combustibles.export');
+
+// API para obtener datos de viaje (usado en el JavaScript)
+Route::get('/api/viajes/{id}/data', [CombustibleController::class, 'getViajeData']);
+
 
 // Rutas para el controlador de camiones 
 Route::resource('camiones', CamionController::class);
@@ -57,7 +69,7 @@ Route::resource('viajes', ViajeController::class);
 Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
 
 // Rutas para el controlador de combustible
-Route::resource('combustibles', CombustibleController::class);
+// Route::resource('combustibles', CombustibleController::class);
 
 // Rutas para el controlador de documentos
 Route::resource('documentos', DocumentoController::class);
