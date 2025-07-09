@@ -48,21 +48,18 @@ class CombustibleController extends Controller
         $costoTotalMes = Combustible::whereBetween('fecha', [$inicioMes, $finMes])
             ->sum('costo');
 
-        // Calcular promedio de eficiencia (simulado)
         $totalRegistros = Combustible::whereBetween('fecha', [$inicioMes, $finMes])->count();
         $eficienciaPromedio = $totalRegistros > 0 ? round(($totalLitrosMes / $totalRegistros) * 0.15, 1) : 0;
 
         // Viajes disponibles para filtros y formulario
         $viajes = Viaje::all();
 
-        // Datos de ejemplo para mejores eficiencias
         $mejoresEficiencias = collect([
             (object) ['viaje' => (object) ['id' => 1], 'eficiencia_promedio' => 8.5],
             (object) ['viaje' => (object) ['id' => 2], 'eficiencia_promedio' => 8.2],
             (object) ['viaje' => (object) ['id' => 3], 'eficiencia_promedio' => 7.8],
         ]);
-
-        // Alertas de ejemplo
+        
         $alertas = collect([
             (object) ['tipo' => 'warning', 'titulo' => 'Eficiencia Baja', 'descripcion' => 'Algunos viajes tienen eficiencia por debajo del promedio'],
             (object) ['tipo' => 'danger', 'titulo' => 'Costo Elevado', 'descripcion' => 'Costos de combustible han aumentado 3% este mes'],
@@ -177,7 +174,7 @@ class CombustibleController extends Controller
     }
 
     /**
-     * API para obtener datos de viaje (usado en JavaScript).
+     * API para obtener datos de viaje
      */
     public function getViajeData($id)
     {

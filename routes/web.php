@@ -11,16 +11,6 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChoferController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 // Ruta principal - redirige al login
 Route::get('/', function () {
@@ -48,7 +38,7 @@ Route::get('/profile', function () {
     return view('profile');
 })->name('profile.edit');
 
-// Ruta principal del combustible (actualizada para usar el controlador)
+// Ruta principal del combustible 
 Route::get('/combustible', [CombustibleController::class, 'index'])->name('combustible');
 
 // Rutas para el controlador de combustible
@@ -57,9 +47,8 @@ Route::resource('combustibles', CombustibleController::class);
 // Ruta adicional para exportar reportes
 Route::get('/combustibles/export', [CombustibleController::class, 'export'])->name('combustibles.export');
 
-// API para obtener datos de viaje (usado en el JavaScript)
+// API para obtener datos de viaje
 Route::get('/api/viajes/{id}/data', [CombustibleController::class, 'getViajeData']);
-
 
 // Rutas para el controlador de camiones 
 Route::resource('camiones', CamionController::class);
@@ -83,15 +72,15 @@ Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.ind
 Route::get('/registrarCliente', [ClienteController::class, 'create'])->name('clientes.create');
 
 
-   // Mantenimiento routes
-    Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');
-    Route::get('/registrarMantenimiento', [MantenimientoController::class, 'create'])->name('registrarMantenimiento');
-    Route::get('/mantenimiento/search', [MantenimientoController::class, 'search'])->name('mantenimiento.search');
-    
-    // Resource routes para mantenimientos
-    Route::resource('mantenimientos', MantenimientoController::class);
+// Mantenimiento routes
+Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');
+Route::get('/registrarMantenimiento', [MantenimientoController::class, 'create'])->name('registrarMantenimiento');
+Route::get('/mantenimiento/search', [MantenimientoController::class, 'search'])->name('mantenimiento.search');
 
-    // Rutas para el controlador de choferes
+// Resource routes para mantenimientos
+Route::resource('mantenimientos', MantenimientoController::class);
+
+// Rutas para el controlador de choferes
 Route::resource('choferes', ChoferController::class);
 
 // Ruta para mostrar la vista de conductores conectada al controlador
