@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id', // agregado para asignar roles al crear usuarios
     ];
 
     /**
@@ -32,7 +33,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Atributos asignados.
+     * Atributos casteados.
      *
      * @var array<string, string>
      */
@@ -42,6 +43,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * Relación: un usuario pertenece a un rol.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
      * Indica si el usuario puede acceder al panel de Filament.
      *
      * @return bool
@@ -49,5 +58,16 @@ class User extends Authenticatable
     public function canAccessFilament(): bool
     {
         return true;
+    }
+
+    /**
+     * Verificar si el usuario tiene un rol específico.
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role && $this->role->name === $roleName;
     }
 }
