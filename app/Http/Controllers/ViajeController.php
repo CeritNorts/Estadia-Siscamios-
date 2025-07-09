@@ -21,9 +21,9 @@ class ViajeController extends Controller
      */
     public function create()
     {
-        $camiones = Camion::all(); // Obtener todos los camiones
-        $choferes = Chofer::all();  // Obtener todos los choferes
-        $clientes = Cliente::all(); // Obtener todos los clientes
+        $camiones = Camion::all(); 
+        $choferes = Chofer::all();  
+        $clientes = Cliente::all(); 
         
         return view('asignarViaje', compact('camiones', 'choferes', 'clientes'));
     }

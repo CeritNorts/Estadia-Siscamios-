@@ -23,28 +23,28 @@ class Cliente extends Model
         return $this->hasMany(Viaje::class);
     }
 
-    // Accessor para obtener el estado formateado (simulado como activo por defecto)
+    // Accessor para obtener el estado formateado
     public function getEstadoFormateadoAttribute()
     {
-        return 'Activo'; // Como no tienes campo estado, lo simulamos
+        return 'Activo'; 
     }
 
     // Accessor para simular tipo de cliente
     public function getTipoFormateadoAttribute()
     {
-        return 'Empresa'; // Como no tienes campo tipo, lo simulamos
+        return 'Empresa'; 
     }
 
-    // Scope para obtener todos los clientes (simulando activos)
+    // Scope para obtener todos los clientes 
     public function scopeActivos($query)
     {
-        return $query; // Devuelve todos ya que no hay campo estado
+        return $query; 
     }
 
-    // Método para verificar si está activo (simulado)
+    // Método para verificar si está activo 
     public function estaActivo()
     {
-        return true; // Simula que todos están activos
+        return true; 
     }
 
     // Método para obtener estadísticas del cliente

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class MantenimientoController extends Controller
 {
-    // Mostrar lista de mantenimientos (para el resource route)
+    // Mostrar lista de mantenimientos 
     public function index()
     {
         $mantenimientos = Mantenimiento::with('camion')->orderBy('fecha', 'desc')->paginate(10);

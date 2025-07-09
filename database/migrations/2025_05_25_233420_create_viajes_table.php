@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Ejecuta las migracones.
      */
     public function up(): void
     {
         Schema::create('viajes', function (Blueprint $table) {
             $table->id();
 
-            // Foreign keys
+            // Llaves foráneas
             $table->foreignId('camion_id')->constrained('camiones')->onDelete('cascade');
             $table->foreignId('chofer_id')->constrained('choferes')->onDelete('cascade');
             $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
@@ -29,7 +29,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revertir las migraciones.
      */
     public function down(): void
     {
