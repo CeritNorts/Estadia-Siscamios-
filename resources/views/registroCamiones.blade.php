@@ -78,6 +78,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -135,6 +143,7 @@
         .navbar-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .navbar-links a {
@@ -145,6 +154,25 @@
 
         .navbar-links a:hover {
             color: #667eea;
+        }
+
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
         }
 
         /* Content Area */
@@ -353,13 +381,62 @@
             margin-top: 0.25rem;
         }
 
-        /* Mobile Responsive */
+        /* Logout button in navbar */
+        .logout-btn {
+            background: transparent;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+        @media (max-width: 1200px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+            }
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
                 height: 100vh;
                 z-index: 1001;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -387,6 +464,22 @@
 
             .navbar-content {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-content > div:last-child {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .datetime-display {
+                align-items: flex-start;
             }
 
             .content {
@@ -395,6 +488,7 @@
 
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .page-header {
@@ -403,8 +497,163 @@
                 gap: 1rem;
             }
 
+            .page-title {
+                font-size: 1.75rem;
+            }
+
             .form-actions {
                 flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.25rem;
+                justify-content: center;
+            }
+
+            .form-container {
+                padding: 1.25rem;
+            }
+
+            .form-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.25rem;
+            }
+
+            .sidebar-menu a {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .user-info {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 0.75rem;
+            }
+
+            .sidebar-toggle {
+                padding: 0.375rem;
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+            }
+
+            .form-container {
+                padding: 1rem;
+                border-radius: 8px;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 0.875rem;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .btn {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 60px);
+                max-width: 300px;
+            }
+
+            .sidebar-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.25rem;
+            }
+
+            .breadcrumb {
+                font-size: 0.8rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .form-container {
+                padding: 0.75rem;
+            }
+
+            .form-grid {
+                gap: 0.75rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .logout-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
             }
         }
 
@@ -416,6 +665,28 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .btn {
+                display: none;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .form-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
         }
     </style>
 </head>
@@ -436,6 +707,9 @@
                 <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
+                <a href="/camiones/create" class="active">📝 Registro de Camiones</a>
+            </li>
+            <li>
                 <a href="/viajes">
                     📋 Viajes
                 </a>
@@ -454,12 +728,12 @@
                 <a href="/clientes">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="/combustible">⛽ Combustible</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
+            <div class="user-info" onclick="goToProfile()">
                 <div class="user-avatar">AD</div>
                 <div>
                     <div style="color: #ffffff; font-weight: 500;">Administrador</div>
@@ -481,8 +755,10 @@
                     <h1 class="navbar-title">Registro de Camiones</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
-                    <a href="#">Notificaciones</a>
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
@@ -624,6 +900,8 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000); // Actualizar cada segundo
         });
 
         function setupEventListeners() {
@@ -641,6 +919,44 @@
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+
+            // Prevent form submission on Enter in input fields (except submit button)
+            document.getElementById('formRegistroCamion').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'submit') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
+
+        function goToProfile() {
+            window.location.href = '/profile';
         }
 
         function limpiarFormulario() {
@@ -651,10 +967,61 @@
 
         function logout() {
             if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                // Aquí podrías redirigir al logout
                 window.location.href = '/logout';
             }
         }
+
+        // Enhanced mobile touch handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
+        }
+
+        // Auto-save form data to prevent data loss
+        const formInputs = document.querySelectorAll('#formRegistroCamion input, #formRegistroCamion select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                localStorage.setItem('form_' + this.name, this.value);
+            });
+
+            // Restore saved data
+            const savedValue = localStorage.getItem('form_' + input.name);
+            if (savedValue && !input.value) {
+                input.value = savedValue;
+            }
+        });
+
+        // Clear saved data on successful form submission
+        document.getElementById('formRegistroCamion').addEventListener('submit', function() {
+            formInputs.forEach(input => {
+                localStorage.removeItem('form_' + input.name);
+            });
+        });
     </script>
 </body>
 </html>
