@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Siscamino - Gestión de Camiones</title>
     <style>
         * {
@@ -17,6 +18,7 @@
             background-color: #f5f7fa;
             display: flex;
             height: 100vh;
+            overflow: hidden;
         }
 
         /* Sidebar Styles */
@@ -29,38 +31,41 @@
             transition: transform 0.3s ease;
             position: relative;
             z-index: 1000;
+            flex-shrink: 0;
         }
 
         .sidebar-header {
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-brand {
             color: white;
             text-decoration: none;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: bold;
         }
 
         .sidebar-menu {
             flex: 1;
-            padding: 1rem 0;
+            padding: 0.5rem 0;
             list-style: none;
+            overflow-y: auto;
         }
 
         .sidebar-menu li {
-            margin: 0.5rem 0;
+            margin: 0.25rem 0;
         }
 
         .sidebar-menu a {
             display: flex;
             align-items: center;
-            padding: 1rem 1.5rem;
+            padding: 0.875rem 1rem;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s ease;
-            gap: 1rem;
+            gap: 0.75rem;
+            font-size: 0.9rem;
         }
 
         .sidebar-menu a:hover,
@@ -71,25 +76,92 @@
         }
 
         .sidebar-footer {
-            padding: 1.5rem;
+            padding: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .profile-arrow {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: auto;
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover .profile-arrow {
+            color: white;
+            transform: translateX(3px);
+        }
+
+        /* DateTime Display Styles */
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 1rem;
+            text-align: right;
+        }
+
+        .date-text {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .time-text {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
+            line-height: 1;
+            margin-top: 2px;
         }
 
         /* Main Content */
@@ -97,35 +169,50 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
         .navbar {
             background: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 999;
+            flex-shrink: 0;
         }
 
         .navbar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0.75rem 1rem;
+            min-height: 60px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 0;
         }
 
         .navbar-title {
             color: #333;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .sidebar-toggle {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 5px;
             transition: background 0.3s ease;
+            flex-shrink: 0;
         }
 
         .sidebar-toggle:hover {
@@ -134,13 +221,16 @@
 
         .navbar-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
+            align-items: center;
         }
 
         .navbar-links a {
             color: #666;
             text-decoration: none;
             transition: color 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .navbar-links a:hover {
@@ -150,45 +240,48 @@
         /* Content Area */
         .content {
             flex: 1;
-            padding: 2rem;
             overflow-y: auto;
+            min-height: 0;
         }
 
         .content-wrapper {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 1.5rem;
         }
 
         /* Page Header */
         .page-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .page-title {
-            font-size: 2rem;
+            font-size: 1.75rem;
             color: #333;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .page-subtitle {
             color: #666;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         /* Dashboard Cards */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .dashboard-card {
             background: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -197,26 +290,26 @@
         }
 
         .dashboard-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
 
         .dashboard-card h3 {
             color: #333;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
         }
 
         .dashboard-card .card-number {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #667eea;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .dashboard-card .card-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         /* Tabs */
@@ -239,7 +332,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
             color: #666;
             transition: all 0.3s ease;
@@ -258,7 +351,7 @@
 
         .tab-content {
             display: none;
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .tab-content.active {
@@ -270,13 +363,14 @@
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -315,8 +409,8 @@
         }
 
         .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
         }
 
         /* Tables */
@@ -324,26 +418,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .table-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: #333;
             font-weight: 600;
         }
 
         .table-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .search-input {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.75rem;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             min-width: 200px;
         }
 
@@ -357,11 +454,12 @@
         .table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 700px;
         }
 
         .table th,
         .table td {
-            padding: 1rem;
+            padding: 0.875rem;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
@@ -370,6 +468,7 @@
             background: #f8f9fa;
             font-weight: 600;
             color: #333;
+            font-size: 0.85rem;
         }
 
         .table tr:hover {
@@ -379,9 +478,9 @@
         /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: bold;
             text-transform: uppercase;
         }
@@ -408,7 +507,7 @@
 
         /* Alert Messages */
         .alert {
-            padding: 1rem;
+            padding: 0.875rem;
             border-radius: 5px;
             margin-bottom: 1rem;
             border: 1px solid;
@@ -428,7 +527,7 @@
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
+            padding: 2rem;
             color: #666;
         }
 
@@ -438,69 +537,27 @@
             opacity: 0.5;
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                transform: translateX(-100%);
-                height: 100vh;
-                z-index: 1001;
-            }
+        /* Overlay for mobile sidebar */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
 
-            .sidebar.active {
-                transform: translateX(0);
-            }
+        .overlay.active {
+            display: block;
+        }
 
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1000;
-                display: none;
-            }
-
-            .overlay.active {
-                display: block;
-            }
-
-            .main-content {
-                width: 100%;
-            }
-
-            .navbar-content {
-                padding: 1rem;
-            }
-
-            .content {
-                padding: 1rem;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs-header {
-                flex-direction: column;
-            }
-
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .table-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-
-            .table-actions {
-                justify-content: center;
-            }
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
         }
 
         /* Animation */
@@ -513,10 +570,495 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+
+        /* Large Desktop (1200px+) */
+        @media (min-width: 1200px) {
+            .sidebar {
+                width: 300px;
+            }
+            
+            .sidebar-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .sidebar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .sidebar-menu a {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                gap: 1rem;
+            }
+            
+            .navbar-content {
+                padding: 1rem 2rem;
+            }
+            
+            .navbar-title {
+                font-size: 1.25rem;
+            }
+            
+            .content-wrapper {
+                padding: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .dashboard-card {
+                padding: 2rem;
+            }
+            
+            .dashboard-card .card-number {
+                font-size: 2.5rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .table-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Medium Desktop (992px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .navbar-links a {
+                font-size: 0.85rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Tablet Landscape (768px - 991px) */
+        @media (max-width: 991px) and (min-width: 768px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+            
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+                gap: 0.5rem;
+            }
+            
+            .navbar-links {
+                gap: 0.75rem;
+            }
+            
+            .navbar-links a {
+                font-size: 0.8rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .dashboard-card {
+                padding: 1.25rem;
+            }
+            
+            .dashboard-card .card-number {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Tablet Portrait & Large Phone (576px - 767px) */
+        @media (max-width: 767px) and (min-width: 576px) {
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                height: 100vh;
+                z-index: 1001;
+                width: 280px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                width: 100%;
+            }
+            
+            .navbar-content {
+                padding: 0.75rem;
+            }
+            
+            .navbar-title {
+                font-size: 1rem;
+            }
+            
+            .navbar-links {
+                gap: 0.5rem;
+            }
+            
+            .navbar-links a {
+                font-size: 0.75rem;
+            }
+
+            .datetime-display {
+                margin-right: 0.5rem;
+            }
+
+            .date-text {
+                font-size: 0.7rem;
+            }
+
+            .time-text {
+                font-size: 0.75rem;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .dashboard-card {
+                padding: 1rem;
+            }
+            
+            .dashboard-card .card-number {
+                font-size: 1.5rem;
+            }
+            
+            .dashboard-card h3 {
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-card .card-label {
+                font-size: 0.75rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .table-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .search-input {
+                min-width: 180px;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .tabs-header {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .tab-content {
+                padding: 1rem;
+            }
+        }
+
+        /* Small Phone (below 576px) */
+        @media (max-width: 575px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                height: 100vh;
+                z-index: 1001;
+                width: 260px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                width: 100%;
+            }
+            
+            .navbar-content {
+                padding: 0.5rem;
+                min-height: 50px;
+            }
+            
+            .navbar-title {
+                font-size: 0.9rem;
+            }
+            
+            .sidebar-toggle {
+                font-size: 1.1rem;
+                padding: 0.25rem;
+            }
+            
+            .navbar-links {
+                gap: 0.25rem;
+            }
+            
+            .navbar-links a {
+                font-size: 0.7rem;
+                padding: 0.25rem;
+            }
+
+            .datetime-display {
+                margin-right: 0.25rem;
+            }
+
+            .date-text {
+                font-size: 0.65rem;
+            }
+
+            .time-text {
+                font-size: 0.7rem;
+            }
+
+            .content-wrapper {
+                padding: 0.75rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            
+            .dashboard-card {
+                padding: 0.75rem;
+            }
+            
+            .dashboard-card .card-number {
+                font-size: 1.25rem;
+            }
+            
+            .dashboard-card h3 {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .dashboard-card .card-label {
+                font-size: 0.7rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.8rem;
+            }
+
+            .table-title {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-sm {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .search-input {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+                min-width: 150px;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .status-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .action-buttons {
+                gap: 0.15rem;
+            }
+
+            .empty-state {
+                padding: 1.5rem 0.5rem;
+            }
+
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Ultra Small Screens (below 360px) */
+        @media (max-width: 359px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar-title {
+                display: none;
+            }
+
+            .datetime-display {
+                display: none;
+            }
+
+            .page-header {
+                text-align: left;
+            }
+
+            .search-input {
+                min-width: 120px;
+            }
+
+            .table-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+                width: 100%;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px;
+                padding: 0.75rem 1rem;
+            }
+            
+            .btn-sm {
+                min-height: 36px;
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .sidebar-toggle {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .search-input {
+                min-height: 44px;
+            }
+
+            .tab-button {
+                min-height: 48px;
+            }
+        }
+
+        /* High DPI displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .table-container {
+                border: 0.5px solid #e9ecef;
+            }
+            
+            .status-badge {
+                border: 0.5px solid rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        /* Landscape orientation on phones */
+        @media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
+            .dashboard-grid {
+                display: none;
+            }
+            
+            .navbar-content {
+                padding: 0.5rem;
+                min-height: 45px;
+            }
+            
+            .content-wrapper {
+                padding: 0.5rem;
+            }
+            
+            .page-header {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .overlay {
+                display: none;
+            }
+            
+            .main-content,
+            .content,
+            .content-wrapper {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+            
+            .dashboard-grid {
+                display: none;
+            }
+            
+            .btn {
+                display: none;
             }
         }
     </style>
@@ -529,14 +1071,14 @@
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
 
-         <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
             <li>
-                <a href="/camiones">🚛 Camiones</a>
+                <a href="/camiones" class="active">🚛 Camiones</a>
             </li>
             <li>
                 <a href="/viajes">
@@ -557,17 +1099,18 @@
                 <a href="/clientes">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="{{ route('combustible') }}">⛽ Combustible</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
+            <div class="user-info" onclick="goToProfile()" title="Ir a Perfil">
                 <div class="user-avatar">AD</div>
-                <div>
-                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
-                    <div style="font-size: 0.75rem;">Sistema</div>
+                <div class="user-details">
+                    <div class="user-name">{{ Auth::user()->name }}</div>
+                    <div class="user-role">Sistema</div>
                 </div>
+                <div class="profile-arrow">›</div>
             </div>
         </div>
     </div>
@@ -579,13 +1122,15 @@
     <div class="main-content">
         <nav class="navbar">
             <div class="navbar-content">
-                <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="navbar-left">
                     <button class="sidebar-toggle" id="sidebarToggle">☰</button>
                     <h1 class="navbar-title">Gestión de Camiones</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
-                    <a href="#">Notificaciones</a>
+                    <div class="datetime-display" id="datetimeDisplay">
+                        <div class="date-text" id="dateText"></div>
+                        <div class="time-text" id="timeText"></div>
+                    </div>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
@@ -686,7 +1231,7 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div style="display: flex; gap: 0.5rem;">
+                                                    <div class="action-buttons">
                                                         <a href="{{ route('camiones.show', $camion->id) }}"
                                                             class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
                                                         <a href="{{ route('camiones.edit', $camion->id) }}"
@@ -723,9 +1268,14 @@
     </div>
 
     <script>
+        // Variables globales
+        let currentTrucksData = [];
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000); // Actualizar cada segundo
         });
 
         function setupEventListeners() {
@@ -744,32 +1294,184 @@
                 overlay.classList.remove('active');
             });
 
+            // Cerrar sidebar al hacer clic en un enlace (móvil)
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 767) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+
             // Search functionality
             if (document.getElementById('searchTable')) {
                 document.getElementById('searchTable').addEventListener('input', function () {
                     filtrarTabla(this.value);
                 });
             }
+
+            // Prevenir zoom accidental en iOS
+            if (isMobile()) {
+                document.addEventListener('touchmove', function(e) {
+                    if (e.touches.length > 1) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function(e) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        e.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+            }
         }
 
+        // Función para actualizar fecha y hora
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Configurar opciones de formato para México
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'America/Mexico_City'
+            };
+            
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+                timeZone: 'America/Mexico_City'
+            };
+            
+            // Formatear fecha y hora
+            const dateStr = now.toLocaleDateString('es-MX', dateOptions);
+            const timeStr = now.toLocaleTimeString('es-MX', timeOptions);
+            
+            // Actualizar elementos del DOM
+            const dateElement = document.getElementById('dateText');
+            const timeElement = document.getElementById('timeText');
+            
+            if (dateElement && timeElement) {
+                dateElement.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+                timeElement.textContent = timeStr;
+            }
+        }
+
+        // Detectar dispositivo móvil
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Función para filtrar tabla
         function filtrarTabla(termino) {
             const rows = document.querySelectorAll('#trucksTableBody tr');
+            let visibleRows = 0;
 
             rows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
                     row.style.display = '';
+                    visibleRows++;
                 } else {
                     row.style.display = 'none';
                 }
             });
         }
 
+        // Función para ir al perfil
+        function goToProfile() {
+            // Agregar efecto visual
+            const userInfo = document.querySelector('.user-info');
+            userInfo.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                userInfo.style.transform = '';
+                // Navegar al perfil
+                window.location.href = '/profile';
+            }, 150);
+        }
+
+        // Función para eliminar camión
+        function deleteTruck(id) {
+            if (confirm('¿Está seguro de que desea eliminar este camión?')) {
+                // El formulario ya maneja la eliminación con Laravel
+                return true;
+            }
+            return false;
+        }
+
+        // Función para mostrar alertas (mantenida para compatibilidad)
+        function showAlert(type, message) {
+            // Esta función se mantiene para compatibilidad, pero las alertas 
+            // ahora se manejan desde el servidor con session flash messages
+            console.log(`${type}: ${message}`);
+        }
+
+        // Función para cerrar sesión
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                window.location.href = '/logout';
+                // Crear form para logout con método POST
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/logout';
+                
+                // Agregar token CSRF
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = csrfToken.getAttribute('content');
+                    form.appendChild(csrfInput);
+                }
+                
+                document.body.appendChild(form);
+                form.submit();
             }
         }
+
+        // Manejo de orientación y redimensionamiento
+        function handleOrientationChange() {
+            setTimeout(() => {
+                // Reajustar elementos si es necesario
+                const content = document.querySelector('.content');
+                if (content) {
+                    content.scrollTop = 0;
+                }
+            }, 100);
+        }
+
+        // Event listeners para orientación y redimensionamiento
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', debounce(handleOrientationChange, 250));
+
+        // Función debounce para optimizar rendimiento
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Simulación de datos dinámicos (eliminada - ahora se usa datos reales del servidor)
+        // La función updateStats() se eliminó porque las estadísticas 
+        // ahora se calculan dinámicamente desde el controlador Laravel
+
+        // Actualizar estadísticas al cargar (comentado - no necesario)
+        // setTimeout(updateStats, 100);
     </script>
 </body>
 
