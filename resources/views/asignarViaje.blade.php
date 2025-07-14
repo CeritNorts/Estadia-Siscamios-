@@ -307,6 +307,12 @@
             color: #721c24;
         }
 
+        .alert-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
         /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
@@ -367,6 +373,46 @@
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid #667eea;
+        }
+
+        /* Estado indicators */
+        .status-indicator {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .status-activo {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-mantenimiento {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-inactivo {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .camion-unavailable {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .info-text {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            color: #1565c0;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
         }
 
         /* Mobile Responsive */
@@ -452,7 +498,7 @@
                 <a href="/camiones">🚛 Camiones</a>
             </li>
             <li>
-                <a href="/viajes">
+                <a href="/viajes" class="active">
                     📋 Viajes
                 </a>
             </li>
@@ -470,7 +516,7 @@
                 <a href="/clientes">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="/combustible">⛽ Combustible</a>
             </li>
         </ul>
 
@@ -537,17 +583,18 @@
                     </a>
                 </div>
 
+
                 <!-- Mostrar mensajes de éxito -->
                 @if(session('success'))
                     <div class="alert alert-success">
-                        {{ session('success') }}
+                        ✅ {{ session('success') }}
                     </div>
                 @endif
 
                 <!-- Mostrar errores generales -->
                 @if(session('error'))
                     <div class="alert alert-danger">
-                        {{ session('error') }}
+                        ❌ {{ session('error') }}
                     </div>
                 @endif
 
@@ -558,6 +605,15 @@
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
+                    </div>
+                @endif
+
+                <!-- Verificar si hay camiones disponibles -->
+                @if($camiones->isEmpty())
+                    <div class="alert alert-warning">
+                        ⚠️ <strong>No hay camiones disponibles</strong><br>
+                        Actualmente no hay camiones con estado "Activo" para asignar viajes. 
+                        <a href="/camiones">Revisar estado de los camiones</a>
                     </div>
                 @endif
 
@@ -576,19 +632,25 @@
                             <h3 class="section-title">📋 Información Básica del Viaje</h3>
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label for="camion_id">Camión <span class="required-indicator">*</span></label>
-                                    <select id="camion_id" name="camion_id" required class="@error('camion_id') border-danger @enderror">
-                                        <option value="">Seleccionar camión</option>
+                                    <label for="camion_id">Camión Disponible <span class="required-indicator">*</span></label>
+                                    <select id="camion_id" name="camion_id" required class="@error('camion_id') border-danger @enderror" {{ $camiones->isEmpty() ? 'disabled' : '' }}>
+                                        <option value="">{{ $camiones->isEmpty() ? 'No hay camiones disponibles' : 'Seleccionar camión activo' }}</option>
                                         @foreach($camiones as $camion)
                                             <option value="{{ $camion->id }}" {{ old('camion_id') == $camion->id ? 'selected' : '' }}>
                                                 {{ $camion->placa ?? $camion->modelo ?? 'CAM-' . str_pad($camion->id, 3, '0', STR_PAD_LEFT) }}
                                                 {{ $camion->marca ? ' - ' . $camion->marca : '' }}
+                                                <span class="status-indicator status-activo">✓ Activo</span>
                                             </option>
                                         @endforeach
                                     </select>
                                     @error('camion_id')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
+                                    @if($camiones->isNotEmpty())
+                                        <small style="color: #666; margin-top: 0.5rem; font-size: 0.875rem;">
+                                            {{ $camiones->count() }} camión(es) activo(s) disponible(s)
+                                        </small>
+                                    @endif
                                 </div>
                                 
                                 <div class="form-group">
@@ -706,7 +768,7 @@
                         
                         <div class="form-actions">
                             <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">🗑️ Limpiar</button>
-                            <button type="submit" class="btn btn-primary">📋 Asignar Viaje</button>
+                            <button type="submit" class="btn btn-primary" {{ $camiones->isEmpty() ? 'disabled' : '' }}>📋 Asignar Viaje</button>
                         </div>
                     </form>
                 </div>
@@ -720,6 +782,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
             setMinDateTime();
+            checkCamionesDisponibles();
         });
 
         function setupEventListeners() {
@@ -749,6 +812,20 @@
                     alert('La fecha de llegada debe ser posterior a la fecha de salida');
                 }
             });
+
+            // Validación en tiempo real del formulario
+            const camionSelect = document.getElementById('camion_id');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            camionSelect.addEventListener('change', function() {
+                if (this.value === '') {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.6';
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                }
+            });
         }
 
         function setMinDateTime() {
@@ -758,10 +835,22 @@
             document.getElementById('fecha_llegada').min = formattedNow;
         }
 
+        function checkCamionesDisponibles() {
+            const camionSelect = document.getElementById('camion_id');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            if (camionSelect.options.length <= 1) { // Solo tiene la opción "Seleccionar..."
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.innerHTML = '❌ Sin Camiones Disponibles';
+            }
+        }
+
         function limpiarFormulario() {
             if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
                 document.getElementById('formAsignarViaje').reset();
                 setMinDateTime();
+                checkCamionesDisponibles();
             }
         }
 
@@ -770,6 +859,53 @@
                 alert('Cerrando sesión...');
             }
         }
+
+        // Mostrar información adicional del camión seleccionado
+        document.getElementById('camion_id').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                console.log('Camión seleccionado:', selectedOption.text);
+                // Aquí podrías hacer una petición AJAX para obtener más detalles del camión
+                // y mostrarlos en la interfaz si es necesario
+            }
+        });
+
+        // Validaciones adicionales antes del envío
+        document.getElementById('formAsignarViaje').addEventListener('submit', function(e) {
+            const camionId = document.getElementById('camion_id').value;
+            const choferId = document.getElementById('chofer_id').value;
+            const clienteId = document.getElementById('cliente_id').value;
+            
+            if (!camionId) {
+                e.preventDefault();
+                alert('Debe seleccionar un camión activo para el viaje');
+                return false;
+            }
+            
+            if (!choferId) {
+                e.preventDefault();
+                alert('Debe seleccionar un chofer para el viaje');
+                return false;
+            }
+            
+            if (!clienteId) {
+                e.preventDefault();
+                alert('Debe seleccionar un cliente para el viaje');
+                return false;
+            }
+            
+            // Validar fechas
+            const fechaSalida = new Date(document.getElementById('fecha_salida').value);
+            const fechaLlegada = new Date(document.getElementById('fecha_llegada').value);
+            
+            if (fechaLlegada <= fechaSalida) {
+                e.preventDefault();
+                alert('La fecha de llegada debe ser posterior a la fecha de salida');
+                return false;
+            }
+            
+            return true;
+        });
     </script>
 </body>
 </html>

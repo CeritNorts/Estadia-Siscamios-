@@ -21,7 +21,8 @@ class ViajeController extends Controller
      */
     public function create()
     {
-        $camiones = Camion::all(); 
+        // Solo obtener camiones con estado "activo"
+        $camiones = Camion::where('estado', 'activo')->get(); 
         $choferes = Chofer::all();  
         $clientes = Cliente::all(); 
         
@@ -29,34 +30,43 @@ class ViajeController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Debug: Ver qué datos llegan
-    \Log::info('Datos del formulario:', $request->all());
-    
-    try {
-        $request->validate([
-            'camion_id' => 'required|exists:camiones,id',
-            'chofer_id' => 'required|exists:choferes,id',
-            'cliente_id' => 'required|exists:clientes,id',
-            'ruta' => 'required|string',
-            'fecha_salida' => 'required|date',
-            'fecha_llegada' => 'required|date|after_or_equal:fecha_salida',
-            'estado' => 'required|string',
-        ]);
+    {
+        // Debug: Ver qué datos llegan
+        \Log::info('Datos del formulario:', $request->all());
         
-        \Log::info('Validación pasada, creando viaje...');
-        
-        $viaje = Viaje::create($request->all());
-        
-        \Log::info('Viaje creado:', $viaje->toArray());
-        
-        return redirect()->route('viajes.index')->with('success', 'Viaje registrado correctamente');
-        
-    } catch (\Exception $e) {
-        \Log::error('Error creando viaje: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Error al crear el viaje: ' . $e->getMessage());
+        try {
+            $request->validate([
+                'camion_id' => 'required|exists:camiones,id',
+                'chofer_id' => 'required|exists:choferes,id',
+                'cliente_id' => 'required|exists:clientes,id',
+                'ruta' => 'required|string',
+                'fecha_salida' => 'required|date',
+                'fecha_llegada' => 'required|date|after_or_equal:fecha_salida',
+                'estado' => 'required|string',
+            ]);
+
+            // Validación adicional: verificar que el camión esté activo
+            $camion = Camion::find($request->camion_id);
+            if (!$camion || $camion->estado !== 'activo') {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'El camión seleccionado no está disponible. Solo se pueden asignar viajes a camiones activos.');
+            }
+            
+            \Log::info('Validación pasada, creando viaje...');
+            
+            $viaje = Viaje::create($request->all());
+            
+            \Log::info('Viaje creado:', $viaje->toArray());
+            
+            return redirect()->route('viajes.index')->with('success', 'Viaje registrado correctamente');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error creando viaje: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al crear el viaje: ' . $e->getMessage());
+        }
     }
-}
+
     public function show($id)
     {
         $viaje = Viaje::with(['camion', 'chofer', 'cliente'])->find($id);
@@ -74,6 +84,7 @@ class ViajeController extends Controller
     public function edit($id)
     {
         $viaje = Viaje::findOrFail($id);
+        // Para edición, mostrar todos los camiones pero indicar cuáles están disponibles
         $camiones = Camion::all();
         $choferes = Chofer::all();
         $clientes = Cliente::all();
@@ -97,6 +108,14 @@ class ViajeController extends Controller
             'fecha_llegada' => 'required|date|after_or_equal:fecha_salida',
             'estado' => 'required|string',
         ]);
+
+        // Validación adicional para updates: verificar estado del camión
+        $camion = Camion::find($request->camion_id);
+        if (!$camion || $camion->estado !== 'activo') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'El camión seleccionado no está disponible. Solo se pueden asignar viajes a camiones activos.');
+        }
 
         $viaje->update($request->all());
 
