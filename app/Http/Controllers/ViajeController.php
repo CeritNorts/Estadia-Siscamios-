@@ -12,7 +12,18 @@ class ViajeController extends Controller
 {
     public function index()
     {
-        $viajes = Viaje::with(['camion', 'chofer', 'cliente'])->get();
+        // Actualizar todos los estados antes de mostrar la lista
+        $viajesActualizados = Viaje::actualizarTodosLosEstados();
+        
+        // Si se actualizaron viajes, mostrar mensaje
+        if ($viajesActualizados > 0) {
+            session()->flash('success', "Se actualizaron automáticamente {$viajesActualizados} viaje(s) según sus horarios programados.");
+        }
+        
+        $viajes = Viaje::with(['camion', 'chofer', 'cliente'])
+                      ->orderBy('fecha_salida', 'desc')
+                      ->get();
+        
         return view('viajes', compact('viajes'));
     }
 
@@ -57,6 +68,9 @@ class ViajeController extends Controller
             
             $viaje = Viaje::create($request->all());
             
+            // Actualizar el estado automáticamente después de crear
+            $viaje->actualizarEstadoAutomatico();
+            
             \Log::info('Viaje creado:', $viaje->toArray());
             
             return redirect()->route('viajes.index')->with('success', 'Viaje registrado correctamente');
@@ -75,6 +89,9 @@ class ViajeController extends Controller
             return redirect()->route('viajes.index')->with('error', 'Viaje no encontrado');
         }
         
+        // Actualizar estado antes de mostrar
+        $viaje->actualizarEstadoAutomatico();
+        
         return view('viajes.show', compact('viaje'));
     }
 
@@ -84,6 +101,10 @@ class ViajeController extends Controller
     public function edit($id)
     {
         $viaje = Viaje::findOrFail($id);
+        
+        // Actualizar estado antes de editar
+        $viaje->actualizarEstadoAutomatico();
+        
         // Para edición, mostrar todos los camiones pero indicar cuáles están disponibles
         $camiones = Camion::all();
         $choferes = Chofer::all();
@@ -109,15 +130,20 @@ class ViajeController extends Controller
             'estado' => 'required|string',
         ]);
 
-        // Validación adicional para updates: verificar estado del camión
-        $camion = Camion::find($request->camion_id);
-        if (!$camion || $camion->estado !== 'activo') {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'El camión seleccionado no está disponible. Solo se pueden asignar viajes a camiones activos.');
+        // Validación adicional para updates: verificar estado del camión si cambió
+        if ($request->camion_id != $viaje->camion_id) {
+            $camion = Camion::find($request->camion_id);
+            if (!$camion || $camion->estado !== 'activo') {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'El camión seleccionado no está disponible. Solo se pueden asignar viajes a camiones activos.');
+            }
         }
 
         $viaje->update($request->all());
+        
+        // Actualizar estado automáticamente después de la actualización
+        $viaje->actualizarEstadoAutomatico();
 
         return redirect()->route('viajes.index')->with('success', 'Viaje actualizado correctamente');
     }
@@ -131,5 +157,71 @@ class ViajeController extends Controller
 
         $viaje->delete();
         return redirect()->route('viajes.index')->with('success', 'Viaje eliminado correctamente');
+    }
+
+    /**
+     * Endpoint para actualizar estados manualmente via AJAX
+     */
+    public function actualizarEstados()
+    {
+        try {
+            $viajesActualizados = Viaje::actualizarTodosLosEstados();
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Se actualizaron {$viajesActualizados} viaje(s)",
+                'viajes_actualizados' => $viajesActualizados
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar estados: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtener estadísticas actualizadas para el dashboard
+     */
+    public function getEstadisticas()
+    {
+        // Actualizar estados antes de calcular estadísticas
+        Viaje::actualizarTodosLosEstados();
+        
+        $viajes = Viaje::all();
+        
+        return response()->json([
+            'programados' => $viajes->where('estado', 'programado')->count(),
+            'transito' => $viajes->where('estado', 'transito')->count(),
+            'entregados' => $viajes->where('estado', 'entregado')->count(),
+            'retrasados' => $viajes->where('estado', 'retrasado')->count(),
+            'total' => $viajes->count()
+        ]);
+    }
+
+    /**
+     * Marcar un viaje como retrasado manualmente
+     */
+    public function marcarRetrasado($id)
+    {
+        $viaje = Viaje::findOrFail($id);
+        
+        if ($viaje->marcarComoRetrasado()) {
+            return redirect()->back()->with('success', 'Viaje marcado como retrasado');
+        }
+        
+        return redirect()->back()->with('error', 'No se pudo marcar el viaje como retrasado');
+    }
+
+    /**
+     * Obtener viajes que requieren atención
+     */
+    public function viajesRequierenAtencion()
+    {
+        $viajes = Viaje::requierenAtencion()
+                      ->with(['camion', 'chofer', 'cliente'])
+                      ->get();
+        
+        return response()->json($viajes);
     }
 }

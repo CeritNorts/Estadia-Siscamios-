@@ -93,3 +93,9 @@ Route::get('/registrarConductor', [ChoferController::class, 'create'])->name('co
 // Rutas POST para el frontend (sin funcionalidad backend por ahora)
 // Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 // Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+// Rutas para actualización automática de viajes
+Route::post('/viajes/actualizar-estados', [ViajeController::class, 'actualizarEstados'])->name('viajes.actualizar-estados');
+Route::get('/viajes/estadisticas', [ViajeController::class, 'getEstadisticas'])->name('viajes.estadisticas');
+Route::post('/viajes/{id}/marcar-retrasado', [ViajeController::class, 'marcarRetrasado'])->name('viajes.marcar-retrasado');
+Route::get('/viajes/requieren-atencion', [ViajeController::class, 'viajesRequierenAtencion'])->name('viajes.requieren-atencion');
