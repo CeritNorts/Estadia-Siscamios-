@@ -1184,7 +1184,8 @@
                                         <td><span class="status-badge status-{{ $mantenimiento->estado }}">{{ ucfirst($mantenimiento->estado) }}</span></td>
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
-                                                <a href="{{ route('mantenimientos.show', $mantenimiento) }}" class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
+                                                <button onclick="mostrarDetalles('mantenimiento', {{ $mantenimiento->id }}, {{ json_encode($mantenimiento->load('camion')) }})" 
+                                                    class="btn btn-secondary btn-sm">👁️</button>
                                                 <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
                                                 <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
                                                     @csrf
@@ -1673,6 +1674,9 @@
             );
         }
     </script>
+
+    @include('components.modal-detalles')
+
 </body>
 
 </html>

@@ -1054,9 +1054,8 @@
                                         </td>
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
-                                                <a href="{{ route('viajes.show', $viaje->id) }}" 
-                                                   class="btn btn-secondary btn-sm" 
-                                                   title="Ver detalles">👁️</a>
+                                                <button onclick="mostrarDetalles('viaje', {{ $viaje->id }}, {{ json_encode($viaje) }})" 
+                                                    class="btn btn-secondary btn-sm" title="Ver Detalles">👁️</button>
                                                 <a href="{{ route('viajes.edit', $viaje->id) }}" 
                                                    class="btn btn-warning btn-sm" 
                                                    title="Editar">✏️</a>
@@ -1463,5 +1462,8 @@
             );
         }
     </script>
+
+    @include('components.modal-detalles')
+    
 </body>
 </html>

@@ -570,6 +570,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -583,50 +584,50 @@
             .sidebar {
                 width: 300px;
             }
-            
+
             .sidebar-header {
                 padding: 2rem 1.5rem;
             }
-            
+
             .sidebar-brand {
                 font-size: 1.5rem;
             }
-            
+
             .sidebar-menu a {
                 padding: 1rem 1.5rem;
                 font-size: 1rem;
                 gap: 1rem;
             }
-            
+
             .navbar-content {
                 padding: 1rem 2rem;
             }
-            
+
             .navbar-title {
                 font-size: 1.25rem;
             }
-            
+
             .content-wrapper {
                 padding: 2rem;
             }
-            
+
             .dashboard-grid {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 1.5rem;
             }
-            
+
             .dashboard-card {
                 padding: 2rem;
             }
-            
+
             .dashboard-card .card-number {
                 font-size: 2.5rem;
             }
-            
+
             .page-title {
                 font-size: 2rem;
             }
-            
+
             .table-title {
                 font-size: 1.5rem;
             }
@@ -637,11 +638,11 @@
             .sidebar {
                 width: 260px;
             }
-            
+
             .navbar-links a {
                 font-size: 0.85rem;
             }
-            
+
             .dashboard-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
@@ -652,38 +653,38 @@
             .sidebar {
                 width: 240px;
             }
-            
+
             .sidebar-header {
                 padding: 1.25rem 1rem;
             }
-            
+
             .sidebar-brand {
                 font-size: 1.1rem;
             }
-            
+
             .sidebar-menu a {
                 padding: 0.75rem 1rem;
                 font-size: 0.85rem;
                 gap: 0.5rem;
             }
-            
+
             .navbar-links {
                 gap: 0.75rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.8rem;
             }
-            
+
             .dashboard-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1rem;
             }
-            
+
             .dashboard-card {
                 padding: 1.25rem;
             }
-            
+
             .dashboard-card .card-number {
                 font-size: 1.75rem;
             }
@@ -706,19 +707,19 @@
             .main-content {
                 width: 100%;
             }
-            
+
             .navbar-content {
                 padding: 0.75rem;
             }
-            
+
             .navbar-title {
                 font-size: 1rem;
             }
-            
+
             .navbar-links {
                 gap: 0.5rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.75rem;
             }
@@ -743,19 +744,19 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
             }
-            
+
             .dashboard-card {
                 padding: 1rem;
             }
-            
+
             .dashboard-card .card-number {
                 font-size: 1.5rem;
             }
-            
+
             .dashboard-card h3 {
                 font-size: 0.9rem;
             }
-            
+
             .dashboard-card .card-label {
                 font-size: 0.75rem;
             }
@@ -801,7 +802,7 @@
             body {
                 font-size: 14px;
             }
-            
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
@@ -817,25 +818,25 @@
             .main-content {
                 width: 100%;
             }
-            
+
             .navbar-content {
                 padding: 0.5rem;
                 min-height: 50px;
             }
-            
+
             .navbar-title {
                 font-size: 0.9rem;
             }
-            
+
             .sidebar-toggle {
                 font-size: 1.1rem;
                 padding: 0.25rem;
             }
-            
+
             .navbar-links {
                 gap: 0.25rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.7rem;
                 padding: 0.25rem;
@@ -861,20 +862,20 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
             }
-            
+
             .dashboard-card {
                 padding: 0.75rem;
             }
-            
+
             .dashboard-card .card-number {
                 font-size: 1.25rem;
             }
-            
+
             .dashboard-card h3 {
                 font-size: 0.8rem;
                 margin-bottom: 0.5rem;
             }
-            
+
             .dashboard-card .card-label {
                 font-size: 0.7rem;
             }
@@ -937,11 +938,11 @@
             .sidebar {
                 width: 240px;
             }
-            
+
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .navbar-title {
                 display: none;
             }
@@ -986,12 +987,12 @@
                 min-height: 44px;
                 padding: 0.75rem 1rem;
             }
-            
+
             .btn-sm {
                 min-height: 36px;
                 padding: 0.5rem 0.75rem;
             }
-            
+
             .sidebar-toggle {
                 min-height: 44px;
                 min-width: 44px;
@@ -1007,11 +1008,12 @@
         }
 
         /* High DPI displays */
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        @media (-webkit-min-device-pixel-ratio: 2),
+        (min-resolution: 192dpi) {
             .table-container {
                 border: 0.5px solid #e9ecef;
             }
-            
+
             .status-badge {
                 border: 0.5px solid rgba(0, 0, 0, 0.1);
             }
@@ -1022,16 +1024,16 @@
             .dashboard-grid {
                 display: none;
             }
-            
+
             .navbar-content {
                 padding: 0.5rem;
                 min-height: 45px;
             }
-            
+
             .content-wrapper {
                 padding: 0.5rem;
             }
-            
+
             .page-header {
                 margin-bottom: 1rem;
             }
@@ -1039,12 +1041,13 @@
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .overlay {
                 display: none;
             }
-            
+
             .main-content,
             .content,
             .content-wrapper {
@@ -1052,11 +1055,11 @@
                 padding: 0;
                 box-shadow: none;
             }
-            
+
             .dashboard-grid {
                 display: none;
             }
-            
+
             .btn {
                 display: none;
             }
@@ -1232,8 +1235,9 @@
                                                 </td>
                                                 <td>
                                                     <div class="action-buttons">
-                                                        <a href="{{ route('camiones.show', $camion->id) }}"
-                                                            class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
+                                                        <button
+                                                            onclick="mostrarDetalles('camion', {{ $camion->id }}, {{ json_encode($camion) }})"
+                                                            class="btn btn-secondary btn-sm" title="Ver Detalles">👁️</button>
                                                         <a href="{{ route('camiones.edit', $camion->id) }}"
                                                             class="btn btn-secondary btn-sm" title="Editar">✏️</a>
                                                         <form action="{{ route('camiones.destroy', $camion->id) }}"
@@ -1296,7 +1300,7 @@
 
             // Cerrar sidebar al hacer clic en un enlace (móvil)
             document.querySelectorAll('.sidebar-menu a').forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function () {
                     if (window.innerWidth <= 767) {
                         sidebar.classList.remove('active');
                         overlay.classList.remove('active');
@@ -1313,14 +1317,14 @@
 
             // Prevenir zoom accidental en iOS
             if (isMobile()) {
-                document.addEventListener('touchmove', function(e) {
+                document.addEventListener('touchmove', function (e) {
                     if (e.touches.length > 1) {
                         e.preventDefault();
                     }
                 }, { passive: false });
 
                 let lastTouchEnd = 0;
-                document.addEventListener('touchend', function(e) {
+                document.addEventListener('touchend', function (e) {
                     const now = (new Date()).getTime();
                     if (now - lastTouchEnd <= 300) {
                         e.preventDefault();
@@ -1333,7 +1337,7 @@
         // Función para actualizar fecha y hora
         function updateDateTime() {
             const now = new Date();
-            
+
             // Configurar opciones de formato para México
             const dateOptions = {
                 weekday: 'long',
@@ -1342,7 +1346,7 @@
                 day: 'numeric',
                 timeZone: 'America/Mexico_City'
             };
-            
+
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -1350,15 +1354,15 @@
                 hour12: true,
                 timeZone: 'America/Mexico_City'
             };
-            
+
             // Formatear fecha y hora
             const dateStr = now.toLocaleDateString('es-MX', dateOptions);
             const timeStr = now.toLocaleTimeString('es-MX', timeOptions);
-            
+
             // Actualizar elementos del DOM
             const dateElement = document.getElementById('dateText');
             const timeElement = document.getElementById('timeText');
-            
+
             if (dateElement && timeElement) {
                 dateElement.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
                 timeElement.textContent = timeStr;
@@ -1391,7 +1395,7 @@
             // Agregar efecto visual
             const userInfo = document.querySelector('.user-info');
             userInfo.style.transform = 'scale(0.95)';
-            
+
             setTimeout(() => {
                 userInfo.style.transform = '';
                 // Navegar al perfil
@@ -1422,7 +1426,7 @@
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/logout';
-                
+
                 // Agregar token CSRF
                 const csrfToken = document.querySelector('meta[name="csrf-token"]');
                 if (csrfToken) {
@@ -1432,7 +1436,7 @@
                     csrfInput.value = csrfToken.getAttribute('content');
                     form.appendChild(csrfInput);
                 }
-                
+
                 document.body.appendChild(form);
                 form.submit();
             }
@@ -1467,12 +1471,15 @@
         }
 
         // Simulación de datos dinámicos (eliminada - ahora se usa datos reales del servidor)
-        // La función updateStats() se eliminó porque las estadísticas 
+        // La función updateStats() se eliminó porque las estadísticas
         // ahora se calculan dinámicamente desde el controlador Laravel
 
         // Actualizar estadísticas al cargar (comentado - no necesario)
         // setTimeout(updateStats, 100);
     </script>
+
+    @include('components.modal-detalles')
+
 </body>
 
 </html>
