@@ -110,7 +110,7 @@ class ViajeController extends Controller
         $choferes = Chofer::all();
         $clientes = Cliente::all();
         
-        return view('viajes.edit', compact('viaje', 'camiones', 'choferes', 'clientes'));
+       return view('editarViaje', compact('viaje', 'camiones', 'choferes', 'clientes'));
     }
 
     public function update(Request $request, $id)
