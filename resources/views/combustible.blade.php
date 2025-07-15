@@ -808,11 +808,13 @@
                                     </div>
                                     <div class="filter-group">
                                         <label>Fecha Desde</label>
-                                        <input type="date" name="fecha_desde" id="filterDateFrom" value="{{ request('fecha_desde', date('Y-m-01')) }}">
+                                        <input type="date" name="fecha_desde" id="filterDateFrom"
+                                            value="{{ request('fecha_desde', date('Y-m-01')) }}">
                                     </div>
                                     <div class="filter-group">
                                         <label>Fecha Hasta</label>
-                                        <input type="date" name="fecha_hasta" id="filterDateTo" value="{{ request('fecha_hasta', date('Y-m-d')) }}">
+                                        <input type="date" name="fecha_hasta" id="filterDateTo"
+                                            value="{{ request('fecha_hasta', date('Y-m-d')) }}">
                                     </div>
                                     <div class="filter-group" style="justify-content: end; align-items: end;">
                                         <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
@@ -839,15 +841,23 @@
                                     <tbody>
                                         @forelse($registrosCombustible ?? [] as $registro)
                                             <tr>
-                                                <td>{{ $registro->fecha ? \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y') : '-' }}</td>
+                                                <td>{{ $registro->fecha ? \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y') : '-' }}
+                                                </td>
                                                 <td><strong>Viaje #{{ $registro->viaje_id ?? '-' }}</strong></td>
                                                 <td>{{ number_format($registro->cantidad_litros ?? 0, 2) }} L</td>
                                                 <td><strong>${{ number_format($registro->costo ?? 0, 2) }}</strong></td>
-                                                <td>${{ $registro->cantidad_litros > 0 ? number_format(($registro->costo / $registro->cantidad_litros), 2) : '0.00' }}</td>
+                                                <td>${{ $registro->cantidad_litros > 0 ? number_format(($registro->costo / $registro->cantidad_litros), 2) : '0.00' }}
+                                                </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-secondary" onclick="viewFuelRecord({{ $registro->id }})">👁️</button>
-                                                    <button class="btn btn-sm btn-warning" onclick="editFuelRecord({{ $registro->id }})">✏️</button>
-                                                    <form method="POST" action="{{ route('combustibles.destroy', $registro->id) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este registro?')">
+                                                    <button
+                                                        onclick="mostrarDetalles('combustible', {{ $registro->id }}, {{ json_encode($registro->load('viaje')) }})"
+                                                        class="btn btn-secondary btn-sm">👁️</button>
+                                                    <button class="btn btn-sm btn-warning"
+                                                        onclick="editFuelRecord({{ $registro->id }})">✏️</button>
+                                                    <form method="POST"
+                                                        action="{{ route('combustibles.destroy', $registro->id) }}"
+                                                        style="display: inline;"
+                                                        onsubmit="return confirm('¿Está seguro de eliminar este registro?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
@@ -864,7 +874,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             @if(isset($registrosCombustible) && method_exists($registrosCombustible, 'links'))
                                 <div style="margin-top: 1rem;">
                                     {{ $registrosCombustible->links() }}
@@ -889,13 +899,15 @@
                             <h3>🏆 Mejores Eficiencias</h3>
                             <div style="display: flex; flex-direction: column; gap: 1rem;">
                                 @forelse($mejoresEficiencias ?? [] as $eficiencia)
-                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
                                         <div>
                                             <strong>Viaje #{{ $eficiencia->viaje->id ?? '-' }}</strong>
                                             <div style="font-size: 0.875rem; color: #666;">Eficiencia calculada</div>
                                         </div>
                                         <div style="text-align: right;">
-                                            <div style="font-size: 1.25rem; font-weight: bold; color: #28a745;">{{ $eficiencia->eficiencia_promedio ?? 0 }} L/viaje</div>
+                                            <div style="font-size: 1.25rem; font-weight: bold; color: #28a745;">
+                                                {{ $eficiencia->eficiencia_promedio ?? 0 }} L/viaje</div>
                                             <div style="font-size: 0.75rem; color: #666;">Promedio</div>
                                         </div>
                                     </div>
@@ -912,9 +924,14 @@
                             <h3>⚠️ Alertas</h3>
                             <div style="display: flex; flex-direction: column; gap: 1rem;">
                                 @forelse($alertas ?? [] as $alerta)
-                                    <div style="padding: 1rem; background: {{ $alerta->tipo == 'warning' ? '#fff3cd' : ($alerta->tipo == 'danger' ? '#f8d7da' : '#d1ecf1') }}; border-left: 4px solid {{ $alerta->tipo == 'warning' ? '#ffc107' : ($alerta->tipo == 'danger' ? '#dc3545' : '#0c5460') }}; border-radius: 5px;">
-                                        <div style="font-weight: bold; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">{{ $alerta->titulo }}</div>
-                                        <div style="font-size: 0.875rem; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">{{ $alerta->descripcion }}</div>
+                                    <div
+                                        style="padding: 1rem; background: {{ $alerta->tipo == 'warning' ? '#fff3cd' : ($alerta->tipo == 'danger' ? '#f8d7da' : '#d1ecf1') }}; border-left: 4px solid {{ $alerta->tipo == 'warning' ? '#ffc107' : ($alerta->tipo == 'danger' ? '#dc3545' : '#0c5460') }}; border-radius: 5px;">
+                                        <div
+                                            style="font-weight: bold; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">
+                                            {{ $alerta->titulo }}</div>
+                                        <div
+                                            style="font-size: 0.875rem; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">
+                                            {{ $alerta->descripcion }}</div>
                                     </div>
                                 @empty
                                     <div style="text-align: center; color: #666; padding: 1rem;">
@@ -928,15 +945,19 @@
                         <div class="card">
                             <h3>📊 Estadísticas Rápidas</h3>
                             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <div
+                                    style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
                                     <span>Total registros:</span>
                                     <strong>{{ isset($registrosCombustible) ? $registrosCombustible->total() : 0 }}</strong>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <div
+                                    style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
                                     <span>Promedio costo/litro:</span>
-                                    <strong>${{ isset($registrosCombustible) && $registrosCombustible->count() > 0 ? number_format($registrosCombustible->where('cantidad_litros', '>', 0)->avg(function($item) { return $item->costo / $item->cantidad_litros; }), 2) : '0.00' }}</strong>
+                                    <strong>${{ isset($registrosCombustible) && $registrosCombustible->count() > 0 ? number_format($registrosCombustible->where('cantidad_litros', '>', 0)->avg(function ($item) {
+    return $item->costo / $item->cantidad_litros; }), 2) : '0.00' }}</strong>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
+                                <div
+                                    style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;">
                                     <span>Viajes con combustible:</span>
                                     <strong>{{ isset($registrosCombustible) ? $registrosCombustible->pluck('viaje_id')->unique()->count() : 0 }}</strong>
                                 </div>
@@ -977,7 +998,8 @@
                     </div>
                     <div class="form-group">
                         <label for="cantidad_litros">Cantidad (Litros) *</label>
-                        <input type="number" name="cantidad_litros" id="cantidad_litros" step="0.01" placeholder="0.00" required>
+                        <input type="number" name="cantidad_litros" id="cantidad_litros" step="0.01" placeholder="0.00"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="costo">Costo Total *</label>
@@ -1000,11 +1022,11 @@
         // Setup CSRF token for AJAX requests
         document.addEventListener('DOMContentLoaded', function () {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
+
             // Add token to all AJAX requests
             if (window.fetch) {
                 const originalFetch = window.fetch;
-                window.fetch = function(url, options = {}) {
+                window.fetch = function (url, options = {}) {
                     if (options.method && options.method.toUpperCase() !== 'GET') {
                         options.headers = options.headers || {};
                         options.headers['X-CSRF-TOKEN'] = token;
@@ -1048,7 +1070,7 @@
         function calculatePricePerLiter() {
             const liters = parseFloat(document.getElementById('cantidad_litros').value) || 0;
             const totalCost = parseFloat(document.getElementById('costo').value) || 0;
-            
+
             if (liters > 0) {
                 const pricePerLiter = totalCost / liters;
                 document.getElementById('precio_por_litro').value = pricePerLiter.toFixed(2);
@@ -1097,7 +1119,7 @@
         }
 
         // Cerrar modal al hacer clic fuera
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('fuelModal');
             if (event.target == modal) {
                 closeFuelModal();
@@ -1105,7 +1127,7 @@
         }
 
         // Auto-hide alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {
                 setTimeout(() => {
@@ -1117,6 +1139,9 @@
             });
         });
     </script>
+
+    @include('components.modal-detalles')
+
 </body>
 
 </html>

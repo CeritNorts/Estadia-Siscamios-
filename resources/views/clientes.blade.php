@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -216,10 +217,21 @@
             font-size: 0.8rem;
         }
 
-        .stat-total { color: #007bff; }
-        .stat-activos { color: #28a745; }
-        .stat-empresas { color: #17a2b8; }
-        .stat-recent { color: #ffc107; }
+        .stat-total {
+            color: #007bff;
+        }
+
+        .stat-activos {
+            color: #28a745;
+        }
+
+        .stat-empresas {
+            color: #17a2b8;
+        }
+
+        .stat-recent {
+            color: #ffc107;
+        }
 
         /* Table Container */
         .table-container {
@@ -353,8 +365,15 @@
             text-transform: uppercase;
         }
 
-        .status-activo { background: #e8f5e8; color: #2e7d32; }
-        .status-empresa { background: #e3f2fd; color: #1565c0; }
+        .status-activo {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-empresa {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
 
         /* Empty State */
         .empty-state {
@@ -435,19 +454,27 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
-        
-         <ul class="sidebar-menu">
+
+        <ul class="sidebar-menu">
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
@@ -523,7 +550,7 @@
 
         <div class="content">
             <div class="content-wrapper fade-in">
-                
+
                 <!-- Page Header -->
                 <div class="page-header">
                     <div>
@@ -553,7 +580,8 @@
                         <div class="stat-sublabel">Clientes corporativos</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-recent">{{ $clientes->where('created_at', '>=', now()->subDays(30))->count() }}</div>
+                        <div class="stat-number stat-recent">
+                            {{ $clientes->where('created_at', '>=', now()->subDays(30))->count() }}</div>
                         <div class="stat-label">Nuevos este mes</div>
                         <div class="stat-sublabel">Últimos 30 días</div>
                     </div>
@@ -568,7 +596,7 @@
                             <a href="{{ route('clientes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Cliente</a>
                         </div>
                     </div>
-                    
+
                     @if($clientes->count() > 0)
                         <table class="table">
                             <thead>
@@ -584,39 +612,47 @@
                             </thead>
                             <tbody>
                                 @foreach($clientes as $cliente)
-                                <tr>
-                                    <td><strong>CLI-{{ str_pad($cliente->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
-                                    <td>
-                                        <div style="font-weight: 500;">{{ $cliente->nombre }}</div>
-                                        <div style="font-size: 0.8rem; color: #666;">Cliente empresarial</div>
-                                    </td>
-                                    <td>
-                                        <div>{{ $cliente->contacto }}</div>
-                                    </td>
-                                    <td>
-                                        <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            {{ $cliente->contrato }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>{{ $cliente->created_at->format('d/m/Y') }}</div>
-                                        <div style="font-size: 0.8rem; color: #666;">{{ $cliente->created_at->diffForHumans() }}</div>
-                                    </td>
-                                    <td>
-                                        <span class="status-badge status-activo">Activo</span>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; gap: 0.5rem;">
-                                            <a href="{{ route('clientes.show', $cliente) }}" class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
-                                            <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
-                                            <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><strong>CLI-{{ str_pad($cliente->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                        <td>
+                                            <div style="font-weight: 500;">{{ $cliente->nombre }}</div>
+                                            <div style="font-size: 0.8rem; color: #666;">Cliente empresarial</div>
+                                        </td>
+                                        <td>
+                                            <div>{{ $cliente->contacto }}</div>
+                                        </td>
+                                        <td>
+                                            <div
+                                                style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                {{ $cliente->contrato }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>{{ $cliente->created_at->format('d/m/Y') }}</div>
+                                            <div style="font-size: 0.8rem; color: #666;">
+                                                {{ $cliente->created_at->diffForHumans() }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-activo">Activo</span>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.5rem;">
+                                                <button
+                                                    onclick="mostrarDetalles('cliente', {{ $cliente->id }}, {{ json_encode($cliente) }})"
+                                                    class="btn btn-secondary btn-sm">👁️</button>
+                                                <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm"
+                                                    title="Editar">✏️</a>
+                                                <form action="{{ route('clientes.destroy', $cliente) }}" method="POST"
+                                                    style="display: inline;"
+                                                    onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        title="Eliminar">🗑️</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -637,7 +673,7 @@
 
     <script>
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
         });
 
@@ -647,12 +683,12 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
 
-            overlay.addEventListener('click', function() {
+            overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
@@ -660,7 +696,7 @@
             // Search functionality
             const searchInput = document.getElementById('searchClientes');
             if (searchInput) {
-                searchInput.addEventListener('input', function() {
+                searchInput.addEventListener('input', function () {
                     filtrarClientes(this.value);
                 });
             }
@@ -668,7 +704,7 @@
 
         function filtrarClientes(termino) {
             const rows = document.querySelectorAll('.table tbody tr');
-            
+
             rows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
@@ -685,5 +721,9 @@
             }
         }
     </script>
+
+    @include('components.modal-detalles')
+
 </body>
+
 </html>
