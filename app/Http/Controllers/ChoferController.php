@@ -63,24 +63,28 @@ class ChoferController extends Controller
     /**
      * Mostrar detalles de un chofer específico
      */
-    public function show(Chofer $chofer)
+    public function show($id)
     {
+        $chofer = Chofer::findOrFail($id);
         return view('choferes.show', compact('chofer'));
     }
 
     /**
      * Mostrar formulario para editar chofer
      */
-    public function edit(Chofer $chofer)
+    public function edit($id)
     {
-        return view('choferes.edit', compact('chofer'));
+        $chofer = Chofer::findOrFail($id);
+        return view('editarConductor', compact('chofer'));
     }
 
     /**
      * Actualizar chofer en la base de datos
      */
-    public function update(Request $request, Chofer $chofer)
+    public function update(Request $request, $id)
     {
+        $chofer = Chofer::findOrFail($id);
+        
         $request->validate([
             'nombre' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
@@ -112,8 +116,9 @@ class ChoferController extends Controller
     /**
      * Eliminar chofer de la base de datos
      */
-    public function destroy(Chofer $chofer)
+    public function destroy($id)
     {
+        $chofer = Chofer::findOrFail($id);
         $chofer->delete();
         return redirect()->route('conductores.index')->with('success', 'Conductor eliminado correctamente.');
     }

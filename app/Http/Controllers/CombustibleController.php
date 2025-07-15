@@ -106,7 +106,7 @@ class CombustibleController extends Controller
             ]);
         }
 
-        return redirect()->route('combustibles.index')->with('success', 'Registro de combustible guardado correctamente');
+        return redirect()->route('combustible')->with('success', 'Registro de combustible guardado correctamente');
     }
 
     /**
@@ -125,7 +125,7 @@ class CombustibleController extends Controller
     {
         $combustible = Combustible::findOrFail($id);
         $viajes = Viaje::all();
-        return view('combustible.edit', compact('combustible', 'viajes'));
+        return view('editarCombustible', compact('combustible', 'viajes'));
     }
 
     /**
@@ -133,6 +133,8 @@ class CombustibleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $combustible = Combustible::findOrFail($id);
+        
         $request->validate([
             'viaje_id' => 'required|exists:viajes,id',
             'cantidad_litros' => 'required|numeric|min:0',
@@ -140,7 +142,6 @@ class CombustibleController extends Controller
             'fecha' => 'required|date',
         ]);
 
-        $combustible = Combustible::findOrFail($id);
         $combustible->update($request->all());
 
         if ($request->ajax()) {
@@ -150,7 +151,7 @@ class CombustibleController extends Controller
             ]);
         }
 
-        return redirect()->route('combustibles.index')->with('success', 'Registro de combustible actualizado correctamente');
+        return redirect()->route('combustible')->with('success', 'Registro de combustible actualizado correctamente');
     }
 
     /**
@@ -161,7 +162,7 @@ class CombustibleController extends Controller
         $combustible = Combustible::findOrFail($id);
         $combustible->delete();
 
-        return redirect()->route('combustibles.index')->with('success', 'Registro de combustible eliminado');
+        return redirect()->route('combustible')->with('success', 'Registro de combustible eliminado');
     }
 
     /**

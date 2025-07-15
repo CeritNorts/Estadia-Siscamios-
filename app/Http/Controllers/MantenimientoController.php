@@ -112,7 +112,7 @@ private function calcularEstadisticas()
     public function edit(Mantenimiento $mantenimiento)
     {
         $camiones = Camion::all();
-        return view('mantenimientos.edit', compact('mantenimiento', 'camiones'));
+        return view('editarMantenimiento', compact('mantenimiento', 'camiones'));
     }
 
     // Actualizar mantenimiento

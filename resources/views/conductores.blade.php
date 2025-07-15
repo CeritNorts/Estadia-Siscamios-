@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -244,11 +245,25 @@
             font-size: 0.8rem;
         }
 
-        .stat-total { color: #007bff; }
-        .stat-activos { color: #28a745; }
-        .stat-inactivos { color: #6c757d; }
-        .stat-viajes { color: #ffc107; }
-        .stat-licencias { color: #dc3545; }
+        .stat-total {
+            color: #007bff;
+        }
+
+        .stat-activos {
+            color: #28a745;
+        }
+
+        .stat-inactivos {
+            color: #6c757d;
+        }
+
+        .stat-viajes {
+            color: #ffc107;
+        }
+
+        .stat-licencias {
+            color: #dc3545;
+        }
 
         /* Tabs */
         .tabs-container {
@@ -492,12 +507,35 @@
             text-transform: uppercase;
         }
 
-        .status-activo { background: #e8f5e8; color: #2e7d32; }
-        .status-inactivo { background: #f8f9fa; color: #6c757d; }
-        .status-disponible { background: #e3f2fd; color: #1565c0; }
-        .status-ocupado { background: #fff8e1; color: #f57c00; }
-        .status-vencida { background: #ffebee; color: #c62828; }
-        .status-vigente { background: #e8f5e8; color: #2e7d32; }
+        .status-activo {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-inactivo {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .status-disponible {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-ocupado {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-vencida {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-vigente {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
 
         /* Alert Cards */
         .alert-card {
@@ -903,14 +941,15 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
-        
-         <ul class="sidebar-menu">
+
+        <ul class="sidebar-menu">
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
@@ -1001,6 +1040,7 @@
                         ❌ {{ session('error') }}
                     </div>
                 @endif
+            <div class="content-wrapper">
 
                 <!-- Page Header -->
                 <div class="page-header">
@@ -1026,7 +1066,8 @@
                         <div class="stat-sublabel">Disponibles para viajes</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-inactivos">{{ $choferes->where('estado', 'inactivo')->count() }}</div>
+                        <div class="stat-number stat-inactivos">{{ $choferes->where('estado', 'inactivo')->count() }}
+                        </div>
                         <div class="stat-label">Inactivos</div>
                         <div class="stat-sublabel">No disponibles</div>
                     </div>
@@ -1052,7 +1093,8 @@
                         <div class="table-header">
                             <h3 class="table-title">Todos los Conductores</h3>
                             <div class="table-actions">
-                                <input type="text" class="search-input" placeholder="Buscar conductor..." id="searchConductores">
+                                <input type="text" class="search-input" placeholder="Buscar conductor..."
+                                    id="searchConductores">
                                 <a href="{{ route('conductores.create') }}" class="btn btn-primary btn-sm">➕ Nuevo</a>
                             </div>
                         </div>
@@ -1074,6 +1116,22 @@
                                     <tbody id="conductoresTableBody">
                                         @foreach($choferes as $chofer)
                                         <tr data-estado="{{ $chofer->estado ?? 'activo' }}">
+
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Teléfono</th>
+                                        <th>Licencia</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($choferes as $chofer)
+                                        <tr>
                                             <td><strong>CH-{{ str_pad($chofer->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
                                             <td>{{ $chofer->nombre }}</td>
                                             <td>{{ $chofer->telefono }}</td>
@@ -1091,6 +1149,16 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
+                                                    <a href="{{ route('choferes.show', $chofer->id) }}"
+                                                        class="btn btn-secondary btn-sm">👁️</a>
+                                                    <a href="{{ route('choferes.edit', $chofer->id) }}"
+                                                        class="btn btn-warning btn-sm">✏️</a>
+                                                    <form action="{{ route('choferes.destroy', $chofer->id) }}" method="POST"
+                                                        style="display: inline;"
+                                                        onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
                                                     </form>
                                                 </div>
                                             </td>
@@ -1154,6 +1222,18 @@
                                 </a>
                             </div>
                         @endif
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                                                No hay conductores registrados.
+                                                <a href="{{ route('conductores.create') }}" class="btn btn-primary"
+                                                    style="margin-left: 1rem;">Registrar el primero</a>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -1172,6 +1252,15 @@
         function setupEventListeners() {
             // Sidebar toggle
             const sidebarToggle = document.getElementById('sidebarToggle');
+        // Sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', function () {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
@@ -1236,6 +1325,12 @@
             const mobileCards = document.querySelectorAll('.mobile-card');
             
             tableRows.forEach(row => {
+        // Search functionality
+        document.getElementById('searchConductores').addEventListener('input', function () {
+            const termino = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#conductores tbody tr');
+
+            rows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
                     row.style.display = '';
@@ -1420,4 +1515,5 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
         });
     </script>
 </body>
+
 </html>
