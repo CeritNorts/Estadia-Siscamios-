@@ -80,6 +80,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -137,6 +145,7 @@
         .navbar-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .navbar-links a {
@@ -147,6 +156,25 @@
 
         .navbar-links a:hover {
             color: #667eea;
+        }
+
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
         }
 
         /* Content Area */
@@ -346,6 +374,62 @@
             font-size: 0.9rem;
         }
 
+        /* Cards for mobile table */
+        .mobile-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .mobile-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-card .card-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .mobile-card .card-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-card .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-card .info-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .mobile-card .info-value {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .mobile-card .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
         /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
@@ -449,6 +533,41 @@
             color: #7b1fa2;
         }
 
+        .status-preventivo {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-correctivo {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-emergencia {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-normal {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-vigente {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-por-vencer {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-vencido {
+            background: #ffebee;
+            color: #c62828;
+        }
+
         /* Alert Cards */
         .alert-card {
             background: #fff3cd;
@@ -473,13 +592,76 @@
             color: #721c24;
         }
 
+        /* Success/Error Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
         /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+
+            .table-actions {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .search-input {
+                min-width: 150px;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                min-width: 120px;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+            }
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
                 height: 100vh;
                 z-index: 1001;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -507,6 +689,34 @@
 
             .navbar-content {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-content > div:last-child {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+
+            .current-date {
+                font-size: 0.8rem;
+            }
+
+            .current-time {
+                font-size: 0.9rem;
+            }
+
+            .datetime-display {
+                align-items: flex-start;
             }
 
             .content {
@@ -514,17 +724,39 @@
             }
 
             .dashboard-stats {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
             }
 
             .tabs-header {
                 flex-direction: column;
             }
 
+            .tab-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .tab-content {
+                padding: 1.5rem;
+            }
+
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
             }
 
             .table-header {
@@ -535,6 +767,170 @@
 
             .table-actions {
                 justify-content: center;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                min-width: unset;
+                width: 100%;
+            }
+
+            /* Hide table, show cards on mobile */
+            .table {
+                display: none;
+            }
+
+            .mobile-card {
+                display: block;
+            }
+
+            .btn {
+                padding: 0.875rem 1.25rem;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 0.75rem;
+            }
+
+            .sidebar-toggle {
+                padding: 0.375rem;
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 60px);
+                max-width: 300px;
+            }
+
+            .sidebar-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.25rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .stat-number {
+                font-size: 2.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .tabs-container {
+                border-radius: 8px;
+            }
+
+            .tab-content {
+                padding: 1rem;
+            }
+
+            .table-title {
+                font-size: 1.25rem;
+            }
+
+            .mobile-card {
+                padding: 1.25rem;
+            }
+
+            .mobile-card .card-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .tab-content {
+                padding: 0.75rem;
+            }
+
+            .mobile-card {
+                padding: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -555,24 +951,35 @@
             }
         }
 
-        /* Success/Error Messages */
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 5px;
-        }
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .btn,
+            .table-actions {
+                display: none;
+            }
 
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
+            .main-content {
+                width: 100%;
+            }
 
-        .alert-error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
+            .content {
+                padding: 0;
+            }
+
+            .tabs-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .mobile-card {
+                display: none;
+            }
+
+            .table {
+                display: table !important;
+            }
         }
     </style>
 </head>
@@ -599,7 +1006,7 @@
                 </a>
             </li>
             <li>
-                <a href="/mantenimiento">
+                <a href="/mantenimiento" class="active">
                     🔧 Mantenimiento
                 </a>
             </li>
@@ -612,15 +1019,27 @@
                 <a href="/clientes">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="/combustible">⛽ Combustible</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-avatar">{{ substr(Auth::user()->name, 0, 2) }}</div>
+            <div class="user-info" onclick="goToProfile()">
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -639,12 +1058,11 @@
                     <h1 class="navbar-title">Gestión de Mantenimiento</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="{{ route('profile.edit') }}">Perfil</a>
-                    <a href="#">Notificaciones</a>
-                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                        @csrf
-                        <a href="#" onclick="this.closest('form').submit();">Cerrar Sesión</a>
-                    </form>
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
+                    <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
         </nav>
@@ -655,13 +1073,13 @@
                 <!-- Success/Error Messages -->
                 @if(session('success'))
                     <div class="alert alert-success">
-                        {{ session('success') }}
+                        ✅ {{ session('success') }}
                     </div>
                 @endif
 
                 @if(session('error'))
                     <div class="alert alert-error">
-                        {{ session('error') }}
+                        ❌ {{ session('error') }}
                     </div>
                 @endif
                 
@@ -737,6 +1155,7 @@
                             </div>
                         </div>
                         
+                        <!-- Desktop Table -->
                         <div class="table-container">
                             <table class="table">
                                 <thead>
@@ -752,9 +1171,9 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="mantenimientosTableBody">
                                     @foreach($mantenimientos as $mantenimiento)
-                                    <tr>
+                                    <tr data-tipo="{{ $mantenimiento->tipo }}" data-estado="{{ $mantenimiento->estado }}">
                                         <td><strong>MNT-{{ str_pad($mantenimiento->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
                                         <td>{{ $mantenimiento->camion->numero_interno ?? 'N/A' }}</td>
                                         <td><span class="status-badge status-{{ strtolower(str_replace(' ', '-', $mantenimiento->tipo)) }}">{{ ucfirst($mantenimiento->tipo) }}</span></td>
@@ -765,12 +1184,12 @@
                                         <td><span class="status-badge status-{{ $mantenimiento->estado }}">{{ ucfirst($mantenimiento->estado) }}</span></td>
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
-                                                <a href="{{ route('mantenimientos.show', $mantenimiento) }}" class="btn btn-secondary btn-sm">👁️</a>
-                                                <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm">✏️</a>
+                                                <a href="{{ route('mantenimientos.show', $mantenimiento) }}" class="btn btn-secondary btn-sm" title="Ver detalles">👁️</a>
+                                                <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
                                                 <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -778,6 +1197,55 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Mobile Cards -->
+                        <div class="mobile-cards" id="mobileCards">
+                            @foreach($mantenimientos as $mantenimiento)
+                                <div class="mobile-card" data-tipo="{{ $mantenimiento->tipo }}" data-estado="{{ $mantenimiento->estado }}">
+                                    <div class="card-header">
+                                        <div class="card-title">MNT-{{ str_pad($mantenimiento->id, 3, '0', STR_PAD_LEFT) }}</div>
+                                        <span class="status-badge status-{{ $mantenimiento->estado }}">{{ ucfirst($mantenimiento->estado) }}</span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="info-item">
+                                            <div class="info-label">Camión</div>
+                                            <div class="info-value">{{ $mantenimiento->camion->numero_interno ?? 'N/A' }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Tipo</div>
+                                            <div class="info-value">
+                                                <span class="status-badge status-{{ strtolower(str_replace(' ', '-', $mantenimiento->tipo)) }}">{{ ucfirst($mantenimiento->tipo) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Descripción</div>
+                                            <div class="info-value">{{ $mantenimiento->descripcion }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Fecha</div>
+                                            <div class="info-value">{{ $mantenimiento->fecha_formateada }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Costo</div>
+                                            <div class="info-value">{{ $mantenimiento->costo_formateado }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Proveedor</div>
+                                            <div class="info-value">{{ $mantenimiento->proveedor ?? 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="{{ route('mantenimientos.show', $mantenimiento) }}" class="btn btn-secondary btn-sm">👁️ Ver</a>
+                                        <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                        <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -790,6 +1258,7 @@
                             </div>
                         </div>
                         
+                        <!-- Desktop Table -->
                         <div class="table-container">
                             <table class="table">
                                 <thead>
@@ -828,6 +1297,47 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Mobile Cards for Preventivo -->
+                        <div class="mobile-cards">
+                            @foreach($camiones as $camion)
+                            @php
+                                $kmRestantes = ($camion->proximo_mantenimiento ?? 100000) - ($camion->kilometraje_actual ?? 0);
+                                $estado = $kmRestantes <= 1000 ? 'urgente' : 'normal';
+                            @endphp
+                                <div class="mobile-card">
+                                    <div class="card-header">
+                                        <div class="card-title">{{ $camion->numero_interno }}</div>
+                                        <span class="status-badge status-{{ $estado }}">{{ $estado == 'urgente' ? 'Urgente' : 'Normal' }}</span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="info-item">
+                                            <div class="info-label">Kilometraje Actual</div>
+                                            <div class="info-value">{{ number_format($camion->kilometraje_actual ?? 0) }} km</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Próximo Servicio</div>
+                                            <div class="info-value">{{ number_format($camion->proximo_mantenimiento ?? 100000) }} km</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Km Restantes</div>
+                                            <div class="info-value">{{ number_format($kmRestantes) }} km</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Tipo de Servicio</div>
+                                            <div class="info-value">{{ $kmRestantes <= 5000 ? 'Mantenimiento Mayor' : 'Cambio de Aceite' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-actions">
+                                        @if($estado == 'urgente')
+                                            <button class="btn btn-danger btn-sm">🚨 Urgente</button>
+                                        @else
+                                            <button class="btn btn-success btn-sm">📅 Programar</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
 
                     <!-- Tab: Control de Documentos -->
@@ -839,6 +1349,7 @@
                             </div>
                         </div>
                         
+                        <!-- Desktop Table -->
                         <div class="table-container">
                             <table class="table">
                                 <thead>
@@ -881,6 +1392,51 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Mobile Cards for Documentos -->
+                        <div class="mobile-cards">
+                            @foreach($camiones as $camion)
+                            @if($camion->fecha_seguro)
+                            @php
+                                $diasRestantes = \Carbon\Carbon::parse($camion->fecha_seguro)->diffInDays(now(), false);
+                                $estado = $diasRestantes <= 30 ? ($diasRestantes < 0 ? 'vencido' : 'por-vencer') : 'vigente';
+                            @endphp
+                                <div class="mobile-card">
+                                    <div class="card-header">
+                                        <div class="card-title">{{ $camion->numero_interno }}</div>
+                                        <span class="status-badge status-{{ $estado }}">{{ ucfirst(str_replace('-', ' ', $estado)) }}</span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="info-item">
+                                            <div class="info-label">Tipo de Documento</div>
+                                            <div class="info-value">Póliza de Seguro</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Número</div>
+                                            <div class="info-value">{{ $camion->numero_poliza ?? 'N/A' }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Vigencia</div>
+                                            <div class="info-value">{{ \Carbon\Carbon::parse($camion->fecha_seguro)->format('d/m/Y') }}</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Días Restantes</div>
+                                            <div class="info-value">{{ $diasRestantes < 0 ? abs($diasRestantes) . ' días vencido' : $diasRestantes . ' días' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-actions">
+                                        @if($estado == 'vencido')
+                                            <button class="btn btn-danger btn-sm">🚨 Renovar Ya</button>
+                                        @elseif($estado == 'por-vencer')
+                                            <button class="btn btn-warning btn-sm">⚠️ Renovar</button>
+                                        @else
+                                            <button class="btn btn-secondary btn-sm">📄</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
@@ -889,16 +1445,11 @@
     </div>
 
     <script>
-        // Configuración CSRF para AJAX
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
         // Inicialización
         document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
         });
 
         function setupEventListeners() {
@@ -915,6 +1466,14 @@
             overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+            });
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
             });
 
             // Tab navigation
@@ -950,6 +1509,25 @@
             }, 5000);
         }
 
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
+
         function cambiarTab(tabId) {
             // Remover active de todos los botones y contenidos
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -961,9 +1539,11 @@
         }
 
         function filtrarMantenimientos(termino) {
-            const rows = document.querySelectorAll('#mantenimientos tbody tr');
+            // Filter table rows
+            const tableRows = document.querySelectorAll('#mantenimientosTableBody tr');
+            const mobileCards = document.querySelectorAll('#mantenimientos .mobile-card');
 
-            rows.forEach(row => {
+            tableRows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
                     row.style.display = '';
@@ -971,64 +1551,126 @@
                     row.style.display = 'none';
                 }
             });
+
+            // Filter mobile cards
+            mobileCards.forEach(card => {
+                const texto = card.textContent.toLowerCase();
+                if (texto.includes(termino.toLowerCase())) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         function filtrarPorTipo(tipo) {
-            const rows = document.querySelectorAll('#mantenimientos tbody tr');
+            // Filter table rows
+            const tableRows = document.querySelectorAll('#mantenimientosTableBody tr');
+            const mobileCards = document.querySelectorAll('#mantenimientos .mobile-card');
 
-            rows.forEach(row => {
-                const tipoCell = row.cells[2].textContent.toLowerCase();
-                if (!tipo || tipoCell.includes(tipo.toLowerCase())) {
+            tableRows.forEach(row => {
+                const tipoData = row.getAttribute('data-tipo');
+                if (!tipo || tipoData === tipo) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
                 }
             });
-        }
 
-        // AJAX Search function (opcional para búsqueda avanzada)
-        function buscarMantenimientos(query) {
-            fetch(`{{ route('mantenimiento.search') }}?q=${encodeURIComponent(query)}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
+            // Filter mobile cards
+            mobileCards.forEach(card => {
+                const tipoData = card.getAttribute('data-tipo');
+                if (!tipo || tipoData === tipo) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                actualizarTablaMantenimientos(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
             });
         }
 
-        function actualizarTablaMantenimientos(mantenimientos) {
-            const tbody = document.querySelector('#mantenimientos tbody');
-            tbody.innerHTML = '';
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
 
-            mantenimientos.forEach(mantenimiento => {
-                const row = `
-                    <tr>
-                        <td><strong>MNT-${String(mantenimiento.id).padStart(3, '0')}</strong></td>
-                        <td>${mantenimiento.camion ? mantenimiento.camion.numero_interno : 'N/A'}</td>
-                        <td><span class="status-badge status-${mantenimiento.tipo.toLowerCase().replace(' ', '-')}">${mantenimiento.tipo}</span></td>
-                        <td>${mantenimiento.descripcion || ''}</td>
-                        <td>${new Date(mantenimiento.fecha).toLocaleDateString('es-ES')}</td>
-                        <td>${parseFloat(mantenimiento.costo || 0).toLocaleString('es-ES', {minimumFractionDigits: 2})}</td>
-                        <td>${mantenimiento.proveedor || 'N/A'}</td>
-                        <td><span class="status-badge status-${mantenimiento.estado}">${mantenimiento.estado}</span></td>
-                        <td>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <a href="/mantenimientos/${mantenimiento.id}" class="btn btn-secondary btn-sm">👁️</a>
-                                <a href="/mantenimientos/${mantenimiento.id}/edit" class="btn btn-warning btn-sm">✏️</a>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+        function logout() {
+            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        // Enhanced mobile touch handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close sidebar
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            // Tab navigation with numbers
+            if (e.key >= '1' && e.key <= '3') {
+                const tabs = ['mantenimientos', 'preventivo', 'documentos'];
+                const tabIndex = parseInt(e.key) - 1;
+                if (tabs[tabIndex]) {
+                    cambiarTab(tabs[tabIndex]);
+                }
+            }
+        });
+
+        // Performance optimization: Debounce search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Apply debounce to search
+        if (document.getElementById('searchMantenimientos')) {
+            document.getElementById('searchMantenimientos').addEventListener('input', 
+                debounce(function() {
+                    filtrarMantenimientos(this.value);
+                }, 300)
+            );
         }
     </script>
 </body>
