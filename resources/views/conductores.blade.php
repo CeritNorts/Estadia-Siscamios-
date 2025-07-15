@@ -747,6 +747,122 @@
 
             .dashboard-stats {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .tab-content {
+                padding: 0.75rem;
+            }
+
+            .mobile-card {
+                padding: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .btn,
+            .table-actions {
+                display: none;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .tabs-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .mobile-card {
+                display: none;
+            }
+
+            .table {
+                display: table !important;
             }
 
             .stat-card {
@@ -1088,6 +1204,7 @@
                                                     <button
                                                         onclick="mostrarDetalles('chofer', {{ $chofer->id }}, {{ json_encode($chofer) }})"
                                                         class="btn btn-secondary btn-sm">👁️</button>
+
                                                     <a href="{{ route('choferes.edit', $chofer) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
                                                     <form action="{{ route('choferes.destroy', $chofer) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
                                                         @csrf
@@ -1426,3 +1543,4 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
 
 </body>
 </html>
+
