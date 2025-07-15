@@ -78,6 +78,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -135,6 +143,7 @@
         .navbar-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .navbar-links a {
@@ -145,6 +154,25 @@
 
         .navbar-links a:hover {
             color: #667eea;
+        }
+
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
         }
 
         /* Content Area */
@@ -416,12 +444,38 @@
         }
 
         /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+            }
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
                 height: 100vh;
                 z-index: 1001;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -449,6 +503,34 @@
 
             .navbar-content {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-content > div:last-child {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+
+            .current-date {
+                font-size: 0.8rem;
+            }
+
+            .current-time {
+                font-size: 0.9rem;
+            }
+
+            .datetime-display {
+                align-items: flex-start;
             }
 
             .content {
@@ -457,6 +539,7 @@
 
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .page-header {
@@ -465,8 +548,191 @@
                 gap: 1rem;
             }
 
+            .page-title {
+                font-size: 1.75rem;
+            }
+
             .form-actions {
                 flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.25rem;
+                justify-content: center;
+            }
+
+            .form-container {
+                padding: 1.25rem;
+            }
+
+            .form-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.25rem;
+            }
+
+            .sidebar-menu a {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .user-info {
+                padding: 0.75rem;
+            }
+
+            .form-section {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 0.75rem;
+            }
+
+            .sidebar-toggle {
+                padding: 0.375rem;
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 60px);
+                max-width: 300px;
+            }
+
+            .sidebar-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .form-container {
+                padding: 1rem;
+                border-radius: 8px;
+            }
+
+            .form-header {
+                margin-bottom: 1rem;
+            }
+
+            .form-title {
+                font-size: 1.1rem;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 0.875rem;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .btn {
+                padding: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .breadcrumb {
+                font-size: 0.8rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+
+            .form-section {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                padding: 0.75rem;
+            }
+
+            .form-grid {
+                gap: 0.75rem;
+            }
+
+            .form-section {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .form-section {
+                margin-bottom: 1rem;
             }
         }
 
@@ -478,6 +744,28 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar,
+            .btn {
+                display: none;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .form-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
         }
     </style>
 </head>
@@ -521,7 +809,7 @@
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
+            <div class="user-info" onclick="goToProfile()">
                 <div class="user-avatar">
                     @auth
                         {{ substr(auth()->user()->name, 0, 2) }}
@@ -555,8 +843,10 @@
                     <h1 class="navbar-title">Asignar Viaje</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
-                    <a href="#">Notificaciones</a>
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
@@ -781,6 +1071,8 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
             setMinDateTime();
             checkCamionesDisponibles();
         });
@@ -799,6 +1091,14 @@
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
+            });
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
             });
 
             // Validación de fechas
@@ -826,6 +1126,32 @@
                     submitBtn.style.opacity = '1';
                 }
             });
+
+            // Prevent form submission on Enter in input fields (except submit button)
+            document.getElementById('formAsignarViaje').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.type !== 'submit' && e.target.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
         }
 
         function setMinDateTime() {
@@ -854,9 +1180,13 @@
             }
         }
 
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                alert('Cerrando sesión...');
+                window.location.href = '/logout';
             }
         }
 
@@ -905,6 +1235,98 @@
             }
             
             return true;
+        });
+
+        // Enhanced mobile touch handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close sidebar
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            // Ctrl+S to save form
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                const submitButton = document.querySelector('.btn-primary');
+                if (submitButton && !submitButton.disabled) {
+                    submitButton.click();
+                }
+            }
+        });
+
+        // Auto-format ruta input with arrow
+        document.getElementById('ruta').addEventListener('blur', function() {
+            let value = this.value.trim();
+            if (value && !value.includes('→') && !value.includes('-')) {
+                // Try to detect two locations and format with arrow
+                const parts = value.split(/[,;]/);
+                if (parts.length >= 2) {
+                    this.value = parts[0].trim() + ' → ' + parts.slice(1).join(', ').trim();
+                }
+            }
+        });
+
+        // Form auto-save to prevent data loss
+        const formInputs = document.querySelectorAll('#formAsignarViaje input, #formAsignarViaje select, #formAsignarViaje textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                localStorage.setItem('viaje_form_' + this.name, this.value);
+            });
+
+            // Restore saved data
+            const savedValue = localStorage.getItem('viaje_form_' + input.name);
+            if (savedValue && !input.value) {
+                input.value = savedValue;
+            }
+        });
+
+        // Clear saved data on successful form submission
+        document.getElementById('formAsignarViaje').addEventListener('submit', function() {
+            formInputs.forEach(input => {
+                localStorage.removeItem('viaje_form_' + input.name);
+            });
+        });
+
+        // Initialize form state
+        window.addEventListener('load', function() {
+            checkCamionesDisponibles();
+            setMinDateTime();
         });
     </script>
 </body>
