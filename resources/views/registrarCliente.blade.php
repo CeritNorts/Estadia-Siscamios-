@@ -78,6 +78,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -135,6 +143,7 @@
         .navbar-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .navbar-links a {
@@ -145,6 +154,25 @@
 
         .navbar-links a:hover {
             color: #667eea;
+        }
+
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
         }
 
         /* Content Area */
@@ -251,7 +279,8 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             padding: 0.75rem;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -265,7 +294,8 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -355,13 +385,47 @@
             color: white;
         }
 
+        /* Character Counter */
+        .character-counter {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        .character-counter.warning {
+            color: #dc3545;
+        }
+
         /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+
+            .navbar-content {
+                padding: 1rem 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+            }
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
                 height: 100vh;
                 z-index: 1001;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -389,6 +453,34 @@
 
             .navbar-content {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-content > div:last-child {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+
+            .current-date {
+                font-size: 0.8rem;
+            }
+
+            .current-time {
+                font-size: 0.9rem;
+            }
+
+            .datetime-display {
+                align-items: flex-start;
             }
 
             .content {
@@ -405,8 +497,128 @@
                 gap: 1rem;
             }
 
+            .page-title {
+                font-size: 1.75rem;
+            }
+
             .form-actions {
                 flex-direction: column-reverse;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 0.75rem;
+            }
+
+            .sidebar-toggle {
+                padding: 0.375rem;
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 60px);
+                max-width: 300px;
+            }
+
+            .sidebar-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+                border-radius: 8px;
+            }
+
+            .form-header {
+                padding-bottom: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-title {
+                font-size: 1.25rem;
+            }
+
+            .form-grid {
+                gap: 1rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
             }
         }
 
@@ -416,8 +628,35 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar {
+                display: none;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .form-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
         }
     </style>
 </head>
@@ -453,30 +692,18 @@
                 </a>
             </li>
             <li>
-                <a href="/clientes">👤 Clientes</a>
+                <a href="/clientes" class="active">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="/combustible">⛽ Combustible</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-avatar">
-                    @auth
-                        {{ substr(auth()->user()->name, 0, 2) }}
-                    @else
-                        AD
-                    @endauth
-                </div>
+            <div class="user-info" onclick="goToProfile()">
+                <div class="user-avatar">AD</div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">
-                        @auth
-                            {{ auth()->user()->name }}
-                        @else
-                            Administrador
-                        @endauth
-                    </div>
+                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -495,8 +722,10 @@
                     <h1 class="navbar-title">Registrar Cliente</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
-                    <a href="#">Notificaciones</a>
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
@@ -507,7 +736,7 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="{{ route('clientes.index') }}">Clientes</a>
+                    <a href="/clientes">Clientes</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Registrar Cliente</span>
                 </div>
@@ -518,28 +747,13 @@
                         <h1 class="page-title">Registrar Cliente</h1>
                         <p class="page-subtitle">Complete la información del nuevo cliente</p>
                     </div>
-                    <a href="{{ route('clientes.index') }}" class="btn btn-outline">
+                    <a href="/clientes" class="btn btn-outline">
                         ← Volver a Clientes
                     </a>
                 </div>
 
-                <!-- Mostrar mensajes de éxito -->
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <!-- Mostrar errores generales -->
-                @if($errors->any())
-                    <div class="alert alert-danger">
-                        <ul style="margin: 0; padding-left: 1rem;">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <!-- Success/Error Messages -->
+                <div id="alertContainer"></div>
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -548,9 +762,7 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para registrar el cliente</p>
                     </div>
                     
-                    <form action="{{ route('clientes.store') }}" method="POST" id="formRegistrarCliente">
-                        @csrf
-                        
+                    <form id="formRegistrarCliente">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="nombre">Nombre/Razón Social <span class="required-indicator">*</span></label>
@@ -558,14 +770,18 @@
                                     type="text" 
                                     id="nombre" 
                                     name="nombre" 
-                                    value="{{ old('nombre') }}"
                                     required 
                                     placeholder="Ej: Juan Pérez García / Empresa S.A. de C.V."
-                                    class="@error('nombre') border-danger @enderror"
                                 >
-                                @error('nombre')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
+                                <div class="error-message" id="error-nombre"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tipo">Tipo de Cliente</label>
+                                <select id="tipo" name="tipo">
+                                    <option value="empresa">Empresa</option>
+                                    <option value="particular">Particular</option>
+                                </select>
                             </div>
                             
                             <div class="form-group">
@@ -574,14 +790,18 @@
                                     type="text" 
                                     id="contacto" 
                                     name="contacto" 
-                                    value="{{ old('contacto') }}"
                                     required 
                                     placeholder="Ej: +52 271 123 4567 / contacto@empresa.com"
-                                    class="@error('contacto') border-danger @enderror"
                                 >
-                                @error('contacto')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
+                                <div class="error-message" id="error-contacto"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estado">Estado</label>
+                                <select id="estado" name="estado">
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
                             </div>
                             
                             <div class="form-group full-width">
@@ -591,11 +811,9 @@
                                     name="contrato" 
                                     required 
                                     placeholder="Detalles del contrato: servicios requeridos, frecuencia de viajes, rutas principales, términos especiales, etc."
-                                    class="@error('contrato') border-danger @enderror"
-                                >{{ old('contrato') }}</textarea>
-                                @error('contrato')
-                                    <div class="error-message">{{ $message }}</div>
-                                @enderror
+                                ></textarea>
+                                <div class="character-counter" id="contrato-counter">0 / 1000 caracteres</div>
+                                <div class="error-message" id="error-contrato"></div>
                             </div>
                         </div>
                         
@@ -618,6 +836,8 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
         });
 
         function setupEventListeners() {
@@ -636,47 +856,182 @@
                 overlay.classList.remove('active');
             });
 
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+
             // Contador de caracteres para el textarea
             const contratoTextarea = document.getElementById('contrato');
             contratoTextarea.addEventListener('input', function() {
                 const maxLength = 1000;
                 const currentLength = this.value.length;
-                
-                // Agregar contador si no existe
-                let counter = document.getElementById('contrato-counter');
-                if (!counter) {
-                    counter = document.createElement('div');
-                    counter.id = 'contrato-counter';
-                    counter.style.cssText = 'font-size: 0.8rem; color: #666; text-align: right; margin-top: 0.25rem;';
-                    this.parentNode.appendChild(counter);
-                }
+                const counter = document.getElementById('contrato-counter');
                 
                 counter.textContent = `${currentLength} / ${maxLength} caracteres`;
                 
                 if (currentLength > maxLength * 0.9) {
-                    counter.style.color = '#dc3545';
+                    counter.classList.add('warning');
                 } else {
-                    counter.style.color = '#666';
+                    counter.classList.remove('warning');
                 }
             });
+
+            // Form submission
+            document.getElementById('formRegistrarCliente').addEventListener('submit', function(e) {
+                e.preventDefault();
+                registrarCliente();
+            });
+
+            // Enhanced mobile touch handling
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Escape key to close sidebar
+                if (e.key === 'Escape') {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
         }
 
         function limpiarFormulario() {
             if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
                 document.getElementById('formRegistrarCliente').reset();
                 
-                // Limpiar contador de caracteres si existe
+                // Limpiar contador de caracteres
                 const counter = document.getElementById('contrato-counter');
-                if (counter) {
-                    counter.textContent = '0 / 1000 caracteres';
-                    counter.style.color = '#666';
-                }
+                counter.textContent = '0 / 1000 caracteres';
+                counter.classList.remove('warning');
+
+                // Limpiar mensajes de error
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.textContent = '';
+                });
+
+                showAlert('Formulario limpiado correctamente', 'success');
             }
+        }
+
+        function registrarCliente() {
+            // Limpiar errores previos
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.textContent = '';
+            });
+
+            // Obtener datos del formulario
+            const formData = new FormData(document.getElementById('formRegistrarCliente'));
+            const cliente = Object.fromEntries(formData);
+
+            // Validación básica
+            let hasErrors = false;
+
+            if (!cliente.nombre.trim()) {
+                document.getElementById('error-nombre').textContent = 'El nombre es obligatorio';
+                hasErrors = true;
+            }
+
+            if (!cliente.contacto.trim()) {
+                document.getElementById('error-contacto').textContent = 'La información de contacto es obligatoria';
+                hasErrors = true;
+            }
+
+            if (!cliente.contrato.trim()) {
+                document.getElementById('error-contrato').textContent = 'La información del contrato es obligatoria';
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                showAlert('Por favor, corrija los errores en el formulario', 'danger');
+                return;
+            }
+
+            // Simulación de registro exitoso
+            showAlert('Cliente registrado exitosamente', 'success');
+            
+            // Limpiar formulario después del registro
+            setTimeout(() => {
+                document.getElementById('formRegistrarCliente').reset();
+                document.getElementById('contrato-counter').textContent = '0 / 1000 caracteres';
+                document.getElementById('contrato-counter').classList.remove('warning');
+            }, 1500);
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertContainer.appendChild(alert);
+            
+            // Auto-remove alert after 5 seconds
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    alert.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        function goToProfile() {
+            window.location.href = '/profile';
         }
 
         function logout() {
             if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                alert('Cerrando sesión...');
+                window.location.href = '/logout';
             }
         }
     </script>
