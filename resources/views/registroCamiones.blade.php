@@ -291,6 +291,18 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        .form-group input.is-invalid,
+        .form-group select.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .form-group input.is-valid,
+        .form-group select.is-valid {
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
         .form-group textarea {
             resize: vertical;
             min-height: 100px;
@@ -381,6 +393,19 @@
             margin-top: 0.25rem;
         }
 
+        .success-message {
+            color: #28a745;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Validation indicators */
+        .validation-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
         /* Logout button in navbar */
         .logout-btn {
             background: transparent;
@@ -405,6 +430,7 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
         }
+
         @media (max-width: 1200px) {
             .content {
                 padding: 1.5rem;
@@ -820,6 +846,7 @@
                                 @error('placa')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
+                                <div class="validation-info">Formato: XXX-1234 (3 letras, guión, 4 números)</div>
                             </div>
                             
                             <div class="form-group">
@@ -834,6 +861,7 @@
                                 @error('modelo')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
+                                <div class="validation-info">Permite letras, espacios, números y guión (máximo 6 números consecutivos)</div>
                             </div>
                             
                             <div class="form-group">
@@ -843,13 +871,14 @@
                                        name="anio" 
                                        value="{{ old('anio') }}"
                                        required 
-                                       min="2000" 
+                                       min="1900" 
                                        max="{{ date('Y') }}" 
                                        placeholder="{{ date('Y') }}"
                                        class="@error('anio') is-invalid @enderror">
                                 @error('anio')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
+                                <div class="validation-info">Año entre 1900 y {{ date('Y') }}</div>
                             </div>
                             
                             <div class="form-group">
@@ -860,12 +889,14 @@
                                        value="{{ old('capacidad_carga') }}"
                                        required 
                                        step="0.1" 
-                                       min="0"
+                                       min="0.1"
+                                       max="100"
                                        placeholder="25.5"
                                        class="@error('capacidad_carga') is-invalid @enderror">
                                 @error('capacidad_carga')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
+                                <div class="validation-info">Solo números positivos (0.1 - 100 toneladas)</div>
                             </div>
                             
                             <div class="form-group">
@@ -901,7 +932,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
             updateDateTime();
-            setInterval(updateDateTime, 1000); // Actualizar cada segundo
+            setInterval(updateDateTime, 1000);
+            setupValidations();
         });
 
         function setupEventListeners() {
@@ -936,6 +968,187 @@
             });
         }
 
+        function setupValidations() {
+            const anioInput = document.getElementById('anio');
+            const modeloInput = document.getElementById('modelo');
+            const capacidadInput = document.getElementById('capacidad_carga');
+            const placaInput = document.getElementById('placa');
+
+            // Validación para el año
+            anioInput.addEventListener('input', function() {
+                const currentYear = new Date().getFullYear();
+                let value = this.value;
+                
+                // Remover números negativos y limitarlo a 4 dígitos
+                value = value.replace(/[^0-9]/g, '');
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+                
+                this.value = value;
+                
+                // Validar rango
+                const year = parseInt(value);
+                if (value && (year < 1900 || year > currentYear)) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    showFieldError(this, `El año debe estar entre 1900 y ${currentYear}`);
+                } else if (value && year >= 1900 && year <= currentYear) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    hideFieldError(this);
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(this);
+                }
+            });
+
+            // Validación para el modelo (letras, espacios, números - máximo 6 números consecutivos)
+            modeloInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Permitir letras, espacios, números y algunos caracteres especiales comunes en modelos
+                value = value.replace(/[^a-zA-ZÀ-ÿ\s0-9\-]/g, '');
+                
+                // Verificar que no haya más de 6 números consecutivos
+                const consecutiveNumbers = value.match(/\d{7,}/g);
+                if (consecutiveNumbers) {
+                    // Si hay más de 6 números consecutivos, cortarlos a 6
+                    consecutiveNumbers.forEach(match => {
+                        const replacement = match.substring(0, 6);
+                        value = value.replace(match, replacement);
+                    });
+                }
+                
+                this.value = value;
+                
+                // Validar formato
+                const hasMoreThan6ConsecutiveNumbers = /\d{7,}/.test(value);
+                
+                if (hasMoreThan6ConsecutiveNumbers) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    showFieldError(this, 'No se permiten más de 6 números consecutivos');
+                } else if (value.trim().length > 0) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    hideFieldError(this);
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(this);
+                }
+            });
+
+            // Validación para capacidad de carga (solo números positivos)
+            capacidadInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Remover letras y caracteres especiales, mantener solo números y punto decimal
+                value = value.replace(/[^0-9.]/g, '');
+                
+                // Evitar múltiples puntos decimales
+                const parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                
+                this.value = value;
+                
+                const numValue = parseFloat(value);
+                if (value && (numValue <= 0 || numValue > 100)) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    showFieldError(this, 'La capacidad debe ser mayor a 0 y menor o igual a 100 toneladas');
+                } else if (value && numValue > 0 && numValue <= 100) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    hideFieldError(this);
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(this);
+                }
+            });
+
+            // Prevenir entrada de valores negativos con teclado
+            anioInput.addEventListener('keydown', function(e) {
+                // Prevenir el signo negativo
+                if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                }
+            });
+
+            capacidadInput.addEventListener('keydown', function(e) {
+                // Prevenir el signo negativo
+                if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                }
+            });
+
+            // Validación para placa (formato XXX-1234)
+            placaInput.addEventListener('input', function() {
+                let value = this.value.replace(/[^a-zA-Z0-9-]/g, '').toUpperCase();
+                
+                // Formato automático XXX-1234
+                if (value.length > 3 && value.charAt(3) !== '-') {
+                    value = value.slice(0, 3) + '-' + value.slice(3);
+                }
+                
+                // Limitar longitud
+                if (value.length > 8) {
+                    value = value.slice(0, 8);
+                }
+                
+                this.value = value;
+                
+                // Validar formato
+                const placaRegex = /^[A-Z]{3}-[0-9]{4}$/;
+                if (value && !placaRegex.test(value)) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                    showFieldError(this, 'Formato inválido. Use XXX-1234 (3 letras, guión, 4 números)');
+                } else if (value && placaRegex.test(value)) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    hideFieldError(this);
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(this);
+                }
+            });
+
+            // Validación en tiempo real para estado
+            document.getElementById('estado').addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.add('is-valid');
+                    this.classList.remove('is-invalid');
+                    hideFieldError(this);
+                } else {
+                    this.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(this);
+                }
+            });
+        }
+
+        function showFieldError(field, message) {
+            // Remover mensaje de error anterior
+            hideFieldError(field);
+            
+            // Crear nuevo mensaje de error
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message validation-error';
+            errorDiv.textContent = message;
+            
+            // Insertar después del campo
+            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+        }
+
+        function hideFieldError(field) {
+            const errorMessage = field.parentNode.querySelector('.validation-error');
+            if (errorMessage) {
+                errorMessage.remove();
+            }
+        }
+
         function updateDateTime() {
             const now = new Date();
             const dateOptions = { 
@@ -962,6 +1175,19 @@
         function limpiarFormulario() {
             if (confirm('¿Estás seguro de que deseas limpiar todos los campos?')) {
                 document.getElementById('formRegistroCamion').reset();
+                
+                // Limpiar clases de validación
+                const inputs = document.querySelectorAll('.form-group input, .form-group select');
+                inputs.forEach(input => {
+                    input.classList.remove('is-valid', 'is-invalid');
+                    hideFieldError(input);
+                });
+                
+                // Limpiar localStorage
+                const formInputs = document.querySelectorAll('#formRegistroCamion input, #formRegistroCamion select');
+                formInputs.forEach(input => {
+                    localStorage.removeItem('form_' + input.name);
+                });
             }
         }
 
@@ -969,6 +1195,68 @@
             if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
                 window.location.href = '/logout';
             }
+        }
+
+        // Validación final antes del envío
+        document.getElementById('formRegistroCamion').addEventListener('submit', function(e) {
+            const isValid = validateForm();
+            if (!isValid) {
+                e.preventDefault();
+                alert('Por favor, corrija los errores en el formulario antes de continuar.');
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            const currentYear = new Date().getFullYear();
+            
+            // Validar placa
+            const placa = document.getElementById('placa').value;
+            const placaRegex = /^[A-Z]{3}-[0-9]{4}$/;
+            if (!placa || !placaRegex.test(placa)) {
+                showFieldError(document.getElementById('placa'), 'Formato de placa inválido');
+                document.getElementById('placa').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            // Validar modelo
+            const modelo = document.getElementById('modelo').value;
+            const hasMoreThan6ConsecutiveNumbers = /\d{7,}/.test(modelo);
+            if (!modelo || modelo.trim().length === 0) {
+                showFieldError(document.getElementById('modelo'), 'El modelo es obligatorio');
+                document.getElementById('modelo').classList.add('is-invalid');
+                isValid = false;
+            } else if (hasMoreThan6ConsecutiveNumbers) {
+                showFieldError(document.getElementById('modelo'), 'No se permiten más de 6 números consecutivos');
+                document.getElementById('modelo').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            // Validar año
+            const anio = parseInt(document.getElementById('anio').value);
+            if (!anio || anio < 1900 || anio > currentYear) {
+                showFieldError(document.getElementById('anio'), `El año debe estar entre 1900 y ${currentYear}`);
+                document.getElementById('anio').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            // Validar capacidad de carga
+            const capacidad = parseFloat(document.getElementById('capacidad_carga').value);
+            if (!capacidad || capacidad <= 0 || capacidad > 100) {
+                showFieldError(document.getElementById('capacidad_carga'), 'La capacidad debe ser mayor a 0 y menor o igual a 100 toneladas');
+                document.getElementById('capacidad_carga').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            // Validar estado
+            const estado = document.getElementById('estado').value;
+            if (!estado) {
+                showFieldError(document.getElementById('estado'), 'Debe seleccionar un estado');
+                document.getElementById('estado').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            return isValid;
         }
 
         // Enhanced mobile touch handling
