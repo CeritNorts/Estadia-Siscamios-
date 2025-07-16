@@ -10,7 +10,7 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = Cliente::all();
-        return view('clientes', compact('clientes'));
+        return view('clientes', compact('clientes')); 
     }
 
     public function create()
@@ -24,12 +24,18 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:255',
             'contacto' => 'required|string|max:255',
             'contrato' => 'required|string',
+            'tipo' => 'required|string|in:empresa,particular', 
+            'estado' => 'required|string|in:activo,inactivo', 
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
             'contacto.required' => 'El contacto es obligatorio.',
             'contacto.max' => 'El contacto no puede tener más de 255 caracteres.',
             'contrato.required' => 'El contrato es obligatorio.',
+            'tipo.required' => 'El tipo de cliente es obligatorio.', 
+            'tipo.in' => 'El tipo de cliente debe ser "Empresa" o "Particular".', 
+            'estado.required' => 'El estado es obligatorio.',
+            'estado.in' => 'El estado debe ser "Activo" o "Inactivo".',
         ]);
 
         Cliente::create($request->all());
@@ -57,12 +63,18 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:255',
             'contacto' => 'required|string|max:255',
             'contrato' => 'required|string',
+            'tipo' => 'required|string|in:empresa,particular', 
+            'estado' => 'required|string|in:activo,inactivo', 
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
             'contacto.required' => 'El contacto es obligatorio.',
             'contacto.max' => 'El contacto no puede tener más de 255 caracteres.',
             'contrato.required' => 'El contrato es obligatorio.',
+            'tipo.required' => 'El tipo de cliente es obligatorio.',
+            'tipo.in' => 'El tipo de cliente debe ser "Empresa" o "Particular".',
+            'estado.required' => 'El estado es obligatorio.',
+            'estado.in' => 'El estado debe ser "Activo" o "Inactivo".',
         ]);
 
         $cliente->update($request->all());

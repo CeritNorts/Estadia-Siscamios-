@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siscamino - Registrar Cliente</title>
     <style>
+        /* Tu CSS proporcionado (sin cambios aquí) */
         * {
             margin: 0;
             padding: 0;
@@ -672,49 +673,42 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- Sidebar (contenido de tu sidebar, sin cambios relevantes para este problema) -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
         
         <ul class="sidebar-menu">
-            <li>
-                <a href="/dashboard">
-                    📊 Panel Administrativo
-                </a>
-            </li>
-            <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
-                    📋 Viajes
-                </a>
-            </li>
-            <li>
-                <a href="/mantenimiento">
-                    🔧 Mantenimiento
-                </a>
-            </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes" class="active">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="/combustible">⛽ Combustible</a>
-            </li>
+            <li><a href="/dashboard">📊 Panel Administrativo</a></li>
+            <li><a href="/camiones">🚛 Camiones</a></li>
+            <li><a href="/viajes">📋 Viajes</a></li>
+            <li><a href="/mantenimiento">🔧 Mantenimiento</a></li>
+            <li><a href="/conductores">👥 Conductores</a></li>
+            <li><a href="/clientes" class="active">👤 Clientes</a></li>
+            <li><a href="/combustible">⛽ Combustible</a></li>
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li><a href="{{ route('admin.users.index') }}">⚙️ Gestión de Usuarios</a></li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
             <div class="user-info" onclick="goToProfile()">
-                <div class="user-avatar">AD</div>
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -764,7 +758,22 @@
                 </div>
 
                 <!-- Success/Error Messages -->
-                <div id="alertContainer"></div>
+                {{-- Aquí Laravel inyectará los mensajes de sesión (success/error) --}}
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -773,7 +782,9 @@
                         <p class="form-description">Complete todos los campos obligatorios (*) para registrar el cliente</p>
                     </div>
                     
-                    <form id="formRegistrarCliente">
+                    {{-- ¡CAMBIO CLAVE AQUÍ! El formulario ahora se envía directamente a Laravel --}}
+                    <form action="{{ route('clientes.store') }}" method="POST">
+                        @csrf {{-- ¡Token CSRF es OBLIGATORIO para Laravel! --}}
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="nombre">Nombre/Razón Social <span class="required-indicator">*</span></label>
@@ -783,8 +794,11 @@
                                     name="nombre" 
                                     required 
                                     placeholder="Ej: Juan Pérez García / Empresa S.A. de C.V."
+                                    value="{{ old('nombre') }}" {{-- Para mantener el valor si hay error de validación --}}
                                 >
-                                <div class="error-message" id="error-nombre"></div>
+                                @error('nombre')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
@@ -795,6 +809,14 @@
                                     <option value="particular">Particular</option>
                                 </select>
                                 <div class="error-message" id="error-tipo"></div>
+                                <label for="tipo">Tipo de Cliente</label>
+                                <select id="tipo" name="tipo" class="form-input">
+                                    <option value="empresa" {{ old('tipo') == 'empresa' ? 'selected' : '' }}>Empresa</option>
+                                    <option value="particular" {{ old('tipo') == 'particular' ? 'selected' : '' }}>Particular</option>
+                                </select>
+                                @error('tipo')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group">
@@ -805,8 +827,11 @@
                                     name="contacto" 
                                     required 
                                     placeholder="Ej: +52 271 123 4567 / contacto@empresa.com"
+                                    value="{{ old('contacto') }}"
                                 >
-                                <div class="error-message" id="error-contacto"></div>
+                                @error('contacto')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
@@ -817,6 +842,14 @@
                                     <option value="inactivo">Inactivo</option>
                                 </select>
                                 <div class="error-message" id="error-estado"></div>
+                                <label for="estado">Estado</label>
+                                <select id="estado" name="estado" class="form-input">
+                                    <option value="activo" {{ old('estado') == 'activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                </select>
+                                @error('estado')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             
                             <div class="form-group full-width">
@@ -826,9 +859,11 @@
                                     name="contrato" 
                                     required 
                                     placeholder="Detalles del contrato: servicios requeridos, frecuencia de viajes, rutas principales, términos especiales, etc."
-                                ></textarea>
+                                >{{ old('contrato') }}</textarea>
                                 <div class="character-counter" id="contrato-counter">0 / 1000 caracteres</div>
-                                <div class="error-message" id="error-contrato"></div>
+                                @error('contrato')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         
@@ -854,6 +889,11 @@
             updateDateTime();
             setInterval(updateDateTime, 1000);
             setupFormValidation();
+            // Inicializar contador de caracteres al cargar la página si ya hay contenido
+            const contratoTextarea = document.getElementById('contrato');
+            if (contratoTextarea) {
+                updateCharacterCounter(contratoTextarea);
+            }
         });
 
         function setupEventListeners() {
@@ -895,6 +935,11 @@
                     counter.classList.remove('warning');
                 }
             });
+            if (contratoTextarea) {
+                contratoTextarea.addEventListener('input', function() {
+                    updateCharacterCounter(this);
+                });
+            }
 
             // Enhanced mobile touch handling
             let touchStartX = 0;
@@ -1132,11 +1177,14 @@
             if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
                 const form = document.getElementById('formRegistrarCliente');
                 form.reset();
+                document.querySelector('form').reset(); // Selecciona el primer formulario
                 
                 // Limpiar contador de caracteres
                 const counter = document.getElementById('contrato-counter');
-                counter.textContent = '0 / 1000 caracteres';
-                counter.classList.remove('warning');
+                if (counter) {
+                    counter.textContent = '0 / 1000 caracteres';
+                    counter.classList.remove('warning');
+                }
 
                 // Limpiar mensajes de error
                 document.querySelectorAll('.error-message').forEach(error => {
@@ -1153,17 +1201,32 @@
             }
         }
 
+        // Función para actualizar el contador de caracteres
+        function updateCharacterCounter(textareaElement) {
+            const maxLength = 1000;
+            const currentLength = textareaElement.value.length;
+            const counter = document.getElementById('contrato-counter');
+            
+            if (counter) { // Asegurarse de que el contador existe
+                counter.textContent = `${currentLength} / ${maxLength} caracteres`;
+                
+                if (currentLength > maxLength * 0.9) {
+                    counter.classList.add('warning');
+                } else {
+                    counter.classList.remove('warning');
+                }
+            }
+        }
+
+        // Función para mostrar alertas (similar a como lo tenías en otras vistas)
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alertContainer');
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            
-            alertContainer.appendChild(alert);
-            
-            // Auto-remove alert after 5 seconds
-            setTimeout(() => {
-                alert.style.opacity = '0';
+            if (alertContainer) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-${type}">
+                        ${type === 'success' ? '✅' : '❌'} ${message}
+                    </div>
+                `;
                 setTimeout(() => {
                     if (alert.parentNode) {
                         alert.remove();
@@ -1204,6 +1267,11 @@
                 localStorage.removeItem('cliente_form_' + input.name);
             });
         }
+                    alertContainer.innerHTML = '';
+                }, 5000); // Ocultar alerta después de 5 segundos
+            }
+        }
+
+        
     </script>
 </body>
-</html>
