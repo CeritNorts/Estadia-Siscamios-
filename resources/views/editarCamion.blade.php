@@ -79,6 +79,14 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-avatar {
@@ -97,6 +105,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .navbar {
@@ -135,6 +144,7 @@
         .navbar-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
         }
 
         .navbar-links a {
@@ -145,6 +155,25 @@
 
         .navbar-links a:hover {
             color: #667eea;
+        }
+
+        .datetime-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .current-date {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .current-time {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 600;
         }
 
         /* Content Area */
@@ -415,12 +444,34 @@
         }
 
         /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .content {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 260px;
+            }
+
+            .navbar-content {
+                padding: 1rem 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+            }
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
                 height: 100vh;
                 z-index: 1001;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -448,6 +499,34 @@
 
             .navbar-content {
                 padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-content > div:last-child {
+                order: 1;
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+
+            .current-date {
+                font-size: 0.8rem;
+            }
+
+            .current-time {
+                font-size: 0.9rem;
+            }
+
+            .datetime-display {
+                align-items: flex-start;
             }
 
             .content {
@@ -467,6 +546,125 @@
                 align-items: flex-start;
                 gap: 1rem;
             }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-content {
+                padding: 0.75rem;
+            }
+
+            .sidebar-toggle {
+                padding: 0.375rem;
+                font-size: 1.25rem;
+            }
+
+            .content {
+                padding: 0.75rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 60px);
+                max-width: 300px;
+            }
+
+            .sidebar-header {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.25rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .form-container {
+                border-radius: 8px;
+            }
+
+            .form-header,
+            .form-body {
+                padding: 1.5rem;
+            }
+
+            .navbar-title {
+                font-size: 1rem;
+            }
+
+            .datetime-display {
+                order: -1;
+                width: auto;
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+
+            .sidebar {
+                width: calc(100% - 50px);
+                max-width: 280px;
+            }
+
+            .sidebar-menu a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar-header {
+                padding: 1.25rem 1rem;
+            }
+
+            .sidebar-brand {
+                font-size: 1.1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .navbar-title {
+                font-size: 0.9rem;
+            }
+
+            .form-header,
+            .form-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .content {
+                padding: 0.75rem;
+            }
+
+            .page-header {
+                margin-bottom: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
         }
 
         /* Animation */
@@ -485,6 +683,27 @@
                 transform: translateY(0);
             }
         }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .navbar {
+                display: none;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .form-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
     </style>
 </head>
 
@@ -495,14 +714,14 @@
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
 
-         <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
             <li>
-                <a href="/camiones">🚛 Camiones</a>
+                <a href="/camiones" class="active">🚛 Camiones</a>
             </li>
             <li>
                 <a href="/viajes">
@@ -523,15 +742,27 @@
                 <a href="/clientes">👤 Clientes</a>
             </li>
             <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
+                <a href="/combustible">⛽ Combustible</a>
             </li>
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info">
-                <div class="user-avatar">AD</div>
+            <div class="user-info" onclick="goToProfile()">
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">Admin User</div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -550,8 +781,10 @@
                     <h1 class="navbar-title">Editar Camión</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="/profile">Perfil</a>
-                    <a href="#">Notificaciones</a>
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
                     <a href="#" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
@@ -570,7 +803,21 @@
                 </div>
 
                 <!-- Success/Error Messages -->
-                <div id="alertContainer"></div>
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-error">
+                        <ul style="margin: 0; padding-left: 1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <!-- Page Header -->
                 <div class="page-header">
@@ -586,19 +833,21 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">Placa</span>
-                            <span class="info-value" id="currentPlaca">ABC-123</span>
+                            <span class="info-value">{{ $camion->placa ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Modelo</span>
-                            <span class="info-value" id="currentModelo">FH 440</span>
+                            <span class="info-value">{{ $camion->modelo ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Año</span>
-                            <span class="info-value" id="currentAnio">2020</span>
+                            <span class="info-value">{{ $camion->anio ?? 'N/A' }}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Estado</span>
-                            <span class="status-badge status-activo" id="currentEstado">Activo</span>
+                            <span class="status-badge status-{{ $camion->estado ?? 'activo' }}">
+                                {{ ucfirst($camion->estado ?? 'activo') }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -626,25 +875,27 @@
                                         <input type="text" 
                                                id="placa" 
                                                name="placa" 
-                                               class="form-control" 
-                                               value="ABC-123"
+                                               class="form-control @error('placa') error @enderror" 
+                                               value="{{ old('placa', $camion->placa ?? '') }}"
                                                placeholder="Ej: ABC-123" 
                                                required>
-                                        <div class="error-message" id="placa-error"></div>
+                                        @error('placa')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
                                     </div>
-
-
 
                                     <div class="form-group">
                                         <label for="modelo">Modelo <span class="required">*</span></label>
                                         <input type="text" 
                                                id="modelo" 
                                                name="modelo" 
-                                               class="form-control" 
-                                               value="FH 440"
+                                               class="form-control @error('modelo') error @enderror" 
+                                               value="{{ old('modelo', $camion->modelo ?? '') }}"
                                                placeholder="Ej: FH 440, Actros 2642" 
                                                required>
-                                        <div class="error-message" id="modelo-error"></div>
+                                        @error('modelo')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">
@@ -652,12 +903,14 @@
                                         <input type="number" 
                                                id="anio" 
                                                name="anio" 
-                                               class="form-control" 
-                                               value="2020"
+                                               class="form-control @error('anio') error @enderror" 
+                                               value="{{ old('anio', $camion->anio ?? '') }}"
                                                min="1990" 
                                                max="2025" 
                                                required>
-                                        <div class="error-message" id="anio-error"></div>
+                                        @error('anio')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -672,22 +925,33 @@
                                         <input type="number" 
                                                id="capacidad_carga" 
                                                name="capacidad_carga" 
-                                               class="form-control" 
-                                               value="25"
+                                               class="form-control @error('capacidad_carga') error @enderror" 
+                                               value="{{ old('capacidad_carga', $camion->capacidad_carga ?? '') }}"
                                                min="1" 
                                                max="100" 
                                                step="0.5" 
                                                required>
-                                        <div class="error-message" id="capacidad_carga-error"></div>
+                                        @error('capacidad_carga')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="form-group">
                                         <label for="estado">Estado del Vehículo <span class="required">*</span></label>
-                                        <select id="estado" name="estado" class="form-control" required>
-                                            <option value="activo" selected>🟢 Activo</option>
-                                            <option value="mantenimiento">🔴 En Mantenimiento</option>
-                                            <option value="inactivo">⚪ Inactivo</option>
+                                        <select id="estado" name="estado" class="form-control @error('estado') error @enderror" required>
+                                            <option value="activo" {{ old('estado', $camion->estado ?? 'activo') == 'activo' ? 'selected' : '' }}>
+                                                🟢 Activo
+                                            </option>
+                                            <option value="mantenimiento" {{ old('estado', $camion->estado ?? '') == 'mantenimiento' ? 'selected' : '' }}>
+                                                🔴 En Mantenimiento
+                                            </option>
+                                            <option value="inactivo" {{ old('estado', $camion->estado ?? '') == 'inactivo' ? 'selected' : '' }}>
+                                                ⚪ Inactivo
+                                            </option>
                                         </select>
+                                        @error('estado')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -697,14 +961,17 @@
                                 <label for="observaciones">Observaciones Adicionales</label>
                                 <textarea id="observaciones" 
                                           name="observaciones" 
-                                          class="form-control" 
+                                          class="form-control @error('observaciones') error @enderror" 
                                           rows="4" 
-                                          placeholder="Ingrese cualquier observación adicional sobre el camión...">Camión en excelente estado, mantenimiento al día.</textarea>
+                                          placeholder="Ingrese cualquier observación adicional sobre el camión...">{{ old('observaciones', $camion->observaciones ?? '') }}</textarea>
+                                @error('observaciones')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <!-- Form Actions -->
                             <div class="form-actions">
-                                <a href="/camiones" class="btn btn-secondary">
+                                <a href="{{ route('camiones.index') }}" class="btn btn-secondary">
                                     ↩️ Cancelar
                                 </a>
                                 <button type="button" onclick="resetForm()" class="btn btn-secondary">
@@ -725,7 +992,8 @@
         // Inicialización
         document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
-            loadTruckData();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
         });
 
         function setupEventListeners() {
@@ -744,10 +1012,18 @@
                 overlay.classList.remove('active');
             });
 
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+
             // Form submission
             document.getElementById('editTruckForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                handleFormSubmit();
+                // Permitir el envío normal del formulario a Laravel
+                showLoadingState();
             });
 
             // Real-time validation
@@ -757,51 +1033,87 @@
                     validateField(this);
                 });
             });
-        }
 
-        function loadTruckData() {
-            // En una aplicación real, esto vendría del servidor
-            // Aquí simulamos la carga de datos
-            const truckData = {
-                placa: 'ABC-123',
-                modelo: 'FH 440',
-                anio: 2020,
-                capacidad_carga: 25,
-                estado: 'activo',
-                observaciones: 'Camión en excelente estado, mantenimiento al día.'
-            };
+            // Enhanced mobile touch handling
+            let touchStartX = 0;
+            let touchEndX = 0;
 
-            // Actualizar información actual
-            document.getElementById('currentPlaca').textContent = truckData.placa;
-            document.getElementById('currentModelo').textContent = truckData.modelo;
-            document.getElementById('currentAnio').textContent = truckData.anio;
-            
-            const estadoBadge = document.getElementById('currentEstado');
-            estadoBadge.textContent = truckData.estado.charAt(0).toUpperCase() + truckData.estado.slice(1);
-            estadoBadge.className = `status-badge status-${truckData.estado}`;
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
 
-            // Llenar formulario
-            Object.keys(truckData).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    element.value = truckData[key];
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Escape key to close sidebar
+                if (e.key === 'Escape') {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
                 }
             });
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                document.querySelectorAll('.alert').forEach(function(alert) {
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 300);
+                });
+            }, 5000);
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
         }
 
         function validateField(field) {
-            const errorElement = document.getElementById(field.name + '-error');
+            const fieldName = field.name;
             let isValid = true;
             let errorMessage = '';
 
             // Limpiar estilos previos
             field.classList.remove('error');
-            if (errorElement) {
-                errorElement.textContent = '';
-            }
 
             // Validaciones específicas
-            switch (field.name) {
+            switch (fieldName) {
                 case 'placa':
                     if (!field.value.trim()) {
                         isValid = false;
@@ -812,20 +1124,19 @@
                     }
                     break;
 
-                case 'marca':
                 case 'modelo':
                     if (!field.value.trim()) {
                         isValid = false;
-                        errorMessage = `${field.name.charAt(0).toUpperCase() + field.name.slice(1)} es obligatorio`;
+                        errorMessage = 'El modelo es obligatorio';
                     }
                     break;
 
                 case 'anio':
                     const year = parseInt(field.value);
                     const currentYear = new Date().getFullYear();
-                    if (!year || year < 2000 || year > currentYear) {
+                    if (!year || year < 1990 || year > currentYear) {
                         isValid = false;
-                        errorMessage = `Año debe estar entre 2000 y ${currentYear}`;
+                        errorMessage = `Año debe estar entre 1990 y ${currentYear}`;
                     }
                     break;
 
@@ -841,6 +1152,8 @@
             // Aplicar estilos de error
             if (!isValid) {
                 field.classList.add('error');
+                // Mostrar mensaje de error si existe un elemento para ello
+                const errorElement = field.parentNode.querySelector('.error-message');
                 if (errorElement) {
                     errorElement.textContent = errorMessage;
                 }
@@ -849,43 +1162,77 @@
             return isValid;
         }
 
-        function validateForm() {
-            const formInputs = document.querySelectorAll('.form-control[required]');
-            let isFormValid = true;
-
-            formInputs.forEach(input => {
-                if (!validateField(input)) {
-                    isFormValid = false;
-                }
-            });
-
-            return isFormValid;
-        }
-
-        function handleFormSubmit() {
-            if (!validateForm()) {
-                showAlert('Por favor corrija los errores en el formulario', 'error');
-                return;
-            }
-
-            // Mostrar loading
+        function showLoadingState() {
             const submitBtn = document.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '⏳ Guardando...';
             submitBtn.disabled = true;
 
-            // Enviar formulario real al servidor
-            document.getElementById('editTruckForm').submit();
+            // Restaurar estado si hay error (en caso de que la página no se recargue)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 10000);
         }
 
-        function updateCurrentInfo() {
-            const formData = new FormData(document.getElementById('editTruckForm'));
+        function resetForm() {
+            if (confirm('¿Está seguro de que desea restablecer el formulario a sus valores originales?')) {
+                // Obtener los valores originales del camión
+                const originalValues = {
+                    placa: '{{ $camion->placa ?? "" }}',
+                    modelo: '{{ $camion->modelo ?? "" }}',
+                    anio: '{{ $camion->anio ?? "" }}',
+                    capacidad_carga: '{{ $camion->capacidad_carga ?? "" }}',
+                    estado: '{{ $camion->estado ?? "activo" }}',
+                    observaciones: '{{ $camion->observaciones ?? "" }}'
+                };
+
+                // Restablecer cada campo
+                Object.keys(originalValues).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = originalValues[key];
+                        element.classList.remove('error');
+                    }
+                });
+
+                // Limpiar mensajes de error
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.textContent = '';
+                });
+
+                showAlert('Formulario restablecido a valores originales', 'success');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
             
-            document.getElementById('currentPlaca').textContent = formData.get('placa');
-            document.getElementById('currentModelo').textContent = `${formData.get('marca')} ${formData.get('modelo')}`;
-            document.getElementById('currentAnio').textContent = formData.get('anio');
+            const container = document.querySelector('.content-wrapper');
+            container.insertBefore(alertDiv, container.firstChild);
             
-            const estadoBadge = document.getElementById('currentEstado');
-            const estado = formData.get('estado');
-            estadoBadge.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
-            estadoBadge.className = `status-badge status-${estado}`;
+            // Auto-hide alert after 5 seconds
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
+        function logout() {
+            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
+                window.location.href = '/logout';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
