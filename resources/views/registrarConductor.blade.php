@@ -331,6 +331,7 @@
             padding: 0.75rem 1rem;
             border-radius: 5px;
             margin-bottom: 1rem;
+            transition: opacity 0.3s ease;
         }
 
         .alert-success {
@@ -390,11 +391,15 @@
             color: white;
         }
 
-        /* Input helpers */
-        .input-helper {
-            font-size: 0.8rem;
-            color: #666;
-            margin-top: 0.25rem;
+        /* Field validation styles */
+        .field-valid {
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
+        }
+
+        .field-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
         }
 
         /* Mobile Responsive */
@@ -763,21 +768,9 @@
 
         <div class="sidebar-footer">
             <div class="user-info" onclick="goToProfile()">
-                <div class="user-avatar">
-                    @auth
-                        {{ substr(auth()->user()->name, 0, 2) }}
-                    @else
-                        AD
-                    @endauth
-                </div>
+                <div class="user-avatar">AD</div>
                 <div>
-                    <div style="color: #ffffff; font-weight: 500;">
-                        @auth
-                            {{ auth()->user()->name }}
-                        @else
-                            Administrador
-                        @endauth
-                    </div>
+                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
                     <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
             </div>
@@ -810,7 +803,7 @@
                 
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="{{ route('conductores.index') }}">Conductores</a>
+                    <a href="/conductores">Conductores</a>
                     <span class="breadcrumb-separator">›</span>
                     <span>Registrar Conductor</span>
                 </div>
@@ -821,7 +814,7 @@
                         <h1 class="page-title">Registrar Conductor</h1>
                         <p class="page-subtitle">Complete la información del nuevo conductor</p>
                     </div>
-                    <a href="{{ route('conductores.index') }}" class="btn btn-outline">
+                    <a href="/conductores" class="btn btn-outline">
                         ← Volver a Conductores
                     </a>
                 </div>
@@ -844,6 +837,9 @@
                         </ul>
                     </div>
                 @endif
+
+                <!-- Success/Error Messages -->
+                <div id="alertContainer"></div>
 
                 <!-- Form Container -->
                 <div class="form-container">
@@ -868,12 +864,12 @@
                                         value="{{ old('nombre') }}"
                                         required 
                                         placeholder="Ej: Juan Pérez García"
-                                        class="@error('nombre') border-danger @enderror"
+                                        class="@error('nombre') field-invalid @enderror"
                                     >
                                     @error('nombre')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
-                                    <div class="input-helper">Nombre completo como aparece en documentos oficiales</div>
+                                    <div class="error-message" id="error-nombre"></div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -884,18 +880,20 @@
                                         name="telefono" 
                                         value="{{ old('telefono') }}"
                                         required 
-                                        placeholder="Ej: +52 271 123 4567"
-                                        class="@error('telefono') border-danger @enderror"
+                                        placeholder="Ej: +522711234567"
+                                        maxlength="13"
+                                        class="@error('telefono') field-invalid @enderror"
                                     >
                                     @error('telefono')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
-                                    <div class="input-helper">Incluir código de país y área</div>
+                                    <div class="error-message" id="error-telefono"></div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="estado">Estado del Conductor</label>
-                                    <select id="estado" name="estado" class="@error('estado') border-danger @enderror">
+                                    <label for="estado">Estado del Conductor <span class="required-indicator">*</span></label>
+                                    <select id="estado" name="estado" required class="@error('estado') field-invalid @enderror">
+                                        <option value="">Seleccionar estado</option>
                                         <option value="activo" {{ old('estado', 'activo') == 'activo' ? 'selected' : '' }}>Activo</option>
                                         <option value="inactivo" {{ old('estado') == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
                                         <option value="suspendido" {{ old('estado') == 'suspendido' ? 'selected' : '' }}>Suspendido</option>
@@ -903,6 +901,7 @@
                                     @error('estado')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
+                                    <div class="error-message" id="error-estado"></div>
                                 </div>
                             </div>
                         </div>
@@ -920,17 +919,17 @@
                                         value="{{ old('licencia') }}"
                                         required 
                                         placeholder="Ej: LIC-2024-001"
-                                        class="@error('licencia') border-danger @enderror"
+                                        class="@error('licencia') field-invalid @enderror"
                                     >
                                     @error('licencia')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
-                                    <div class="input-helper">Número único de la licencia de conducir</div>
+                                    <div class="error-message" id="error-licencia"></div>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="tipoLicencia">Tipo de Licencia</label>
-                                    <select id="tipoLicencia" name="tipoLicencia" class="@error('tipoLicencia') border-danger @enderror">
+                                    <label for="tipoLicencia">Tipo de Licencia <span class="required-indicator">*</span></label>
+                                    <select id="tipoLicencia" name="tipoLicencia" required class="@error('tipoLicencia') field-invalid @enderror">
                                         <option value="">Seleccionar tipo</option>
                                         <option value="A" {{ old('tipoLicencia') == 'A' ? 'selected' : '' }}>Tipo A - Transporte de Carga</option>
                                         <option value="B" {{ old('tipoLicencia') == 'B' ? 'selected' : '' }}>Tipo B - Transporte de Pasajeros</option>
@@ -939,21 +938,23 @@
                                     @error('tipoLicencia')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
+                                    <div class="error-message" id="error-tipoLicencia"></div>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="vencimientoLicencia">Fecha de Vencimiento</label>
+                                    <label for="vencimientoLicencia">Fecha de Vencimiento <span class="required-indicator">*</span></label>
                                     <input 
                                         type="date" 
                                         id="vencimientoLicencia" 
                                         name="vencimientoLicencia"
                                         value="{{ old('vencimientoLicencia') }}"
-                                        class="@error('vencimientoLicencia') border-danger @enderror"
+                                        required
+                                        class="@error('vencimientoLicencia') field-invalid @enderror"
                                     >
                                     @error('vencimientoLicencia')
                                         <div class="error-message">{{ $message }}</div>
                                     @enderror
-                                    <div class="input-helper">Fecha en que expira la licencia</div>
+                                    <div class="error-message" id="error-vencimientoLicencia"></div>
                                 </div>
                             </div>
                         </div>
@@ -1002,13 +1003,214 @@
                     overlay.classList.remove('active');
                 }
             });
+        }
 
-            // Prevent form submission on Enter in input fields (except submit button)
-            document.getElementById('formRegistrarConductor').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && e.target.type !== 'submit' && e.target.tagName !== 'BUTTON') {
-                    e.preventDefault();
+        function setupFormValidation() {
+            const form = document.getElementById('formRegistrarConductor');
+            const inputs = form.querySelectorAll('input, select');
+
+            // Real-time validation
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                input.addEventListener('input', function() {
+                    clearFieldStyles(this);
+                    
+                    // Validación específica para teléfono
+                    if (this.name === 'telefono') {
+                        formatPhoneNumber(this);
+                        validateField(this);
+                    }
+                    
+                    // Validación específica para nombre
+                    if (this.name === 'nombre') {
+                        formatNombreField(this);
+                        validateField(this);
+                    }
+                    
+                    // Validación en tiempo real para otros campos
+                    if (this.value.trim()) {
+                        validateField(this);
+                    }
+                });
+            });
+
+            // Form submission validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                validateAndSubmitForm();
+            });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            const fieldName = field.name;
+            let isValid = true;
+            let errorMessage = '';
+
+            // Limpiar error previo
+            clearError(field);
+
+            // Validación de campos requeridos
+            if (!value) {
+                errorMessage = `El campo ${getFieldDisplayName(fieldName)} es obligatorio`;
+                isValid = false;
+            } else {
+                // Validaciones específicas
+                switch (fieldName) {
+                    case 'nombre':
+                        if (value.length < 2) {
+                            errorMessage = 'El nombre debe tener al menos 2 caracteres';
+                            isValid = false;
+                        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
+                            errorMessage = 'El nombre solo puede contener letras y espacios, no números';
+                            isValid = false;
+                        }
+                        break;
+                    case 'telefono':
+                        // Debe empezar con + y tener exactamente 12 números después del +
+                        if (!/^\+\d{12}$/.test(value)) {
+                            errorMessage = 'El teléfono debe empezar con + y tener exactamente 12 números';
+                            isValid = false;
+                        }
+                        break;
+                    case 'licencia':
+                        if (value.length < 3) {
+                            errorMessage = 'El número de licencia debe tener al menos 3 caracteres';
+                            isValid = false;
+                        }
+                        break;
+                    case 'vencimientoLicencia':
+                        const inputDate = new Date(value);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        if (inputDate <= today) {
+                            errorMessage = 'La fecha de vencimiento debe ser futura';
+                            isValid = false;
+                        }
+                        break;
+                }
+            }
+
+            // Aplicar estilos visuales
+            if (isValid) {
+                field.classList.remove('field-invalid');
+                field.classList.add('field-valid');
+            } else {
+                field.classList.remove('field-valid');
+                field.classList.add('field-invalid');
+                showError(field, errorMessage);
+            }
+
+            return isValid;
+        }
+
+        function formatPhoneNumber(input) {
+            let value = input.value;
+            
+            // Remover todo excepto números y el símbolo +
+            value = value.replace(/[^\d+]/g, '');
+            
+            // Asegurar que comience con + si tiene contenido
+            if (value.length > 0 && !value.startsWith('+')) {
+                value = '+' + value.replace(/\+/g, '');
+            }
+            
+            // Si comienza con +, limitar a 13 caracteres (+ y 12 números)
+            if (value.startsWith('+') && value.length > 13) {
+                value = value.substring(0, 13);
+            }
+            
+            input.value = value;
+        }
+
+        function formatNombreField(input) {
+            let value = input.value;
+            
+            // Remover números y caracteres especiales, solo permitir letras y espacios
+            value = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+            
+            // Capitalizar la primera letra de cada palabra
+            value = value.replace(/\b\w/g, l => l.toUpperCase());
+            
+            input.value = value;
+        }
+
+        function clearFieldStyles(field) {
+            field.classList.remove('field-valid', 'field-invalid');
+        }
+
+        function clearError(field) {
+            const errorElement = document.getElementById(`error-${field.name}`);
+            if (errorElement) {
+                errorElement.textContent = '';
+            }
+        }
+
+        function showError(field, message) {
+            const errorElement = document.getElementById(`error-${field.name}`);
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+        }
+
+        function getFieldDisplayName(fieldName) {
+            const names = {
+                'nombre': 'Nombre Completo',
+                'telefono': 'Teléfono',
+                'estado': 'Estado del Conductor',
+                'licencia': 'Número de Licencia',
+                'tipoLicencia': 'Tipo de Licencia',
+                'vencimientoLicencia': 'Fecha de Vencimiento'
+            };
+            return names[fieldName] || fieldName;
+        }
+
+        function validateAndSubmitForm() {
+            const form = document.getElementById('formRegistrarConductor');
+            const inputs = form.querySelectorAll('input, select');
+            let isFormValid = true;
+            let errors = [];
+
+            // Validar todos los campos
+            inputs.forEach(input => {
+                const isValid = validateField(input);
+                if (!isValid) {
+                    isFormValid = false;
+                    const fieldName = getFieldDisplayName(input.name);
+                    const errorElement = document.getElementById(`error-${input.name}`);
+                    if (errorElement && errorElement.textContent) {
+                        errors.push(errorElement.textContent);
+                    }
                 }
             });
+
+            if (isFormValid) {
+                // Si todas las validaciones pasan, enviar el formulario al servidor
+                showAlert('✅ Enviando datos...', 'success');
+                
+                // Limpiar datos del auto-save ya que se va a enviar
+                clearAutoSaveData();
+                
+                // Enviar formulario al servidor (Laravel)
+                form.submit();
+            } else {
+                const uniqueErrors = [...new Set(errors)];
+                showAlert('❌ Por favor, corrija los errores en el formulario', 'danger');
+                
+                // Scroll al primer campo con error
+                const firstInvalidField = form.querySelector('.field-invalid');
+                if (firstInvalidField) {
+                    firstInvalidField.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    firstInvalidField.focus();
+                }
+            }
         }
 
         function updateDateTime() {
@@ -1030,165 +1232,6 @@
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
         }
 
-        function setupFormValidation() {
-            const form = document.getElementById('formRegistrarConductor');
-            const inputs = form.querySelectorAll('input, select');
-
-            // Real-time validation
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    validateField(this);
-                });
-
-                input.addEventListener('input', function() {
-                    clearError(this);
-                    
-                    // Special formatting for phone number
-                    if (this.name === 'telefono') {
-                        formatPhoneNumber(this);
-                    }
-                    
-                    // Special formatting for license number
-                    if (this.name === 'licencia') {
-                        formatLicenseNumber(this);
-                    }
-                });
-            });
-
-            // Form submission validation
-            form.addEventListener('submit', function(e) {
-                let isValid = true;
-                const requiredFields = form.querySelectorAll('[required]');
-                
-                requiredFields.forEach(field => {
-                    if (!validateField(field)) {
-                        isValid = false;
-                    }
-                });
-
-                if (!isValid) {
-                    e.preventDefault();
-                    scrollToFirstError();
-                    showAlert('error', 'Por favor, corrige los errores antes de continuar');
-                }
-            });
-        }
-
-        function validateField(field) {
-            const value = field.value.trim();
-            const fieldName = field.name;
-            let isValid = true;
-            let errorMessage = '';
-
-            // Reset error state
-            clearError(field);
-
-            // Required field validation
-            if (field.required && !value) {
-                errorMessage = 'Este campo es obligatorio';
-                isValid = false;
-            } else {
-                // Specific field validations
-                switch (fieldName) {
-                    case 'nombre':
-                        if (value && value.length < 2) {
-                            errorMessage = 'El nombre debe tener al menos 2 caracteres';
-                            isValid = false;
-                        } else if (value && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
-                            errorMessage = 'El nombre solo puede contener letras y espacios';
-                            isValid = false;
-                        }
-                        break;
-                    case 'telefono':
-                        if (value && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(value)) {
-                            errorMessage = 'Formato de teléfono inválido';
-                            isValid = false;
-                        }
-                        break;
-                    case 'licencia':
-                        if (value && value.length < 3) {
-                            errorMessage = 'El número de licencia debe tener al menos 3 caracteres';
-                            isValid = false;
-                        }
-                        break;
-                    case 'vencimientoLicencia':
-                        if (value) {
-                            const inputDate = new Date(value);
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            
-                            if (inputDate <= today) {
-                                errorMessage = 'La fecha de vencimiento debe ser futura';
-                                isValid = false;
-                            }
-                        }
-                        break;
-                }
-            }
-
-            if (!isValid) {
-                showError(field, errorMessage);
-            }
-
-            return isValid;
-        }
-
-        function showError(field, message) {
-            const errorElement = document.createElement('div');
-            errorElement.className = 'error-message';
-            errorElement.textContent = message;
-            
-            // Remove existing error message
-            const existingError = field.parentNode.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
-            }
-            
-            field.parentNode.appendChild(errorElement);
-            field.style.borderColor = '#dc3545';
-        }
-
-        function clearError(field) {
-            const errorElement = field.parentNode.querySelector('.error-message');
-            if (errorElement) {
-                errorElement.remove();
-            }
-            field.style.borderColor = '#ddd';
-        }
-
-        function scrollToFirstError() {
-            const firstError = document.querySelector('.error-message');
-            if (firstError) {
-                firstError.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-            }
-        }
-
-        function formatPhoneNumber(input) {
-            let value = input.value.replace(/\D/g, '');
-            
-            if (value.length >= 10) {
-                if (value.startsWith('52')) {
-                    // Mexican number with country code
-                    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '+$1 $2 $3 $4');
-                } else if (value.length === 10) {
-                    // Local Mexican number
-                    value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
-                }
-            }
-            
-            input.value = value;
-        }
-
-        function formatLicenseNumber(input) {
-            let value = input.value.toUpperCase();
-            // Remove invalid characters
-            value = value.replace(/[^A-Z0-9-]/g, '');
-            input.value = value;
-        }
-
         function setMinDateForLicense() {
             const vencimientoInput = document.getElementById('vencimientoLicencia');
             const today = new Date();
@@ -1203,37 +1246,36 @@
                 const form = document.getElementById('formRegistrarConductor');
                 form.reset();
                 
-                // Clear all error messages
-                const errorMessages = form.querySelectorAll('.error-message');
-                errorMessages.forEach(error => {
-                    error.remove();
+                // Limpiar mensajes de error
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.textContent = '';
                 });
-                
-                // Reset field borders
+
+                // Limpiar estilos de validación
                 const inputs = form.querySelectorAll('input, select');
                 inputs.forEach(input => {
-                    input.style.borderColor = '#ddd';
+                    input.classList.remove('field-valid', 'field-invalid');
                 });
                 
                 setMinDateForLicense();
-                showAlert('success', 'Formulario limpiado correctamente');
+                showAlert('✅ Formulario limpiado correctamente', 'success');
             }
         }
 
-        function showAlert(type, message) {
-            const alertElement = document.createElement('div');
-            alertElement.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
-            alertElement.innerHTML = `${type === 'success' ? '✅' : '❌'} ${message}`;
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
             
-            const contentWrapper = document.querySelector('.content-wrapper');
-            contentWrapper.insertBefore(alertElement, contentWrapper.firstChild);
+            alertContainer.appendChild(alert);
             
-            // Auto-hide after 5 seconds
+            // Auto-remove alert after 5 seconds
             setTimeout(() => {
-                alertElement.style.opacity = '0';
+                alert.style.opacity = '0';
                 setTimeout(() => {
-                    if (alertElement.parentNode) {
-                        alertElement.parentNode.removeChild(alertElement);
+                    if (alert.parentNode) {
+                        alert.remove();
                     }
                 }, 300);
             }, 5000);
@@ -1309,19 +1351,21 @@
                 localStorage.setItem('conductor_form_' + this.name, this.value);
             });
 
-            // Restore saved data
-            const savedValue = localStorage.getItem('conductor_form_' + input.name);
-            if (savedValue && !input.value) {
-                input.value = savedValue;
-            }
+            // Restore saved data on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedValue = localStorage.getItem('conductor_form_' + input.name);
+                if (savedValue && !input.value) {
+                    input.value = savedValue;
+                }
+            });
         });
 
         // Clear saved data on successful form submission
-        document.getElementById('formRegistrarConductor').addEventListener('submit', function() {
+        function clearAutoSaveData() {
             formInputs.forEach(input => {
                 localStorage.removeItem('conductor_form_' + input.name);
             });
-        });
+        }
 
         // License expiration warning
         document.getElementById('vencimientoLicencia').addEventListener('change', function() {
@@ -1331,24 +1375,10 @@
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
             if (diffDays < 30) {
-                showAlert('error', `⚠️ La licencia vencerá en ${diffDays} días. Considere renovarla pronto.`);
+                showAlert('⚠️ La licencia vencerá en ' + diffDays + ' días. Considere renovarla pronto.', 'danger');
             } else if (diffDays < 90) {
-                showAlert('warning', `⚠️ La licencia vencerá en ${diffDays} días.`);
+                showAlert('⚠️ La licencia vencerá en ' + diffDays + ' días.', 'success');
             }
-        });
-
-        // Form field suggestions and helpers
-        const nombreInput = document.getElementById('nombre');
-        nombreInput.addEventListener('input', function() {
-            // Auto-capitalize names
-            let words = this.value.split(' ');
-            words = words.map(word => {
-                if (word.length > 0) {
-                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                }
-                return word;
-            });
-            this.value = words.join(' ');
         });
 
         // Initialize form state

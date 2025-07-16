@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mantenimiento;
 use App\Models\Camion;
+use App\Models\Documento; // ← LÍNEA AGREGADA
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -22,6 +23,9 @@ class MantenimientoController extends Controller
         $mantenimientos = Mantenimiento::with('camion')->orderBy('fecha', 'desc')->get();
         $camiones = Camion::all();
         
+        // ← LÍNEA AGREGADA PARA DOCUMENTOS
+        $documentos = Documento::with('camion')->latest()->paginate(10);
+        
         // Estadísticas básicas
         $estadisticas = [
             'programados' => $mantenimientos->where('estado', 'programado')->count(),
@@ -31,7 +35,8 @@ class MantenimientoController extends Controller
             'costo_total' => $mantenimientos->where('estado', 'completado')->sum('costo') ?? 0
         ];
         
-        return view('mantenimiento', compact('mantenimientos', 'estadisticas', 'camiones'));
+        // ← MODIFICADA PARA INCLUIR DOCUMENTOS
+        return view('mantenimiento', compact('mantenimientos', 'estadisticas', 'camiones', 'documentos'));
         
     } catch (\Exception $e) {
         \Log::error('Error en dashboard: ' . $e->getMessage());
@@ -39,6 +44,7 @@ class MantenimientoController extends Controller
         // Variables por defecto en caso de error
         $mantenimientos = collect();
         $camiones = collect();
+        $documentos = collect(); // ← LÍNEA AGREGADA
         $estadisticas = [
             'programados' => 0,
             'en_proceso' => 0,
@@ -47,7 +53,8 @@ class MantenimientoController extends Controller
             'costo_total' => 0
         ];
         
-        return view('mantenimiento', compact('mantenimientos', 'estadisticas', 'camiones'));
+        // ← MODIFICADA PARA INCLUIR DOCUMENTOS
+        return view('mantenimiento', compact('mantenimientos', 'estadisticas', 'camiones', 'documentos'));
     }
 }
 

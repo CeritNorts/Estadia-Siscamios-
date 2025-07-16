@@ -959,25 +959,6 @@
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror
                                 
-                                <!-- Verificación de vencimiento de licencia -->
-                                @if($chofer->vencimiento_licencia)
-                                    @php
-                                        $vencimiento = \Carbon\Carbon::parse($chofer->vencimiento_licencia);
-                                        $hoy = \Carbon\Carbon::now();
-                                        $diasParaVencer = $hoy->diffInDays($vencimiento, false);
-                                    @endphp
-                                    
-                                    @if($diasParaVencer < 0)
-                                        <div class="license-warning license-expired">
-                                            ⚠️ Licencia vencida hace {{ abs($diasParaVencer) }} día(s)
-                                        </div>
-                                    @elseif($diasParaVencer <= 30)
-                                        <div class="license-warning">
-                                            ⚠️ Licencia vence en {{ $diasParaVencer }} día(s)
-                                        </div>
-                                    @endif
-                                @endif
-                                
                                 <!-- Contenedor para advertencias dinámicas -->
                                 <div id="licenseWarning"></div>
                             </div>
@@ -1172,7 +1153,11 @@
             }
             
             const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0); // Establecer hora a medianoche para cálculo preciso
+            
             const vencimiento = new Date(fechaVencimiento);
+            vencimiento.setHours(0, 0, 0, 0); // Establecer hora a medianoche para cálculo preciso
+            
             const diferenciaTiempo = vencimiento.getTime() - hoy.getTime();
             const diasParaVencer = Math.ceil(diferenciaTiempo / (1000 * 3600 * 24));
             
@@ -1276,11 +1261,15 @@
                 return false;
             }
             
+            // Limpiar el event listener de beforeunload antes de enviar
+            window.removeEventListener('beforeunload', beforeUnloadHandler);
+            
+            // Permitir que el formulario se envíe normalmente
             return true;
         });
 
-        // Advertencia antes de salir si hay cambios sin guardar
-        window.addEventListener('beforeunload', function(e) {
+        // Función para manejar beforeunload
+        function beforeUnloadHandler(e) {
             verificarCambios();
             const btnGuardar = document.querySelector('button[type="submit"]');
             if (btnGuardar.innerHTML.includes('Guardar Cambios')) {
@@ -1288,7 +1277,10 @@
                 e.returnValue = '¿Está seguro de que desea salir? Hay cambios sin guardar.';
                 return e.returnValue;
             }
-        });
+        }
+
+        // Advertencia antes de salir si hay cambios sin guardar
+        window.addEventListener('beforeunload', beforeUnloadHandler);
 
         // Formatear teléfono mientras se escribe
         document.getElementById('telefono').addEventListener('input', function() {
