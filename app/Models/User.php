@@ -68,6 +68,17 @@ class User extends Authenticatable
      */
     public function hasRole(string $roleName): bool
     {
-        return $this->role && $this->role->name === $roleName;
+        /* --- INICIO DE DEPURACIÓN ---
+        dd([
+            'user_id' => $this->id,
+            'user_name' => $this->name,
+            'checking_role_name' => $roleName, // El rol que se está buscando (ej. 'Administrador')
+            'user_actual_role_object' => $this->role, // El objeto Role relacionado
+            'user_actual_role_name' => $this->role ? $this->role->nombre : 'NO_ROLE_OBJECT', // El nombre del rol del usuario
+            'comparison_result' => $this->role && $this->role->nombre === $roleName, // Resultado de la comparación
+        ]);
+        */ 
+
+        return $this->role && $this->role->nombre === $roleName;
     }
 }
