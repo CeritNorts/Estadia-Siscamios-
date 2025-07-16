@@ -296,6 +296,15 @@
 </style>
 
 <script>
+// Variable global para almacenar el rol del usuario
+// Asegúrate de que este script se incluya en una vista Blade donde Auth::user() esté disponible
+const userRole = "{{ Auth::check() ? Auth::user()->role->nombre : 'Invitado' }}"; 
+// Si tu tabla de usuarios no tiene una relación 'role' o el campo 'nombre' en el rol,
+// ajusta `Auth::user()->role->nombre` a la forma correcta de obtener el rol del usuario.
+// Por ejemplo, si el rol es una cadena directamente en la tabla de usuarios:
+// const userRole = "{{ Auth::check() ? Auth::user()->role_name_column : 'Invitado' }}";
+
+
 // Variables globales para el modal
 let modalData = {
     tipo: null,
@@ -414,8 +423,41 @@ function generarContenidoCamion(camion) {
 function mostrarDetalles(tipo, id, datos = null) {
     modalData.tipo = tipo;
     modalData.id = id;
-    modalData.editUrl = `/${tipo}s/${id}/edit`;
     
+    // Establecer la URL de edición según el tipo
+    switch (tipo) {
+        case 'viaje':
+            modalData.editUrl = `/viajes/${id}/edit`;
+            break;
+        case 'mantenimiento':
+            modalData.editUrl = `/mantenimiento/${id}/edit`;
+            break;
+        case 'chofer':
+            modalData.editUrl = `/conductores/${id}/edit`; // Asumiendo que la ruta es /conductores
+            break;
+        case 'cliente':
+            modalData.editUrl = `/clientes/${id}/edit`;
+            break;
+        case 'combustible':
+            modalData.editUrl = `/combustible/${id}/edit`;
+            break;
+        case 'camion':
+            modalData.editUrl = `/camiones/${id}/edit`;
+            break;
+        default:
+            modalData.editUrl = null; // No hay URL de edición si el tipo no es reconocido
+    }
+
+    // Mostrar u ocultar el botón de editar basado en el rol del usuario
+    const btnEditar = document.getElementById('btnEditar');
+    if (btnEditar) {
+        if (userRole === 'Chofer') {
+            btnEditar.style.display = 'none'; // Ocultar el botón para el Chofer
+        } else {
+            btnEditar.style.display = 'inline-flex'; // Asegurarse de que sea visible para otros roles
+        }
+    }
+
     // Mostrar modal
     document.getElementById('modalDetalles').style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -436,7 +478,8 @@ async function cargarDatosAsync(tipo, id) {
     modalBody.innerHTML = '<div class="modal-loading"><div class="loading-spinner"></div>Cargando detalles...</div>';
     
     try {
-        const response = await fetch(`/api/${tipo}s/${id}/detalles`);
+        // Asegúrate de que estas rutas API existan y devuelvan los datos correctamente
+        const response = await fetch(`/api/${tipo}s/${id}/detalles`); 
         const data = await response.json();
         
         if (data.success) {
@@ -477,23 +520,25 @@ function renderizarContenido(tipo, datos) {
             
         case 'chofer':
             titulo = `Conductor: ${datos.nombre}`;
-            modalData.editUrl = `/choferes/${datos.id}/edit`;
+            // modalData.editUrl ya se estableció en mostrarDetalles
             contenido = generarContenidoConductor(datos);
             break;
             
         case 'cliente':
             titulo = `Cliente: ${datos.nombre}`;
+            // modalData.editUrl ya se estableció en mostrarDetalles
             contenido = generarContenidoCliente(datos);
             break;
             
         case 'combustible':
             titulo = `Registro de Combustible #${datos.id}`;
+            // modalData.editUrl ya se estableció en mostrarDetalles
             contenido = generarContenidoCombustible(datos);
             break;
             
         case 'camion':
             titulo = `Camión: ${datos.placa || datos.modelo || 'CAM-' + datos.id}`;
-            modalData.editUrl = `/camiones/${datos.id}/edit`;
+            // modalData.editUrl ya se estableció en mostrarDetalles
             contenido = generarContenidoCamion(datos);
             break;
             
@@ -872,8 +917,14 @@ function cerrarModal() {
 }
 
 function editarElemento() {
-    if (modalData.editUrl) {
+    // Solo permitir la redirección si el botón no está oculto (es decir, el rol lo permite)
+    const btnEditar = document.getElementById('btnEditar');
+    if (btnEditar && btnEditar.style.display !== 'none' && modalData.editUrl) {
         window.location.href = modalData.editUrl;
+    } else {
+        // Opcional: mostrar un mensaje si se intenta editar sin permiso (aunque el botón debería estar oculto)
+        console.warn('Acción de edición no permitida para este rol.');
+        // alert('No tienes permiso para editar este elemento.'); // Evitar alert en producción
     }
 }
 

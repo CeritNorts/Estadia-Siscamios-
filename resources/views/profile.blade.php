@@ -555,36 +555,66 @@
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
 
-         <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -667,15 +697,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Correo Electrónico</label>
-                                    <input type="email" id="email" name="email" class="form-control" value="admin@siscamino.com">
+                                    <input type="email" id="email" name="email" class="form-control"
+                                        value="admin@siscamino.com">
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Teléfono</label>
-                                    <input type="tel" id="phone" name="phone" class="form-control" value="+52 55 1234 5678">
+                                    <input type="tel" id="phone" name="phone" class="form-control"
+                                        value="+52 55 1234 5678">
                                 </div>
                                 <div class="form-group">
                                     <label for="position">Cargo/Posición</label>
-                                    <input type="text" id="position" name="position" class="form-control" value="Administrador del Sistema">
+                                    <input type="text" id="position" name="position" class="form-control"
+                                        value="Administrador del Sistema">
                                 </div>
                                 <div style="display: flex; gap: 1rem;">
                                     <button type="submit" class="btn btn-primary">
@@ -694,15 +727,18 @@
                             <form id="securityForm">
                                 <div class="form-group">
                                     <label for="currentPassword">Contraseña Actual</label>
-                                    <input type="password" id="currentPassword" name="current_password" class="form-control" placeholder="Ingrese su contraseña actual">
+                                    <input type="password" id="currentPassword" name="current_password"
+                                        class="form-control" placeholder="Ingrese su contraseña actual">
                                 </div>
                                 <div class="form-group">
                                     <label for="newPassword">Nueva Contraseña</label>
-                                    <input type="password" id="newPassword" name="new_password" class="form-control" placeholder="Ingrese nueva contraseña">
+                                    <input type="password" id="newPassword" name="new_password" class="form-control"
+                                        placeholder="Ingrese nueva contraseña">
                                 </div>
                                 <div class="form-group">
                                     <label for="confirmPassword">Confirmar Nueva Contraseña</label>
-                                    <input type="password" id="confirmPassword" name="confirm_password" class="form-control" placeholder="Confirme la nueva contraseña">
+                                    <input type="password" id="confirmPassword" name="confirm_password"
+                                        class="form-control" placeholder="Confirme la nueva contraseña">
                                 </div>
                                 <button type="submit" class="btn btn-primary">
                                     🔐 Cambiar Contraseña
@@ -740,17 +776,20 @@
                         <div class="card">
                             <h3>⚙️ Configuración de Cuenta</h3>
                             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
                                     <div>
                                         <strong>Notificaciones por Email</strong>
-                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Recibir alertas importantes</p>
+                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Recibir alertas
+                                            importantes</p>
                                     </div>
                                     <label class="switch">
                                         <input type="checkbox" checked>
                                         <span class="slider"></span>
                                     </label>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
                                     <div>
                                         <strong>Notificaciones Push</strong>
                                         <p style="font-size: 0.9rem; color: #666; margin: 0;">Alertas en tiempo real</p>
@@ -847,11 +886,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: #667eea;
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(26px);
         }
     </style>
@@ -904,7 +943,7 @@
             document.getElementById('profileName').textContent = userData.name;
             document.getElementById('profileEmail').textContent = userData.email;
             document.getElementById('profileRole').textContent = userData.position;
-            
+
             // Generar iniciales para el avatar
             const initials = userData.name.split(' ').map(word => word[0]).join('').substring(0, 2);
             document.getElementById('profileAvatar').textContent = initials;
@@ -926,11 +965,11 @@
             // Simular guardado
             setTimeout(() => {
                 showAlert('✅ Información personal actualizada correctamente', 'success');
-                
+
                 // Actualizar datos en la cabecera
                 const name = document.getElementById('name').value;
                 document.getElementById('profileName').textContent = name;
-                
+
                 // Restaurar botón
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -967,10 +1006,10 @@
             // Simular cambio de contraseña
             setTimeout(() => {
                 showAlert('✅ Contraseña cambiada exitosamente', 'success');
-                
+
                 // Limpiar formulario
                 document.getElementById('securityForm').reset();
-                
+
                 // Restaurar botón
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -987,18 +1026,18 @@
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alertContainer');
             let alertClass = 'alert-info';
-            
+
             if (type === 'success') alertClass = 'alert-success';
             if (type === 'error') alertClass = 'alert-danger';
-            
+
             const alertHTML = `
                 <div class="alert ${alertClass}" style="animation: slideDown 0.3s ease-out;">
                     ${message}
                 </div>
             `;
-            
+
             alertContainer.innerHTML = alertHTML;
-            
+
             // Auto-dismiss after 5 seconds
             setTimeout(() => {
                 const alert = alertContainer.querySelector('.alert');

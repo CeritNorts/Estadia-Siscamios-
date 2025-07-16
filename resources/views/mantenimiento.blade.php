@@ -991,36 +991,66 @@
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
         
-         <ul class="sidebar-menu">
+        <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/mantenimiento" class="active">
+                <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="/combustible">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -1089,9 +1119,12 @@
                         <h1 class="page-title">Gestión de Mantenimiento</h1>
                         <p class="page-subtitle">Administra el mantenimiento preventivo y correctivo de la flotilla</p>
                     </div>
-                    <a href="{{ route('registrarMantenimiento') }}" class="btn btn-primary">
-                        ➕ Registrar Mantenimiento
-                    </a>
+                    {{-- Condición para mostrar el botón "Registrar Mantenimiento" --}}
+                    @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                        <a href="{{ route('registrarMantenimiento') }}" class="btn btn-primary">
+                            ➕ Registrar Mantenimiento
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Alertas de Mantenimiento -->
@@ -1186,12 +1219,15 @@
                                             <div style="display: flex; gap: 0.5rem;">
                                                 <button onclick="mostrarDetalles('mantenimiento', {{ $mantenimiento->id }}, {{ json_encode($mantenimiento->load('camion')) }})" 
                                                     class="btn btn-secondary btn-sm">👁️</button>
-                                                <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
-                                                <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
-                                                </form>
+                                                {{-- Botones de Editar y Eliminar solo para Administrador y Supervisor --}}
+                                                @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                                                    <a href="{{ route('mantenimientos.edit', $mantenimiento) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
+                                                    <form method="POST" action="{{ route('mantenimientos.destroy', $mantenimiento) }}" style="display: inline;" onsubmit="return confirm('¿Está seguro de eliminar este mantenimiento?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

@@ -829,35 +829,65 @@
         </div>
         
         <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes" class="active">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="/combustible">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -926,9 +956,12 @@
                         <h1 class="page-title">Gestión de Viajes</h1>
                         <p class="page-subtitle">Administra y supervisa todos los viajes de la flotilla</p>
                     </div>
-                    <a href="{{ route('viajes.create') }}" class="btn btn-primary">
-                        ➕ Asignar Nuevo Viaje
-                    </a>
+                        {{-- Botón "Asignar Nuevo Viaje": Solo para Administrador y Supervisor --}}
+                        @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                            <a href="{{ route('viajes.create') }}" class="btn btn-primary">
+                            ➕ Asignar Nuevo Viaje
+                            </a>
+                        @endif
                 </div>
                 
                 <!-- Dashboard Stats -->
@@ -974,7 +1007,10 @@
                                 <option value="retrasado">Retrasados</option>
                                 <option value="espera">En Espera</option>
                             </select>
-                            <a href="{{ route('viajes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Viaje</a>
+                            {{-- Botón "Nuevo Viaje" en la tabla: Solo para Administrador y Supervisor --}}
+                            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                                <a href="{{ route('viajes.create') }}" class="btn btn-primary btn-sm">➕ Nuevo Viaje</a>
+                            @endif
                         </div>
                     </div>
                     
@@ -1055,20 +1091,27 @@
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
                                                 <button onclick="mostrarDetalles('viaje', {{ $viaje->id }}, {{ json_encode($viaje) }})" 
-                                                    class="btn btn-secondary btn-sm" title="Ver Detalles">👁️</button>
-                                                <a href="{{ route('viajes.edit', $viaje->id) }}" 
-                                                   class="btn btn-warning btn-sm" 
-                                                   title="Editar">✏️</a>
-                                                <form action="{{ route('viajes.destroy', $viaje->id) }}" 
-                                                      method="POST" 
-                                                      style="display: inline;"
-                                                      onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="btn btn-danger btn-sm" 
-                                                            title="Eliminar">🗑️</button>
-                                                </form>
+                                                    class="btn btn-secondary btn-sm" title="Ver Detalles">👁️
+                                                </button>
+                                                {{-- Botón "Editar": Solo para Administrador y Supervisor --}}
+                                                @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                                                    <a href="{{ route('viajes.edit', $viaje->id) }}" 
+                                                        class="btn btn-warning btn-sm" 
+                                                        title="Editar">✏️</a>
+                                                @endif
+                                                {{-- Botón "Eliminar": Solo para Administrador y Supervisor --}}
+                                                @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                                                    <form action="{{ route('viajes.destroy', $viaje->id) }}" 
+                                                            method="POST" 
+                                                            style="display: inline;"
+                                                            onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="btn btn-danger btn-sm" 
+                                                                title="Eliminar">🗑️</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

@@ -582,7 +582,7 @@
             .content {
                 padding: 1.5rem;
             }
-            
+
             .metrics-grid {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             }
@@ -596,7 +596,7 @@
             .navbar-content {
                 padding: 1rem 1.5rem;
             }
-            
+
             .metrics-grid {
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             }
@@ -649,7 +649,7 @@
                 gap: 1rem;
             }
 
-            .navbar-content > div:last-child {
+            .navbar-content>div:last-child {
                 order: 1;
                 width: 100%;
                 justify-content: space-between;
@@ -878,6 +878,7 @@
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .btn,
@@ -909,35 +910,65 @@
         </div>
 
         <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="{{ route('combustible') }}" class="active">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -1179,7 +1210,8 @@
                                         </div>
                                         <div style="text-align: right;">
                                             <div style="font-size: 1.25rem; font-weight: bold; color: #28a745;">
-                                                {{ $eficiencia->eficiencia_promedio ?? 0 }} L/viaje</div>
+                                                {{ $eficiencia->eficiencia_promedio ?? 0 }} L/viaje
+                                            </div>
                                             <div style="font-size: 0.75rem; color: #666;">Promedio</div>
                                         </div>
                                     </div>
@@ -1200,10 +1232,12 @@
                                         style="padding: 1rem; background: {{ $alerta->tipo == 'warning' ? '#fff3cd' : ($alerta->tipo == 'danger' ? '#f8d7da' : '#d1ecf1') }}; border-left: 4px solid {{ $alerta->tipo == 'warning' ? '#ffc107' : ($alerta->tipo == 'danger' ? '#dc3545' : '#0c5460') }}; border-radius: 5px;">
                                         <div
                                             style="font-weight: bold; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">
-                                            {{ $alerta->titulo }}</div>
+                                            {{ $alerta->titulo }}
+                                        </div>
                                         <div
                                             style="font-size: 0.875rem; color: {{ $alerta->tipo == 'warning' ? '#856404' : ($alerta->tipo == 'danger' ? '#721c24' : '#0c5460') }};">
-                                            {{ $alerta->descripcion }}</div>
+                                            {{ $alerta->descripcion }}
+                                        </div>
                                     </div>
                                 @empty
                                     <div style="text-align: center; color: #666; padding: 1rem;">
@@ -1330,7 +1364,7 @@
             });
 
             // Close sidebar on window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768) {
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
@@ -1346,17 +1380,17 @@
             let touchStartX = 0;
             let touchEndX = 0;
 
-            document.addEventListener('touchstart', function(e) {
+            document.addEventListener('touchstart', function (e) {
                 touchStartX = e.changedTouches[0].screenX;
             });
 
-            document.addEventListener('touchend', function(e) {
+            document.addEventListener('touchend', function (e) {
                 touchEndX = e.changedTouches[0].screenX;
                 handleSwipe();
             });
 
             // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 // Escape key to close sidebar or modal
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('fuelModal');
@@ -1370,10 +1404,10 @@
             });
 
             // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     alert.style.opacity = '0';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         alert.remove();
                     }, 300);
                 });
@@ -1382,15 +1416,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             };
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
                 second: '2-digit',
                 hour12: true
             };
@@ -1402,7 +1436,7 @@
         function handleSwipe() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            
+
             if (window.innerWidth <= 768) {
                 if (touchEndX < touchStartX - 50) {
                     // Swipe left - close sidebar
