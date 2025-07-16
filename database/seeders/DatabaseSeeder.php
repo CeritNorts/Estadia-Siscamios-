@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'usuario@usuario.com'],
             [
                 'name' => 'Usuaeio',
-                'password' => Hash::make('password'), // Contraseña por defecto
+                'password' => Hash::make('usuario'), // Contraseña por defecto
                 'role_id' => Role::where('nombre', 'Chofer')->first()->id ?? null, // Asigna el rol Chofer si existe
                 'email_verified_at' => now(),
             ]

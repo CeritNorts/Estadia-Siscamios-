@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -244,11 +245,25 @@
             font-size: 0.8rem;
         }
 
-        .stat-total { color: #007bff; }
-        .stat-activos { color: #28a745; }
-        .stat-inactivos { color: #6c757d; }
-        .stat-viajes { color: #ffc107; }
-        .stat-licencias { color: #dc3545; }
+        .stat-total {
+            color: #007bff;
+        }
+
+        .stat-activos {
+            color: #28a745;
+        }
+
+        .stat-inactivos {
+            color: #6c757d;
+        }
+
+        .stat-viajes {
+            color: #ffc107;
+        }
+
+        .stat-licencias {
+            color: #dc3545;
+        }
 
         /* Tabs */
         .tabs-container {
@@ -492,12 +507,35 @@
             text-transform: uppercase;
         }
 
-        .status-activo { background: #e8f5e8; color: #2e7d32; }
-        .status-inactivo { background: #f8f9fa; color: #6c757d; }
-        .status-disponible { background: #e3f2fd; color: #1565c0; }
-        .status-ocupado { background: #fff8e1; color: #f57c00; }
-        .status-vencida { background: #ffebee; color: #c62828; }
-        .status-vigente { background: #e8f5e8; color: #2e7d32; }
+        .status-activo {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-inactivo {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .status-disponible {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-ocupado {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-vencida {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-vigente {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
 
         /* Alert Cards */
         .alert-card {
@@ -561,7 +599,7 @@
             .content {
                 padding: 1.5rem;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             }
@@ -571,7 +609,7 @@
             .sidebar {
                 width: 260px;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             }
@@ -629,7 +667,7 @@
                 gap: 1rem;
             }
 
-            .navbar-content > div:last-child {
+            .navbar-content>div:last-child {
                 order: 1;
                 width: 100%;
                 justify-content: space-between;
@@ -831,12 +869,20 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .btn,
@@ -983,12 +1029,20 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .btn,
@@ -1019,43 +1073,74 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
-        
-         <ul class="sidebar-menu">
+
+        <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores" class="active">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="/combustible">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -1104,7 +1189,7 @@
 
         <div class="content">
             <div class="content-wrapper fade-in">
-                
+
                 <!-- Success/Error Messages -->
                 @if(session('success'))
                     <div class="alert alert-success">
@@ -1142,7 +1227,8 @@
                         <div class="stat-sublabel">Disponibles para viajes</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-inactivos">{{ $choferes->where('estado', 'inactivo')->count() }}</div>
+                        <div class="stat-number stat-inactivos">{{ $choferes->where('estado', 'inactivo')->count() }}
+                        </div>
                         <div class="stat-label">Inactivos</div>
                         <div class="stat-sublabel">No disponibles</div>
                     </div>
@@ -1152,7 +1238,9 @@
                         <div class="stat-sublabel">Actualmente conduciendo</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number stat-licencias">{{ $choferes->where('fecha_vencimiento_licencia', '<=', now()->addDays(30))->count() }}</div>
+                        <div class="stat-number stat-licencias">
+                            {{ $choferes->where('fecha_vencimiento_licencia', '<=', now()->addDays(30))->count() }}
+                        </div>
                         <div class="stat-label">Licencias por Vencer</div>
                         <div class="stat-sublabel">Próximos 30 días</div>
                     </div>
@@ -1168,11 +1256,12 @@
                         <div class="table-header">
                             <h3 class="table-title">Todos los Conductores</h3>
                             <div class="table-actions">
-                                <input type="text" class="search-input" placeholder="Buscar conductor..." id="searchConductores">
+                                <input type="text" class="search-input" placeholder="Buscar conductor..."
+                                    id="searchConductores">
                                 <a href="{{ route('conductores.create') }}" class="btn btn-primary btn-sm">➕ Nuevo</a>
                             </div>
                         </div>
-                        
+
                         @if($choferes->count() > 0)
                             <!-- Desktop Table -->
                             <div class="table-container">
@@ -1189,31 +1278,35 @@
                                     </thead>
                                     <tbody id="conductoresTableBody">
                                         @foreach($choferes as $chofer)
-                                        <tr data-estado="{{ $chofer->estado ?? 'activo' }}">
-                                            <td><strong>CH-{{ str_pad($chofer->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
-                                            <td>{{ $chofer->nombre }}</td>
-                                            <td>{{ $chofer->telefono }}</td>
-                                            <td>{{ $chofer->licencia }}</td>
-                                            <td>
-                                                <span class="status-badge status-{{ $chofer->estado ?? 'activo' }}">
-                                                    {{ ucfirst($chofer->estado ?? 'activo') }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div style="display: flex; gap: 0.5rem;">
-                                                    <button
-                                                        onclick="mostrarDetalles('chofer', {{ $chofer->id }}, {{ json_encode($chofer) }})"
-                                                        class="btn btn-secondary btn-sm">👁️</button>
+                                            <tr data-estado="{{ $chofer->estado ?? 'activo' }}">
+                                                <td><strong>CH-{{ str_pad($chofer->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                                                <td>{{ $chofer->nombre }}</td>
+                                                <td>{{ $chofer->telefono }}</td>
+                                                <td>{{ $chofer->licencia }}</td>
+                                                <td>
+                                                    <span class="status-badge status-{{ $chofer->estado ?? 'activo' }}">
+                                                        {{ ucfirst($chofer->estado ?? 'activo') }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div style="display: flex; gap: 0.5rem;">
+                                                        <button
+                                                            onclick="mostrarDetalles('chofer', {{ $chofer->id }}, {{ json_encode($chofer) }})"
+                                                            class="btn btn-secondary btn-sm">👁️</button>
 
-                                                    <a href="{{ route('choferes.edit', $chofer) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
-                                                    <form action="{{ route('choferes.destroy', $chofer) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                        <a href="{{ route('choferes.edit', $chofer) }}"
+                                                            class="btn btn-warning btn-sm" title="Editar">✏️</a>
+                                                        <form action="{{ route('choferes.destroy', $chofer) }}" method="POST"
+                                                            style="display: inline;"
+                                                            onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                                title="Eliminar">🗑️</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -1252,9 +1345,13 @@
                                             </div>
                                         </div>
                                         <div class="card-actions">
-                                            <a href="{{ route('choferes.show', $chofer) }}" class="btn btn-secondary btn-sm">👁️ Ver</a>
-                                            <a href="{{ route('choferes.edit', $chofer) }}" class="btn btn-warning btn-sm">✏️ Editar</a>
-                                            <form action="{{ route('choferes.destroy', $chofer) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
+                                            <a href="{{ route('choferes.show', $chofer) }}" class="btn btn-secondary btn-sm">👁️
+                                                Ver</a>
+                                            <a href="{{ route('choferes.edit', $chofer) }}" class="btn btn-warning btn-sm">✏️
+                                                Editar</a>
+                                            <form action="{{ route('choferes.destroy', $chofer) }}" method="POST"
+                                                style="display: inline;"
+                                                onsubmit="return confirm('¿Estás seguro de eliminar este conductor?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
@@ -1268,7 +1365,8 @@
                                 <div class="empty-icon">👥</div>
                                 <h3>No hay conductores registrados</h3>
                                 <p>Comienza registrando tu primer conductor para ver la información aquí.</p>
-                                <a href="{{ route('conductores.create') }}" class="btn btn-primary" style="margin-top: 1rem;">
+                                <a href="{{ route('conductores.create') }}" class="btn btn-primary"
+                                    style="margin-top: 1rem;">
                                     ➕ Registrar Primer Conductor
                                 </a>
                             </div>
@@ -1282,7 +1380,7 @@
 
     <script>
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
             updateDateTime();
             setInterval(updateDateTime, 1000);
@@ -1294,18 +1392,18 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
 
-            overlay.addEventListener('click', function() {
+            overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
             // Close sidebar on window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768) {
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
@@ -1314,16 +1412,16 @@
 
             // Search functionality
             if (document.getElementById('searchConductores')) {
-                document.getElementById('searchConductores').addEventListener('input', function() {
+                document.getElementById('searchConductores').addEventListener('input', function () {
                     filtrarConductores(this.value);
                 });
             }
 
             // Auto-hide alerts
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     alert.style.opacity = '0';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         alert.remove();
                     }, 300);
                 });
@@ -1332,15 +1430,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             };
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
                 second: '2-digit',
                 hour12: true
             };
@@ -1353,7 +1451,7 @@
             // Filter table rows
             const tableRows = document.querySelectorAll('#conductoresTableBody tr');
             const mobileCards = document.querySelectorAll('.mobile-card');
-            
+
             tableRows.forEach(row => {
                 const texto = row.textContent.toLowerCase();
                 if (texto.includes(termino.toLowerCase())) {
@@ -1379,7 +1477,7 @@
         function updateVisibleStats() {
             // Update stats based on visible rows only
             const visibleTableRows = document.querySelectorAll('#conductoresTableBody tr:not([style*="display: none"])');
-            
+
             let stats = {
                 total: 0,
                 activos: 0,
@@ -1390,8 +1488,8 @@
             visibleTableRows.forEach(row => {
                 const estado = row.getAttribute('data-estado') || 'activo';
                 stats.total++;
-                
-                switch(estado) {
+
+                switch (estado) {
                     case 'activo':
                         stats.activos++;
                         break;
@@ -1436,11 +1534,11 @@
         let touchStartX = 0;
         let touchEndX = 0;
 
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function (e) {
             touchStartX = e.changedTouches[0].screenX;
         });
 
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         });
@@ -1448,7 +1546,7 @@
         function handleSwipe() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            
+
             if (window.innerWidth <= 768) {
                 if (touchEndX < touchStartX - 50) {
                     // Swipe left - close sidebar
@@ -1464,7 +1562,7 @@
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Escape key to close sidebar
             if (e.key === 'Escape') {
                 const sidebar = document.getElementById('sidebar');
@@ -1474,7 +1572,7 @@
                     overlay.classList.remove('active');
                 }
             }
-            
+
             // Ctrl+F to focus search
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
@@ -1500,15 +1598,15 @@
 
         // Apply debounce to search
         if (document.getElementById('searchConductores')) {
-            document.getElementById('searchConductores').addEventListener('input', 
-                debounce(function() {
+            document.getElementById('searchConductores').addEventListener('input',
+                debounce(function () {
                     filtrarConductores(this.value);
                 }, 300)
             );
         }
 
         // Initialize stats calculation
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // Calculate initial stats if needed
             updateVisibleStats();
         });
@@ -1522,13 +1620,13 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
 
         // Enhanced delete confirmation for better UX
         document.querySelectorAll('form[onsubmit]').forEach(form => {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 const row = this.closest('tr') || this.closest('.mobile-card');
                 if (row) {
-                    const nombre = row.querySelector('td:nth-child(2)')?.textContent || 
-                                  row.querySelector('.info-value')?.textContent;
+                    const nombre = row.querySelector('td:nth-child(2)')?.textContent ||
+                        row.querySelector('.info-value')?.textContent;
                     const id = row.querySelector('strong')?.textContent?.replace('CH-', '');
-                    
+
                     if (nombre && id) {
                         if (!confirmarEliminacion(nombre, id)) {
                             e.preventDefault();
@@ -1542,5 +1640,5 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
     @include('components.modal-detalles')
 
 </body>
-</html>
 
+</html>

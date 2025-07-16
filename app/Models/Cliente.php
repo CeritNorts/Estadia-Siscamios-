@@ -15,6 +15,8 @@ class Cliente extends Model
         'nombre',
         'contacto',
         'contrato',
+        'tipo',   
+        'estado', 
     ];
 
     // Relación: un cliente puede tener muchos viajes
@@ -26,25 +28,27 @@ class Cliente extends Model
     // Accessor para obtener el estado formateado
     public function getEstadoFormateadoAttribute()
     {
-        return 'Activo'; 
+        return ucfirst($this->estado); 
     }
 
     // Accessor para simular tipo de cliente
     public function getTipoFormateadoAttribute()
     {
-        return 'Empresa'; 
+        return ucfirst($this->tipo); 
     }
 
     // Scope para obtener todos los clientes 
     public function scopeActivos($query)
     {
-        return $query; 
+        // Si tienes una columna 'estado' en tu tabla 'clientes'
+        return $query->where('estado', 'activo'); 
     }
 
     // Método para verificar si está activo 
     public function estaActivo()
     {
-        return true; 
+        // Si tienes una columna 'estado' en tu tabla 'clientes'
+        return $this->estado === 'activo'; 
     }
 
     // Método para obtener estadísticas del cliente

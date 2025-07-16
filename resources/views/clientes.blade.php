@@ -573,7 +573,7 @@
             .content {
                 padding: 1.5rem;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             }
@@ -583,7 +583,7 @@
             .sidebar {
                 width: 260px;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             }
@@ -641,7 +641,7 @@
                 gap: 1rem;
             }
 
-            .navbar-content > div:last-child {
+            .navbar-content>div:last-child {
                 order: 1;
                 width: 100%;
                 justify-content: space-between;
@@ -910,6 +910,7 @@
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .btn,
@@ -949,35 +950,65 @@
         </div>
 
         <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes" class="active">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="/combustible">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -1070,7 +1101,8 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-number stat-recent">
-                            {{ $clientes->where('created_at', '>=', now()->subDays(30))->count() }}</div>
+                            {{ $clientes->where('created_at', '>=', now()->subDays(30))->count() }}
+                        </div>
                         <div class="stat-label">Nuevos este mes</div>
                         <div class="stat-sublabel">Últimos 30 días</div>
                     </div>
@@ -1106,32 +1138,42 @@
                                         <td><strong>CLI-{{ str_pad($cliente->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
                                         <td>
                                             <div style="font-weight: 500;">{{ $cliente->nombre }}</div>
-                                            <div style="font-size: 0.8rem; color: #666;">{{ ucfirst($cliente->tipo ?? 'empresa') }}</div>
+                                            <div style="font-size: 0.8rem; color: #666;">
+                                                {{ ucfirst($cliente->tipo ?? 'empresa') }}</div>
                                         </td>
                                         <td>
                                             <div>{{ $cliente->contacto }}</div>
                                         </td>
                                         <td>
-                                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <div
+                                                style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                                 {{ $cliente->contrato }}
                                             </div>
                                         </td>
                                         <td>
                                             <div>{{ $cliente->created_at->format('d/m/Y') }}</div>
                                             <div style="font-size: 0.8rem; color: #666;">
-                                                {{ $cliente->created_at->diffForHumans() }}</div>
+                                                {{ $cliente->created_at->diffForHumans() }}
+                                            </div>
                                         </td>
                                         <td>
-                                            <span class="status-badge status-{{ $cliente->estado ?? 'activo' }}">{{ ucfirst($cliente->estado ?? 'activo') }}</span>
+                                            <span
+                                                class="status-badge status-{{ $cliente->estado ?? 'activo' }}">{{ ucfirst($cliente->estado ?? 'activo') }}</span>
                                         </td>
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
-                                                <button onclick="mostrarDetalles('{{ $cliente->id }}', '{{ addslashes($cliente->nombre) }}', '{{ addslashes($cliente->contacto) }}', '{{ addslashes($cliente->contrato) }}', '{{ $cliente->created_at->format('d/m/Y') }}', '{{ $cliente->estado ?? 'activo' }}')" class="btn btn-secondary btn-sm" title="Ver detalles">👁️</button>
-                                                <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm" title="Editar">✏️</a>
-                                                <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
+                                                <button
+                                                    onclick="mostrarDetalles('{{ $cliente->id }}', '{{ addslashes($cliente->nombre) }}', '{{ addslashes($cliente->contacto) }}', '{{ addslashes($cliente->contrato) }}', '{{ $cliente->created_at->format('d/m/Y') }}', '{{ $cliente->estado ?? 'activo' }}')"
+                                                    class="btn btn-secondary btn-sm" title="Ver detalles">👁️</button>
+                                                <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm"
+                                                    title="Editar">✏️</a>
+                                                <form action="{{ route('clientes.destroy', $cliente) }}" method="POST"
+                                                    style="display: inline;"
+                                                    onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">🗑️</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        title="Eliminar">🗑️</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -1177,9 +1219,14 @@
                                         </div>
                                     </div>
                                     <div class="card-actions">
-                                        <button onclick="mostrarDetalles('{{ $cliente->id }}', '{{ addslashes($cliente->nombre) }}', '{{ addslashes($cliente->contacto) }}', '{{ addslashes($cliente->contrato) }}', '{{ $cliente->created_at->format('d/m/Y') }}', '{{ $cliente->estado ?? 'activo' }}')" class="btn btn-secondary btn-sm">👁️ Ver</button>
-                                        <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm">✏️ Editar</a>
-                                        <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
+                                        <button
+                                            onclick="mostrarDetalles('{{ $cliente->id }}', '{{ addslashes($cliente->nombre) }}', '{{ addslashes($cliente->contacto) }}', '{{ addslashes($cliente->contrato) }}', '{{ $cliente->created_at->format('d/m/Y') }}', '{{ $cliente->estado ?? 'activo' }}')"
+                                            class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                        <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm">✏️
+                                            Editar</a>
+                                        <form action="{{ route('clientes.destroy', $cliente) }}" method="POST"
+                                            style="display: inline;"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar este cliente?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
@@ -1219,7 +1266,7 @@
 
     <script>
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
             updateDateTime();
             setInterval(updateDateTime, 1000);
@@ -1231,18 +1278,18 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
 
-            overlay.addEventListener('click', function() {
+            overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
             // Close sidebar on window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768) {
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
@@ -1252,15 +1299,15 @@
             // Search functionality
             const searchInput = document.getElementById('searchClientes');
             if (searchInput) {
-                document.getElementById('searchClientes').addEventListener('input', 
-                    debounce(function() {
+                document.getElementById('searchClientes').addEventListener('input',
+                    debounce(function () {
                         filtrarClientes(this.value);
                     }, 300)
                 );
             }
 
             // Modal close on outside click
-            window.addEventListener('click', function(event) {
+            window.addEventListener('click', function (event) {
                 const modal = document.getElementById('modalDetalles');
                 if (event.target === modal) {
                     cerrarModal();
@@ -1268,10 +1315,10 @@
             });
 
             // Auto-hide alerts
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     alert.style.opacity = '0';
-                    setTimeout(function() {
+                    setTimeout(function () {
                         alert.remove();
                     }, 300);
                 });
@@ -1280,15 +1327,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             };
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
                 second: '2-digit',
                 hour12: true
             };
@@ -1327,7 +1374,7 @@
         function updateVisibleStats() {
             // Update stats based on visible rows only
             const visibleTableRows = document.querySelectorAll('#clientesTableBody tr:not([style*="display: none"])');
-            
+
             let stats = {
                 total: 0
             };
@@ -1354,7 +1401,7 @@
         function mostrarDetalles(id, nombre, contacto, contrato, fecha, estado) {
             const modal = document.getElementById('modalDetalles');
             const modalBody = document.getElementById('modalBody');
-            
+
             modalBody.innerHTML = `
                 <div class="detail-item">
                     <div class="detail-label">ID Cliente:</div>
@@ -1383,7 +1430,7 @@
                     </div>
                 </div>
             `;
-            
+
             modal.style.display = 'block';
         }
 
@@ -1406,11 +1453,11 @@
         let touchStartX = 0;
         let touchEndX = 0;
 
-        document.addEventListener('touchstart', function(e) {
+        document.addEventListener('touchstart', function (e) {
             touchStartX = e.changedTouches[0].screenX;
         });
 
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         });
@@ -1418,7 +1465,7 @@
         function handleSwipe() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
-            
+
             if (window.innerWidth <= 768) {
                 if (touchEndX < touchStartX - 50) {
                     // Swipe left - close sidebar
@@ -1434,13 +1481,13 @@
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Escape key to close sidebar or modal
             if (e.key === 'Escape') {
                 const modal = document.getElementById('modalDetalles');
                 const sidebar = document.getElementById('sidebar');
                 const overlay = document.getElementById('overlay');
-                
+
                 if (modal.style.display === 'block') {
                     cerrarModal();
                 } else if (sidebar.classList.contains('active')) {
@@ -1448,7 +1495,7 @@
                     overlay.classList.remove('active');
                 }
             }
-            
+
             // Ctrl+F to focus search
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
@@ -1481,13 +1528,13 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
 
         // Enhanced delete confirmation for better UX
         document.querySelectorAll('form[onsubmit]').forEach(form => {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 const row = this.closest('tr') || this.closest('.mobile-card');
                 if (row) {
-                    const nombre = row.querySelector('td:nth-child(2) div')?.textContent || 
-                                  row.querySelector('.info-value')?.textContent;
+                    const nombre = row.querySelector('td:nth-child(2) div')?.textContent ||
+                        row.querySelector('.info-value')?.textContent;
                     const id = row.querySelector('strong')?.textContent?.replace('CLI-', '');
-                    
+
                     if (nombre && id) {
                         if (!confirmarEliminacion(nombre, id)) {
                             e.preventDefault();
@@ -1498,7 +1545,7 @@ Esta acción no se puede deshacer y eliminará toda la información asociada.`);
         });
 
         // Initialize stats calculation
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             updateVisibleStats();
         });
     </script>
