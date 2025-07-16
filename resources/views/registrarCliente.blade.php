@@ -398,6 +398,17 @@
             color: #dc3545;
         }
 
+        /* Field validation styles */
+        .field-valid {
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
+        }
+
+        .field-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 1200px) {
             .content {
@@ -791,6 +802,13 @@
                             </div>
                             
                             <div class="form-group">
+                                <label for="tipo">Tipo de Cliente <span class="required-indicator">*</span></label>
+                                <select id="tipo" name="tipo" required>
+                                    <option value="">Seleccionar tipo</option>
+                                    <option value="empresa">Empresa</option>
+                                    <option value="particular">Particular</option>
+                                </select>
+                                <div class="error-message" id="error-tipo"></div>
                                 <label for="tipo">Tipo de Cliente</label>
                                 <select id="tipo" name="tipo" class="form-input">
                                     <option value="empresa" {{ old('tipo') == 'empresa' ? 'selected' : '' }}>Empresa</option>
@@ -817,6 +835,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="estado">Estado <span class="required-indicator">*</span></label>
+                                <select id="estado" name="estado" required>
+                                    <option value="">Seleccionar estado</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                                <div class="error-message" id="error-estado"></div>
                                 <label for="estado">Estado</label>
                                 <select id="estado" name="estado" class="form-input">
                                     <option value="activo" {{ old('estado') == 'activo' ? 'selected' : '' }}>Activo</option>
@@ -863,6 +888,7 @@
             setupEventListeners();
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            setupFormValidation();
             // Inicializar contador de caracteres al cargar la página si ya hay contenido
             const contratoTextarea = document.getElementById('contrato');
             if (contratoTextarea) {
@@ -896,6 +922,19 @@
 
             // Contador de caracteres para el textarea
             const contratoTextarea = document.getElementById('contrato');
+            contratoTextarea.addEventListener('input', function() {
+                const maxLength = 1000;
+                const currentLength = this.value.length;
+                const counter = document.getElementById('contrato-counter');
+                
+                counter.textContent = `${currentLength} / ${maxLength} caracteres`;
+                
+                if (currentLength > maxLength * 0.9) {
+                    counter.classList.add('warning');
+                } else {
+                    counter.classList.remove('warning');
+                }
+            });
             if (contratoTextarea) {
                 contratoTextarea.addEventListener('input', function() {
                     updateCharacterCounter(this);
@@ -923,6 +962,178 @@
                     overlay.classList.remove('active');
                 }
             });
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('formRegistrarCliente');
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            // Real-time validation
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                input.addEventListener('input', function() {
+                    clearFieldStyles(this);
+                    
+                    // Validación específica para nombre/razón social
+                    if (this.name === 'nombre') {
+                        formatNombreField(this);
+                        validateField(this);
+                    }
+                    
+                    // Validación en tiempo real para otros campos
+                    if (this.value.trim()) {
+                        validateField(this);
+                    }
+                });
+            });
+
+            // Form submission validation
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                validateAndSubmitForm();
+            });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            const fieldName = field.name;
+            let isValid = true;
+            let errorMessage = '';
+
+            // Limpiar error previo
+            clearError(field);
+
+            // Validación de campos requeridos
+            if (!value) {
+                errorMessage = `El campo ${getFieldDisplayName(fieldName)} es obligatorio`;
+                isValid = false;
+            } else {
+                // Validaciones específicas
+                switch (fieldName) {
+                    case 'nombre':
+                        if (value.length < 2) {
+                            errorMessage = 'El nombre debe tener al menos 2 caracteres';
+                            isValid = false;
+                        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.]+$/.test(value)) {
+                            errorMessage = 'El nombre solo puede contener letras, espacios y puntos';
+                            isValid = false;
+                        }
+                        break;
+                    case 'contacto':
+                        if (value.length < 5) {
+                            errorMessage = 'La información de contacto debe tener al menos 5 caracteres';
+                            isValid = false;
+                        }
+                        break;
+                    case 'contrato':
+                        if (value.length < 10) {
+                            errorMessage = 'La información del contrato debe tener al menos 10 caracteres';
+                            isValid = false;
+                        } else if (value.length > 1000) {
+                            errorMessage = 'La información del contrato no puede exceder 1000 caracteres';
+                            isValid = false;
+                        }
+                        break;
+                }
+            }
+
+            // Aplicar estilos visuales
+            if (isValid) {
+                field.classList.remove('field-invalid');
+                field.classList.add('field-valid');
+            } else {
+                field.classList.remove('field-valid');
+                field.classList.add('field-invalid');
+                showError(field, errorMessage);
+            }
+
+            return isValid;
+        }
+
+        function formatNombreField(input) {
+            let value = input.value;
+            
+            // Remover caracteres no permitidos (números y símbolos excepto puntos)
+            value = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\.]/g, '');
+            
+            // Capitalizar la primera letra de cada palabra
+            value = value.replace(/\b\w/g, l => l.toUpperCase());
+            
+            input.value = value;
+        }
+
+        function clearFieldStyles(field) {
+            field.classList.remove('field-valid', 'field-invalid');
+        }
+
+        function clearError(field) {
+            const errorElement = document.getElementById(`error-${field.name}`);
+            if (errorElement) {
+                errorElement.textContent = '';
+            }
+        }
+
+        function showError(field, message) {
+            const errorElement = document.getElementById(`error-${field.name}`);
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+        }
+
+        function getFieldDisplayName(fieldName) {
+            const names = {
+                'nombre': 'Nombre/Razón Social',
+                'tipo': 'Tipo de Cliente',
+                'contacto': 'Información de Contacto',
+                'estado': 'Estado',
+                'contrato': 'Información del Contrato'
+            };
+            return names[fieldName] || fieldName;
+        }
+
+        function validateAndSubmitForm() {
+            const form = document.getElementById('formRegistrarCliente');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            let isFormValid = true;
+            let errors = [];
+
+            // Validar todos los campos
+            inputs.forEach(input => {
+                const isValid = validateField(input);
+                if (!isValid) {
+                    isFormValid = false;
+                    const fieldName = getFieldDisplayName(input.name);
+                    const errorElement = document.getElementById(`error-${input.name}`);
+                    if (errorElement && errorElement.textContent) {
+                        errors.push(errorElement.textContent);
+                    }
+                }
+            });
+
+            if (isFormValid) {
+                showAlert('✅ Cliente registrado exitosamente', 'success');
+                
+                // Simular delay de envío
+                setTimeout(() => {
+                    limpiarFormulario();
+                }, 2000);
+            } else {
+                const uniqueErrors = [...new Set(errors)];
+                showAlert('❌ Por favor, corrija los errores en el formulario', 'danger');
+                
+                // Scroll al primer campo con error
+                const firstInvalidField = form.querySelector('.field-invalid');
+                if (firstInvalidField) {
+                    firstInvalidField.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    firstInvalidField.focus();
+                }
+            }
         }
 
         function updateDateTime() {
@@ -964,6 +1175,8 @@
 
         function limpiarFormulario() {
             if (confirm('¿Está seguro de que desea limpiar el formulario?')) {
+                const form = document.getElementById('formRegistrarCliente');
+                form.reset();
                 document.querySelector('form').reset(); // Selecciona el primer formulario
                 
                 // Limpiar contador de caracteres
@@ -978,7 +1191,13 @@
                     error.textContent = '';
                 });
 
-                showAlert('Formulario limpiado correctamente', 'success');
+                // Limpiar estilos de validación
+                const inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.classList.remove('field-valid', 'field-invalid');
+                });
+
+                showAlert('✅ Formulario limpiado correctamente', 'success');
             }
         }
 
@@ -1009,6 +1228,45 @@
                     </div>
                 `;
                 setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
+        function logout() {
+            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        // Auto-save form data to prevent data loss
+        const formInputs = document.querySelectorAll('#formRegistrarCliente input, #formRegistrarCliente select, #formRegistrarCliente textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                localStorage.setItem('cliente_form_' + this.name, this.value);
+            });
+
+            // Restore saved data on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedValue = localStorage.getItem('cliente_form_' + input.name);
+                if (savedValue && !input.value) {
+                    input.value = savedValue;
+                }
+            });
+        });
+
+        // Clear saved data on successful form submission
+        function clearAutoSaveData() {
+            formInputs.forEach(input => {
+                localStorage.removeItem('cliente_form_' + input.name);
+            });
+        }
                     alertContainer.innerHTML = '';
                 }, 5000); // Ocultar alerta después de 5 segundos
             }

@@ -841,7 +841,7 @@
                                        name="placa" 
                                        value="{{ old('placa') }}"
                                        required 
-                                       placeholder="Ej: ABC-1234"
+                                       placeholder="ABC-12345"
                                        class="@error('placa') is-invalid @enderror">
                                 @error('placa')
                                     <div class="error-message">{{ $message }}</div>
@@ -856,7 +856,7 @@
                                        name="modelo" 
                                        value="{{ old('modelo') }}"
                                        required 
-                                       placeholder="Ej: Freightliner Cascadia"
+                                       placeholder="Freightliner Cascadia"
                                        class="@error('modelo') is-invalid @enderror">
                                 @error('modelo')
                                     <div class="error-message">{{ $message }}</div>
