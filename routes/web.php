@@ -10,7 +10,8 @@ use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChoferController;
-use App\Http\Controllers\Admin\UserController; // ¡Importa el nuevo controlador de administración de usuarios!
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProfileController; // ¡Nuevo controlador para el perfil!
 
 
 // Ruta principal - redirige al login
@@ -35,10 +36,12 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // Ruta del perfil
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile.edit');
+    // ----------------------------------------------------------------------
+    // Rutas del Perfil de Usuario (ACTUALIZADAS)
+    // ----------------------------------------------------------------------
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // ----------------------------------------------------------------------
 
     // Ruta principal del combustible
     Route::get('/combustible', [CombustibleController::class, 'index'])->name('combustible');
@@ -103,6 +106,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
         // Ruta para procesar la actualización de un usuario (usando PUT para RESTful)
         Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        // Ruta para crear nuevos usuarios (si la necesitas)
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        // Ruta para eliminar usuarios (si la necesitas)
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
     // ----------------------------------------------------------------------
 
