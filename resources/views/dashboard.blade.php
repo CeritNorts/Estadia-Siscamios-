@@ -1105,13 +1105,12 @@
         </ul>
 
         <div class="sidebar-footer">
-            <div class="user-info" onclick="goToProfile()" title="Ir a Perfil">
+            <div class="user-info" onclick="goToProfile()">
                 <div class="user-avatar">AD</div>
-                <div class="user-details">
-                    <div class="user-name">{{ Auth::user()->name }}</div>
-                    <div class="user-role">Sistema</div>
+                <div>
+                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="font-size: 0.75rem;">Sistema</div>
                 </div>
-                <div class="profile-arrow">›</div>
             </div>
         </div>
     </div>
@@ -1132,7 +1131,14 @@
                         <div class="date-text" id="dateText"></div>
                         <div class="time-text" id="timeText"></div>
                     </div>
-                    <a href="login" onclick="logout()">Cerrar Sesión</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit"
+                            style="background: none; border: none; color: #666; cursor: pointer; text-decoration: none; transition: color 0.3s ease;"
+                            onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#666'">
+                            Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -1665,9 +1671,8 @@
 
             setTimeout(() => {
                 userInfo.style.transform = '';
-                // Aquí iría la navegación real al perfil
-                alert('Navegando al perfil...');
-                // window.location.href = '/profile';
+                // CORRECCIÓN: Redirigir al perfil real en lugar de mostrar alerta
+                window.location.href = '/profile';
             }, 150);
         }
 

@@ -1182,7 +1182,12 @@
                         <div class="current-date" id="currentDate"></div>
                         <div class="current-time" id="currentTime"></div>
                     </div>
-                    <a href="login" onclick="logout()">Cerrar Sesión</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#666'">
+                            Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>

@@ -361,6 +361,39 @@
             font-size: 0.875rem;
         }
 
+        /* Role Badge */
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .role-administrador { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .role-supervisor { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .role-chofer { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .role-sin-rol { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
         /* Activity Feed */
         .activity-item {
             display: flex;
@@ -470,6 +503,12 @@
             border-color: #bee5eb;
         }
 
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -545,308 +584,7 @@
                 transform: translateY(0);
             }
         }
-    </style>
-</head>
 
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <a href="#" class="sidebar-brand">Siscamino</a>
-        </div>
-
-        <ul class="sidebar-menu">
-            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
-            <li>
-                <a href="/dashboard">
-                    📊 Panel Administrativo
-                </a>
-            </li>
-
-            {{-- Camiones: Solo Administrador y Supervisor --}}
-            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                <li>
-                    <a href="/camiones">🚛 Camiones</a>
-                </li>
-            @endif
-
-            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
-            <li>
-                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
-                    📋 Viajes
-                </a>
-            </li>
-        
-            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
-            <li>
-                <a href="/mantenimiento">
-                    🔧 Mantenimiento
-                </a>
-            </li>
-        
-            {{-- Conductores: Solo Administrador y Supervisor --}}
-            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                <li>
-                    <a href="/conductores">
-                        👥 Conductores
-                    </a>
-                </li>
-            @endif
-
-            {{-- Clientes: Solo Administrador y Supervisor --}}
-            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                <li>
-                    <a href="/clientes">👤 Clientes</a>
-                </li>
-            @endif
-
-            {{-- Combustible: Solo Administrador y Supervisor --}}
-            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                <li>
-                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
-                </li>
-            @endif
-
-            {{-- Gestión de Usuarios: Solo Administrador --}}
-            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
-                <li>
-                    <a href="{{ route('admin.users.index') }}">
-                        ⚙️ Gestión de Usuarios
-                    </a>
-                </li>
-            @endif
-        </ul>
-
-        <div class="sidebar-footer">
-            <a href="/profile" class="user-info">
-                <div class="user-avatar">AD</div>
-                <div>
-                    <div style="color: #ffffff; font-weight: 500;">{{ Auth::user()->name }}</div>
-                    <div style="font-size: 0.75rem;">Sistema</div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Overlay for mobile -->
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <nav class="navbar">
-            <div class="navbar-content">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-                    <h1 class="navbar-title">Mi Perfil</h1>
-                </div>
-                <div class="navbar-links">
-                    <a href="login" onclick="logout()">Cerrar Sesión</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="content">
-            <div class="content-wrapper fade-in">
-
-                <!-- Breadcrumb -->
-                <div class="breadcrumb">
-                    <a href="/dashboard">🏠 Inicio</a>
-                    <span>›</span>
-                    <span>👤 Mi Perfil</span>
-                </div>
-
-                <!-- Profile Header -->
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">AD</div>
-                    <div class="profile-info">
-                        <h1 id="profileName">Admin User</h1>
-                        <p id="profileEmail">admin@siscamino.com</p>
-                        <p id="profileRole">Administrador del Sistema</p>
-                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <span class="stat-number">15</span>
-                                <span class="stat-label">Días activo</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">42</span>
-                                <span class="stat-label">Acciones realizadas</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">8</span>
-                                <span class="stat-label">Horas promedio</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Success/Error Messages -->
-                <div id="alertContainer"></div>
-
-                <!-- Profile Grid -->
-                <div class="profile-grid">
-                    <!-- Left Column: Personal Information -->
-                    <div>
-                        <!-- Personal Info Card -->
-                        <div class="card">
-                            <h3>👤 Información Personal</h3>
-                            <form id="personalInfoForm">
-                                <div class="form-group">
-                                    <label for="name">Nombre Completo</label>
-                                    <input type="text" id="name" name="name" class="form-control" value="Admin User">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Correo Electrónico</label>
-                                    <input type="email" id="email" name="email" class="form-control"
-                                        value="admin@siscamino.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Teléfono</label>
-                                    <input type="tel" id="phone" name="phone" class="form-control"
-                                        value="+52 55 1234 5678">
-                                </div>
-                                <div class="form-group">
-                                    <label for="position">Cargo/Posición</label>
-                                    <input type="text" id="position" name="position" class="form-control"
-                                        value="Administrador del Sistema">
-                                </div>
-                                <div style="display: flex; gap: 1rem;">
-                                    <button type="submit" class="btn btn-primary">
-                                        💾 Guardar Cambios
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" onclick="resetPersonalForm()">
-                                        🔄 Restablecer
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Security Settings -->
-                        <div class="card">
-                            <h3>🔒 Configuración de Seguridad</h3>
-                            <form id="securityForm">
-                                <div class="form-group">
-                                    <label for="currentPassword">Contraseña Actual</label>
-                                    <input type="password" id="currentPassword" name="current_password"
-                                        class="form-control" placeholder="Ingrese su contraseña actual">
-                                </div>
-                                <div class="form-group">
-                                    <label for="newPassword">Nueva Contraseña</label>
-                                    <input type="password" id="newPassword" name="new_password" class="form-control"
-                                        placeholder="Ingrese nueva contraseña">
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Confirmar Nueva Contraseña</label>
-                                    <input type="password" id="confirmPassword" name="confirm_password"
-                                        class="form-control" placeholder="Confirme la nueva contraseña">
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    🔐 Cambiar Contraseña
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Activity & Stats -->
-                    <div>
-                        <!-- Quick Stats -->
-                        <div class="card">
-                            <h3>📊 Estadísticas Rápidas</h3>
-                            <div class="quick-stats">
-                                <div class="stat-card">
-                                    <div class="number">124</div>
-                                    <div class="label">Camiones Gestionados</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="number">89</div>
-                                    <div class="label">Viajes Supervisados</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="number">15</div>
-                                    <div class="label">Mantenimientos</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="number">32</div>
-                                    <div class="label">Conductores Activos</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Account Settings -->
-                        <div class="card">
-                            <h3>⚙️ Configuración de Cuenta</h3>
-                            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
-                                    <div>
-                                        <strong>Notificaciones por Email</strong>
-                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Recibir alertas
-                                            importantes</p>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox" checked>
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
-                                    <div>
-                                        <strong>Notificaciones Push</strong>
-                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Alertas en tiempo real</p>
-                                    </div>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <button class="btn btn-secondary">
-                                    🔔 Configurar Notificaciones
-                                </button>
-                                <button class="btn btn-secondary">
-                                    📱 Vincular Dispositivos
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Recent Activity -->
-                        <div class="card">
-                            <h3>📈 Actividad Reciente</h3>
-                            <div id="recentActivity">
-                                <div class="activity-item">
-                                    <div class="activity-icon login">🔐</div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Inicio de sesión</div>
-                                        <div class="activity-description">Acceso desde IP: 192.168.1.100</div>
-                                    </div>
-                                    <div class="activity-time">Hace 2 horas</div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon action">✏️</div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Camión editado</div>
-                                        <div class="activity-description">Actualizó información del camión ABC-123</div>
-                                    </div>
-                                    <div class="activity-time">Ayer</div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="activity-icon system">⚙️</div>
-                                    <div class="activity-content">
-                                        <div class="activity-title">Configuración actualizada</div>
-                                        <div class="activity-description">Cambió configuración de notificaciones</div>
-                                    </div>
-                                    <div class="activity-time">Hace 3 días</div>
-                                </div>
-                            </div>
-                            <div style="text-align: center; margin-top: 1rem;">
-                                <a href="#" class="btn btn-secondary btn-sm">Ver Historial Completo</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <style>
         /* Toggle Switch Styles */
         .switch {
             position: relative;
@@ -893,12 +631,414 @@
             transform: translateX(26px);
         }
     </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-brand">Siscamino</a>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a href="{{ route('dashboard') }}">
+                    📊 Panel Administrativo
+                </a>
+            </li>
+
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            <li>
+                <a href="/viajes">📋 Viajes</a>
+            </li>
+        
+            <li>
+                <a href="/mantenimiento">🔧 Mantenimiento</a>
+            </li>
+        
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">👥 Conductores</a>
+                </li>
+            @endif
+
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">⚙️ Gestión de Usuarios</a>
+                </li>
+            @endif
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="{{ route('profile.edit') }}" class="user-info">
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
+                <div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Usuario
+                        @endauth
+                    </div>
+                    <div style="font-size: 0.75rem;">Sistema</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                    <h1 class="navbar-title">Mi Perfil</h1>
+                </div>
+                <div class="navbar-links">
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#666'">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div class="content-wrapper fade-in">
+
+                <!-- Breadcrumb -->
+                <div class="breadcrumb">
+                    <a href="{{ route('dashboard') }}">🏠 Inicio</a>
+                    <span>›</span>
+                    <span>👤 Mi Perfil</span>
+                </div>
+
+                <!-- Success/Error Messages -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        ✅ {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        ❌ {{ session('error') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        ❌ {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">
+                        @auth
+                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                        @else
+                            AD
+                        @endauth
+                    </div>
+                    <div class="profile-info">
+                        <h1 id="profileName">
+                            @auth
+                                {{ auth()->user()->name }}
+                            @else
+                                Usuario
+                            @endauth
+                        </h1>
+                        <p id="profileEmail">
+                            @auth
+                                {{ auth()->user()->email }}
+                            @else
+                                usuario@siscamino.com
+                            @endauth
+                        </p>
+                        @auth
+                            @if(auth()->user()->role)
+                                <div class="role-badge role-{{ strtolower(auth()->user()->role->nombre) }}">
+                                    @switch(auth()->user()->role->nombre)
+                                        @case('Administrador')
+                                            👑 Administrador del Sistema
+                                            @break
+                                        @case('Supervisor')
+                                            👥 Supervisor de Operaciones
+                                            @break
+                                        @case('Chofer')
+                                            🚛 Chofer
+                                            @break
+                                        @default
+                                            ❓ {{ auth()->user()->role->nombre }}
+                                    @endswitch
+                                </div>
+                            @else
+                                <div class="role-badge role-sin-rol">❓ Sin Rol Asignado</div>
+                            @endif
+                        @else
+                            <div class="role-badge role-sin-rol">❓ Usuario</div>
+                        @endauth
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">
+                                    @auth
+                                        {{ \Carbon\Carbon::parse(auth()->user()->created_at)->diffInDays(\Carbon\Carbon::now()) + 1 }}
+                                    @else
+                                        0
+                                    @endauth
+                                </span>
+                                <span class="stat-label">Días en el sistema</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">
+                                    @auth
+                                        {{ auth()->user()->role ? auth()->user()->role->nombre : 'Sin Rol' }}
+                                    @else
+                                        N/A
+                                    @endauth
+                                </span>
+                                <span class="stat-label">Rol actual</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">
+                                    @auth
+                                        {{ \Carbon\Carbon::parse(auth()->user()->created_at)->format('M Y') }}
+                                    @else
+                                        N/A
+                                    @endauth
+                                </span>
+                                <span class="stat-label">Miembro desde</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Grid -->
+                <div class="profile-grid">
+                    <!-- Left Column: Personal Information -->
+                    <div>
+                        <!-- Personal Info Card -->
+                        <div class="card">
+                            <h3>👤 Información Personal</h3>
+                            <form id="personalInfoForm" action="{{ route('profile.edit') }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="form-group">
+                                    <label for="name">Nombre Completo</label>
+                                    <input type="text" id="name" name="name" class="form-control" 
+                                           value="{{ auth()->user()->name ?? '' }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Correo Electrónico</label>
+                                    <input type="email" id="email" name="email" class="form-control"
+                                           value="{{ auth()->user()->email ?? '' }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Rol en el Sistema</label>
+                                    <input type="text" id="role" name="role" class="form-control" 
+                                           value="{{ auth()->user()->role ? auth()->user()->role->nombre : 'Sin Rol' }}" 
+                                           disabled>
+                                    <small style="color: #666; font-size: 0.875rem; margin-top: 0.25rem; display: block;">
+                                        El rol solo puede ser modificado por un administrador
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="member_since">Miembro Desde</label>
+                                    <input type="text" id="member_since" name="member_since" class="form-control"
+                                           value="{{ auth()->user()->created_at ? auth()->user()->created_at->format('d/m/Y H:i') : 'N/A' }}" 
+                                           disabled>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="submit" class="btn btn-primary">
+                                        💾 Guardar Cambios
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="resetPersonalForm()">
+                                        🔄 Restablecer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="card">
+                            <h3>🔒 Configuración de Seguridad</h3>
+                            <form id="securityForm" action="{{ route('profile.edit') }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="action" value="change_password">
+                                <div class="form-group">
+                                    <label for="currentPassword">Contraseña Actual</label>
+                                    <input type="password" id="currentPassword" name="current_password"
+                                        class="form-control" placeholder="Ingrese su contraseña actual" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">Nueva Contraseña</label>
+                                    <input type="password" id="newPassword" name="password" class="form-control"
+                                        placeholder="Ingrese nueva contraseña" required minlength="8">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+                                    <input type="password" id="confirmPassword" name="password_confirmation"
+                                        class="form-control" placeholder="Confirme la nueva contraseña" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    🔐 Cambiar Contraseña
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Activity & Stats -->
+                    <div>
+                        <!-- Account Info -->
+                        <div class="card">
+                            <h3>📊 Información de Cuenta</h3>
+                            <div class="quick-stats">
+                                <div class="stat-card">
+                                    <div class="number">{{ auth()->user()->id ?? 0 }}</div>
+                                    <div class="label">ID de Usuario</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="number">
+                                        @auth
+                                            @if(auth()->user()->email_verified_at)
+                                                ✅
+                                            @else
+                                                ⏳
+                                            @endif
+                                        @else
+                                            ❓
+                                        @endauth
+                                    </div>
+                                    <div class="label">Estado de Verificación</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="number">{{ \Carbon\Carbon::now()->format('H:i') }}</div>
+                                    <div class="label">Última Conexión</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Settings -->
+                        <div class="card">
+                            <h3>⚙️ Configuración de Cuenta</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
+                                    <div>
+                                        <strong>Notificaciones por Email</strong>
+                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Recibir alertas importantes</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e9ecef; border-radius: 8px;">
+                                    <div>
+                                        <strong>Notificaciones Push</strong>
+                                        <p style="font-size: 0.9rem; color: #666; margin: 0;">Alertas en tiempo real</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <button class="btn btn-secondary">
+                                    🔔 Configurar Notificaciones
+                                </button>
+                                <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                                    🏠 Volver al Dashboard
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <h3>📈 Actividad Reciente</h3>
+                            <div id="recentActivity">
+                                <div class="activity-item">
+                                    <div class="activity-icon login">🔐</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Inicio de sesión</div>
+                                        <div class="activity-description">Acceso al sistema Siscamino</div>
+                                    </div>
+                                    <div class="activity-time">Ahora</div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon action">👤</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Perfil visitado</div>
+                                        <div class="activity-description">Accedió a la página de perfil</div>
+                                    </div>
+                                    <div class="activity-time">Hace unos minutos</div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon system">⚙️</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Cuenta creada</div>
+                                        <div class="activity-description">
+                                            @auth
+                                                Registro en {{ \Carbon\Carbon::parse(auth()->user()->created_at)->format('d/m/Y') }}
+                                            @else
+                                                Cuenta de usuario creada
+                                            @endauth
+                                        </div>
+                                    </div>
+                                    <div class="activity-time">
+                                        @auth
+                                            {{ \Carbon\Carbon::parse(auth()->user()->created_at)->diffForHumans() }}
+                                        @else
+                                            Hace tiempo
+                                        @endauth
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-top: 1rem;">
+                                <a href="#" class="btn btn-secondary btn-sm">Ver Historial Completo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Inicialización
         document.addEventListener('DOMContentLoaded', function () {
             setupEventListeners();
-            loadUserData();
+            updateUserAvatar();
         });
 
         function setupEventListeners() {
@@ -917,141 +1057,143 @@
                 overlay.classList.remove('active');
             });
 
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+
             // Form submissions
             document.getElementById('personalInfoForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                savePersonalInfo();
+                // El formulario se enviará normalmente al servidor
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '⏳ Guardando...';
+                submitBtn.disabled = true;
             });
 
             document.getElementById('securityForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                changePassword();
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Validaciones del lado del cliente
+                if (newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    showAlert('❌ Las contraseñas nuevas no coinciden', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    e.preventDefault();
+                    showAlert('❌ La nueva contraseña debe tener al menos 8 caracteres', 'error');
+                    return;
+                }
+
+                // Si pasa las validaciones, mostrar loading
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '⏳ Cambiando...';
+                submitBtn.disabled = true;
             });
+
+            // Actualizar avatar cuando cambie el nombre
+            const nameInput = document.getElementById('name');
+            if (nameInput) {
+                nameInput.addEventListener('input', function() {
+                    updateUserAvatarFromInput(this.value);
+                });
+            }
         }
 
-        function loadUserData() {
-            // En una aplicación real, esto vendría del servidor
-            const userData = {
-                name: 'Admin User',
-                email: 'admin@siscamino.com',
-                phone: '+52 55 1234 5678',
-                position: 'Administrador del Sistema'
-            };
-
-            // Actualizar elementos de la página
-            document.getElementById('profileName').textContent = userData.name;
-            document.getElementById('profileEmail').textContent = userData.email;
-            document.getElementById('profileRole').textContent = userData.position;
-
-            // Generar iniciales para el avatar
-            const initials = userData.name.split(' ').map(word => word[0]).join('').substring(0, 2);
-            document.getElementById('profileAvatar').textContent = initials;
-
-            // Llenar formulario
-            document.getElementById('name').value = userData.name;
-            document.getElementById('email').value = userData.email;
-            document.getElementById('phone').value = userData.phone;
-            document.getElementById('position').value = userData.position;
+        function updateUserAvatar() {
+            const nameElement = document.getElementById('profileName');
+            const avatarElement = document.getElementById('profileAvatar');
+            
+            if (nameElement && avatarElement) {
+                const name = nameElement.textContent.trim();
+                const initials = name.split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('')
+                    .substring(0, 2);
+                avatarElement.textContent = initials;
+            }
         }
 
-        function savePersonalInfo() {
-            // Mostrar loading
-            const submitBtn = document.querySelector('#personalInfoForm button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '⏳ Guardando...';
-            submitBtn.disabled = true;
-
-            // Simular guardado
-            setTimeout(() => {
-                showAlert('✅ Información personal actualizada correctamente', 'success');
-
-                // Actualizar datos en la cabecera
-                const name = document.getElementById('name').value;
-                document.getElementById('profileName').textContent = name;
-
-                // Restaurar botón
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
-        }
-
-        function changePassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            // Validaciones básicas
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                showAlert('❌ Todos los campos de contraseña son obligatorios', 'error');
-                return;
+        function updateUserAvatarFromInput(name) {
+            const avatarElement = document.getElementById('profileAvatar');
+            
+            if (avatarElement && name) {
+                const initials = name.split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('')
+                    .substring(0, 2);
+                avatarElement.textContent = initials;
             }
-
-            if (newPassword !== confirmPassword) {
-                showAlert('❌ Las contraseñas nuevas no coinciden', 'error');
-                return;
-            }
-
-            if (newPassword.length < 6) {
-                showAlert('❌ La nueva contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-
-            // Mostrar loading
-            const submitBtn = document.querySelector('#securityForm button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '⏳ Cambiando...';
-            submitBtn.disabled = true;
-
-            // Simular cambio de contraseña
-            setTimeout(() => {
-                showAlert('✅ Contraseña cambiada exitosamente', 'success');
-
-                // Limpiar formulario
-                document.getElementById('securityForm').reset();
-
-                // Restaurar botón
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 2000);
         }
 
         function resetPersonalForm() {
             if (confirm('¿Está seguro de que desea restablecer los cambios?')) {
-                loadUserData();
-                showAlert('📝 Formulario restablecido', 'info');
+                // Recargar la página para restaurar los valores originales
+                window.location.reload();
             }
         }
 
         function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
+            // Crear alerta dinámica
+            const alertContainer = document.createElement('div');
             let alertClass = 'alert-info';
 
             if (type === 'success') alertClass = 'alert-success';
             if (type === 'error') alertClass = 'alert-danger';
 
-            const alertHTML = `
-                <div class="alert ${alertClass}" style="animation: slideDown 0.3s ease-out;">
-                    ${message}
-                </div>
-            `;
+            alertContainer.className = `alert ${alertClass}`;
+            alertContainer.style.animation = 'slideDown 0.3s ease-out';
+            alertContainer.innerHTML = message;
 
-            alertContainer.innerHTML = alertHTML;
+            // Insertar al inicio del contenido
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const breadcrumb = document.querySelector('.breadcrumb');
+            contentWrapper.insertBefore(alertContainer, breadcrumb.nextSibling);
 
             // Auto-dismiss after 5 seconds
             setTimeout(() => {
-                const alert = alertContainer.querySelector('.alert');
-                if (alert) {
-                    alert.style.animation = 'slideUp 0.3s ease-out';
-                    setTimeout(() => {
-                        alertContainer.innerHTML = '';
-                    }, 300);
-                }
+                alertContainer.style.animation = 'slideUp 0.3s ease-out';
+                setTimeout(() => {
+                    if (alertContainer.parentNode) {
+                        alertContainer.parentNode.removeChild(alertContainer);
+                    }
+                }, 300);
             }, 5000);
         }
 
-        function logout() {
-            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
-                window.location.href = '/logout';
+        // Enhanced mobile touch handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
             }
         }
 
@@ -1080,12 +1222,6 @@
                 }
             }
 
-            .alert-danger {
-                background: #f8d7da;
-                color: #721c24;
-                border-color: #f5c6cb;
-            }
-
             /* Hover effects mejorados */
             .card:hover {
                 box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
@@ -1111,6 +1247,35 @@
             .profile-header:hover {
                 transform: translateY(-2px);
                 transition: transform 0.3s ease;
+            }
+
+            /* Responsive improvements */
+            @media (max-width: 480px) {
+                .profile-avatar {
+                    width: 80px;
+                    height: 80px;
+                    font-size: 2rem;
+                }
+                
+                .profile-info h1 {
+                    font-size: 1.75rem;
+                }
+                
+                .profile-stats {
+                    gap: 1rem;
+                }
+                
+                .stat-item {
+                    min-width: 80px;
+                }
+                
+                .stat-number {
+                    font-size: 1.2rem;
+                }
+                
+                .stat-label {
+                    font-size: 0.8rem;
+                }
             }
         `;
         document.head.appendChild(style);
