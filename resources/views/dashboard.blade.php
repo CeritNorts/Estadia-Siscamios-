@@ -1052,6 +1052,15 @@
             <li>
                 <a href="{{ route('combustible') }}">⛽ Combustible</a>
             </li>
+
+             {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
