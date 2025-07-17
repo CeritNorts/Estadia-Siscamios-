@@ -804,9 +804,6 @@
                         <h1 class="page-title">Gestión de Usuarios</h1>
                         <p class="page-subtitle">Administra los usuarios del sistema y sus roles</p>
                     </div>
-                    <a href="/admin/users/create" class="btn btn-primary">
-                        ➕ Crear Nuevo Usuario
-                    </a>
                 </div>
                 
                 <!-- Dashboard Stats -->
@@ -837,17 +834,6 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">Lista de Usuarios</h3>
-                        <div class="table-actions">
-                            <input type="text" class="search-input" placeholder="Buscar usuario..." id="searchUsuarios">
-                            <select class="search-input" style="max-width: 150px;" id="filterRol">
-                                <option value="">Todos los roles</option>
-                                <option value="administrador">Administrador</option>
-                                <option value="supervisor">Supervisor</option>
-                                <option value="chofer">Chofer</option>
-                                <option value="sin-rol">Sin Rol</option>
-                            </select>
-                            <a href="/admin/users/create" class="btn btn-primary btn-sm">➕ Nuevo Usuario</a>
-                        </div>
                     </div>
                     
                     <!-- Desktop Table -->

@@ -1173,8 +1173,6 @@
                 <div class="tabs-container">
                     <div class="tabs-header">
                         <button class="tab-button active" data-tab="mantenimientos">🔧 Mantenimientos</button>
-                        <button class="tab-button" data-tab="preventivo">📅 Preventivo</button>
-                        <button class="tab-button" data-tab="documentos">📄 Documentos</button>
                     </div>
 
                     <!-- Tab: Lista de Mantenimientos -->
