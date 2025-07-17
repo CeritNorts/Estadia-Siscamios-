@@ -803,6 +803,7 @@
 
             .main-content {
                 width: 100%;
+                align-items: center;
             }
 
             .content {
@@ -828,12 +829,14 @@
         .admin-container {
             background-color: #f5f7fa; /* Usa el color de fondo principal de tu body */
             color: #333; /* Color de texto general para el contenido principal */
+            align-items: center;
         }
         .admin-card {
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 2rem;
+            align-items: center;
         }
         .form-group {
             margin-bottom: 1.5rem;
@@ -879,9 +882,120 @@
     </style>
 </head>
 <body>
+
+        <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-brand">Siscamino</a>
+        </div>
+
+        <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
+            <li>
+                <a href="/dashboard">
+                    📊 Panel Administrativo
+                </a>
+            </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
+            <li>
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
+                    📋 Viajes
+                </a>
+            </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
+            <li>
+                <a href="/mantenimiento">
+                    🔧 Mantenimiento
+                </a>
+            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info" onclick="goToProfile()">
+                <div class="user-avatar">
+                    @auth
+                        {{ substr(auth()->user()->name, 0, 2) }}
+                    @else
+                        AD
+                    @endauth
+                </div>
+                <div>
+                    <div style="color: #ffffff; font-weight: 500;">
+                        @auth
+                            {{ auth()->user()->name }}
+                        @else
+                            Administrador
+                        @endauth
+                    </div>
+                    <div style="font-size: 0.75rem;">Sistema</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
     <div class="main-content">
+
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                    <h1 class="navbar-title">Gestión de Clientes</h1>
+                </div>
+                <div class="navbar-links">
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
+                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                </div>
+            </div>
+        </nav>
+
         <div class="content flex items-center justify-center"> <!-- Añadido flex para centrar el formulario -->
-            <div class="admin-card" style="max-width: 500px; width: 100%;"> <!-- Contenedor del formulario -->
+            <div class="admin-card" style="max-width: 500px; width: 100%; margin:0 auto; pading-top 500px;"> <!-- Contenedor del formulario -->
                 <h1 class="page-title" style="text-align: center; margin-bottom: 1.5rem; color: #333;">Editar Usuario</h1>
 
                 @if ($errors->any())
