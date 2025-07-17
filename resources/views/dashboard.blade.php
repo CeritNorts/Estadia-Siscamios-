@@ -1132,7 +1132,7 @@
                         <div class="date-text" id="dateText"></div>
                         <div class="time-text" id="timeText"></div>
                     </div>
-                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                    <a href="login" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
         </nav>

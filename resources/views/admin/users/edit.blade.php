@@ -989,7 +989,7 @@
                         <div class="current-date" id="currentDate"></div>
                         <div class="current-time" id="currentTime"></div>
                     </div>
-                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                    <a href="#" onclick="">Cerrar Sesión</a>
                 </div>
             </div>
         </nav>

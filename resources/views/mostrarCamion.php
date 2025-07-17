@@ -613,8 +613,7 @@
                     <h1 class="navbar-title">Detalles del Camión</h1>
                 </div>
                 <div class="navbar-links">
-                    <a href="#">Notificaciones</a>
-                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                    <a href="login" onclick="logout()">Cerrar Sesión</a>
                 </div>
             </div>
         </nav>
