@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Usuarios</title>
-    <!-- Incluye tu CSS personalizado directamente o como un link a un archivo CSS -->
+    <title>Siscamino - Gestión de Usuarios</title>
     <style>
-        /* Tu CSS proporcionado */
         * {
             margin: 0;
             padding: 0;
@@ -15,12 +13,12 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa; /* Este color será el fondo principal */
+            background-color: #f5f7fa;
             display: flex;
             height: 100vh;
         }
 
-        /* Sidebar Styles - Se asume que esto está en tu layout principal, pero se mantiene para referencia */
+        /* Sidebar Styles */
         .sidebar {
             width: 280px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -107,7 +105,6 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background-color: #f5f7fa; /* Asegura que el contenido principal tenga este fondo */
         }
 
         .navbar {
@@ -247,10 +244,10 @@
             font-size: 0.8rem;
         }
 
-        .stat-programados { color: #007bff; }
-        .stat-transito { color: #ffc107; }
-        .stat-entregados { color: #28a745; }
-        .stat-retrasados { color: #dc3545; }
+        .stat-admin { color: #007bff; }
+        .stat-supervisor { color: #ffc107; }
+        .stat-chofer { color: #28a745; }
+        .stat-activos { color: #17a2b8; }
         .stat-total { color: #6f42c1; }
 
         /* Table Container */
@@ -373,8 +370,8 @@
             font-size: 0.875rem;
         }
 
-        /* Status Badges */
-        .status-badge {
+        /* Role Badges */
+        .role-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -385,11 +382,10 @@
             text-transform: uppercase;
         }
 
-        .status-programado { background: #e3f2fd; color: #1565c0; }
-        .status-transito { background: #fff8e1; color: #f57c00; }
-        .status-entregado { background: #e8f5e8; color: #2e7d32; }
-        .status-retrasado { background: #ffebee; color: #c62828; }
-        .status-espera { background: #f3e5f5; color: #7b1fa2; }
+        .role-administrador { background: #e3f2fd; color: #1565c0; }
+        .role-supervisor { background: #fff8e1; color: #f57c00; }
+        .role-chofer { background: #e8f5e8; color: #2e7d32; }
+        .role-sin-rol { background: #f3e5f5; color: #7b1fa2; }
 
         /* Alert Messages */
         .alert {
@@ -432,7 +428,7 @@
             margin-bottom: 1rem;
             padding: 1rem;
             border-left: 4px solid #667eea;
-            display: none; /* Oculto por defecto, visible en mobile */
+            display: none;
         }
 
         .mobile-card .card-header {
@@ -715,73 +711,6 @@
             }
         }
 
-        @media (max-width: 320px) {
-            .content {
-                padding: 0.5rem;
-            }
-
-            .sidebar {
-                width: calc(100% - 50px);
-                max-width: 280px;
-            }
-
-            .sidebar-menu a {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .sidebar-header {
-                padding: 1.25rem 1rem;
-            }
-
-            .sidebar-brand {
-                font-size: 1.1rem;
-            }
-
-            .page-title {
-                font-size: 1.25rem;
-            }
-
-            .navbar-title {
-                font-size: 1rem;
-            }
-
-            .table-header {
-                padding: 0.75rem;
-            }
-
-            .mobile-card {
-                padding: 1rem;
-            }
-
-            .stat-card {
-                padding: 1rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-        }
-
-        /* Landscape orientation on mobile */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .content {
-                padding: 0.75rem;
-            }
-
-            .page-header {
-                margin-bottom: 1rem;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
         /* Animation */
         .fade-in {
             animation: fadeIn 0.5s ease-in;
@@ -791,174 +720,186 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Print styles */
-        @media print {
-            .sidebar,
-            .navbar,
-            .btn,
-            .table-actions {
-                display: none;
-            }
-
-            .main-content {
-                width: 100%;
-            }
-
-            .content {
-                padding: 0;
-            }
-
-            .table-container {
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
-
-            .mobile-card {
-                display: none;
-            }
-
-            .table {
-                display: table !important;
-            }
-        }
-        /* Fin de tu CSS proporcionado */
-
-        /* Estilos específicos para este layout si no están cubiertos por tu CSS general */
-        .admin-container {
-            background-color: #f5f7fa; /* Usa el color de fondo principal de tu body */
-            color: #333; /* Color de texto general para el contenido principal */
-        }
-        .admin-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-label {
-            display: block;
-            color: #333; /* Color de labels en fondo blanco */
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            color: #333; /* Color del texto dentro del input */
-            background-color: white; /* Fondo del input */
-            transition: all 0.3s ease;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea; /* Color de borde al enfocar */
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2); /* Sombra al enfocar */
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-        .pagination-links {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-        .pagination-links nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .pagination-links a,
-        .pagination-links span {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #666;
-            transition: all 0.3s ease;
-        }
-        .pagination-links a:hover {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-        }
-        .pagination-links span.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-        .pagination-links span.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-brand">Siscamino</a>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="/dashboard">
+                    📊 Panel Administrativo
+                </a>
+            </li>
+            <li>
+                <a href="/camiones">🚛 Camiones</a>
+            </li>
+            <li>
+                <a href="/viajes">📋 Viajes</a>
+            </li>
+            <li>
+                <a href="/mantenimiento">🔧 Mantenimiento</a>
+            </li>
+            <li>
+                <a href="/conductores">👥 Conductores</a>
+            </li>
+            <li>
+                <a href="/clientes">👤 Clientes</a>
+            </li>
+            <li>
+                <a href="/combustible">⛽ Combustible</a>
+            </li>
+            <li>
+                <a href="/admin/users" class="active">⚙️ Gestión de Usuarios</a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info" onclick="goToProfile()">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="color: #ffffff; font-weight: 500;">Administrador</div>
+                    <div style="font-size: 0.75rem;">Sistema</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
     <div class="main-content">
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                    <h1 class="navbar-title">Gestión de Usuarios</h1>
+                </div>
+                <div class="navbar-links">
+                    <div class="datetime-display">
+                        <div class="current-date" id="currentDate"></div>
+                        <div class="current-time" id="currentTime"></div>
+                    </div>
+                    <a href="#" onclick="logout()">Cerrar Sesión</a>
+                </div>
+            </div>
+        </nav>
+
         <div class="content">
-            <div class="content-wrapper">
+            <div class="content-wrapper fade-in">
+                
+                <!-- Success/Error Messages -->
+                <div class="alert alert-success" style="display: none;">
+                    ✅ Usuario actualizado correctamente
+                </div>
+                
+                <!-- Page Header -->
                 <div class="page-header">
                     <div>
                         <h1 class="page-title">Gestión de Usuarios</h1>
-                        <p class="page-subtitle">Administra los usuarios de tu flotilla y sus roles.</p>
+                        <p class="page-subtitle">Administra los usuarios del sistema y sus roles</p>
                     </div>
-                    <!-- Opcional: Botón para crear un nuevo usuario si implementas esa funcionalidad -->
-                    {{-- <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                        Crear Nuevo Usuario
-                    </a> --}}
+                    <a href="/admin/users/create" class="btn btn-primary">
+                        ➕ Crear Nuevo Usuario
+                    </a>
+                </div>
+                
+                <!-- Dashboard Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number stat-admin">{{ $users->where('role_id', '1')->count() }}</div>
+                        <div class="stat-label">Administradores</div>
+                        <div class="stat-sublabel">Control total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-supervisor">{{ $users->where('role_id', '2')->count() }}</div>
+                        <div class="stat-label">Supervisores</div>
+                        <div class="stat-sublabel">Gestión operativa</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-chofer">{{ $users->where('role_id', '3')->count() }}</div>
+                        <div class="stat-label">Choferes</div>
+                        <div class="stat-sublabel">Operadores</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number stat-total">{{ $users->count() }}</div>
+                        <div class="stat-label">Total Usuarios</div>
+                        <div class="stat-sublabel">En el sistema</div>
+                    </div>
                 </div>
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
+                <!-- Table Container -->
                 <div class="table-container">
                     <div class="table-header">
-                        <h2 class="table-title">Lista de Usuarios</h2>
+                        <h3 class="table-title">Lista de Usuarios</h3>
                         <div class="table-actions">
-                            <!-- Puedes agregar un campo de búsqueda aquí si lo necesitas -->
-                            {{-- <input type="text" placeholder="Buscar usuario..." class="search-input"> --}}
+                            <input type="text" class="search-input" placeholder="Buscar usuario..." id="searchUsuarios">
+                            <select class="search-input" style="max-width: 150px;" id="filterRol">
+                                <option value="">Todos los roles</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="supervisor">Supervisor</option>
+                                <option value="chofer">Chofer</option>
+                                <option value="sin-rol">Sin Rol</option>
+                            </select>
+                            <a href="/admin/users/create" class="btn btn-primary btn-sm">➕ Nuevo Usuario</a>
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Email</th>
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    
+                    <!-- Desktop Table -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                   <th>Nombre</th>
+                                   <th>Email</th>
+                                   <th>Rol</th>
+                                   <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usuariosTableBody">
                                 @forelse ($users as $user)
-                                    <tr>
+                                    <tr data-rol="{{ $user->role ? strtolower($user->role->nombre) : 'sin-rol' }}">
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
-                                            {{ $user->role ? $user->role->nombre : 'Sin Rol' }}
-                                        </td>
+                                        @if($user->role)
+                                            @switch($user->role->nombre)
+                                                @case('Administrador')
+                                                    <span class="role-badge role-administrador">
+                                                        👑 Administrador
+                                                    </span>
+                                                    @break
+                                                @case('Supervisor')
+                                                    <span class="role-badge role-supervisor">
+                                                        👥 Supervisor
+                                                    </span>
+                                                    @break
+                                                @case('Chofer')
+                                                    <span class="role-badge role-chofer">
+                                                        🚛 Chofer
+                                                    </span>
+                                                    @break
+                                                @default
+                                                    <span class="role-badge role-sin-rol">
+                                                        ❓ {{ $user->role->nombre }}
+                                                    </span>
+                                            @endswitch
+                                        @else
+                                            <span class="role-badge role-sin-rol">
+                                                ❓ Sin Rol
+                                            </span>
+                                        @endif
+                                    </td>
                                         <td>
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" 
+                                                class="btn btn-warning btn-sm" 
+                                                title="Editar">✏️</a>
                                         </td>
                                     </tr>
                                 @empty
@@ -966,48 +907,386 @@
                                         <td colspan="5" class="empty-state">No hay usuarios registrados.</td>
                                     </tr>
                                 @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Mobile Cards (visible solo en pantallas pequeñas) -->
-                    @forelse ($users as $user)
-                        <div class="mobile-card">
+                        </tbody>
+                    </table>
+
+                    <!-- Mobile Cards -->
+                    <div class="mobile-cards" id="mobileCards">
+                        <div class="mobile-card" data-rol="administrador">
                             <div class="card-header">
-                                <span class="card-title">{{ $user->name }}</span>
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <div class="card-title">Juan Pérez González</div>
+                                <span class="role-badge role-administrador">👑 Administrador</span>
                             </div>
                             <div class="card-info">
                                 <div class="info-item">
-                                    <span class="info-label">ID:</span>
-                                    <span class="info-value">{{ $user->id }}</span>
+                                    <div class="info-label">ID Usuario</div>
+                                    <div class="info-value">USR-001</div>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Email:</span>
-                                    <span class="info-value">{{ $user->email }}</span>
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">juan.perez@siscamino.com</div>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Rol:</span>
-                                    <span class="info-value">{{ $user->role ? $user->role->nombre : 'Sin Rol' }}</span>
+                                    <div class="info-label">Fecha Registro</div>
+                                    <div class="info-value">15/01/2024 09:30</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado</div>
+                                    <div class="info-value">✅ Activo</div>
                                 </div>
                             </div>
+                            <div class="card-actions">
+                                <button onclick="mostrarDetalles('usuario', 1)" class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                <a href="/admin/users/1/edit" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <button onclick="confirmarEliminar(1)" class="btn btn-danger btn-sm">🗑️</button>
+                            </div>
                         </div>
-                    @empty
-                        <div class="empty-state mobile-card" style="display: block;">No hay usuarios registrados.</div>
-                    @endforelse
+
+                        <div class="mobile-card" data-rol="supervisor">
+                            <div class="card-header">
+                                <div class="card-title">María López Hernández</div>
+                                <span class="role-badge role-supervisor">👥 Supervisor</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item">
+                                    <div class="info-label">ID Usuario</div>
+                                    <div class="info-value">USR-002</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">maria.lopez@siscamino.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Fecha Registro</div>
+                                    <div class="info-value">20/01/2024 14:15</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado</div>
+                                    <div class="info-value">✅ Activo</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button onclick="mostrarDetalles('usuario', 2)" class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                <a href="/admin/users/2/edit" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <button onclick="confirmarEliminar(2)" class="btn btn-danger btn-sm">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="mobile-card" data-rol="chofer">
+                            <div class="card-header">
+                                <div class="card-title">Carlos Rodríguez Méndez</div>
+                                <span class="role-badge role-chofer">🚛 Chofer</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item">
+                                    <div class="info-label">ID Usuario</div>
+                                    <div class="info-value">USR-003</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">carlos.rodriguez@siscamino.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Fecha Registro</div>
+                                    <div class="info-value">25/01/2024 11:45</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado</div>
+                                    <div class="info-value">✅ Activo</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button onclick="mostrarDetalles('usuario', 3)" class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                <a href="/admin/users/3/edit" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <button onclick="confirmarEliminar(3)" class="btn btn-danger btn-sm">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="mobile-card" data-rol="supervisor">
+                            <div class="card-header">
+                                <div class="card-title">Ana Martínez Silva</div>
+                                <span class="role-badge role-supervisor">👥 Supervisor</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item">
+                                    <div class="info-label">ID Usuario</div>
+                                    <div class="info-value">USR-004</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">ana.martinez@siscamino.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Fecha Registro</div>
+                                    <div class="info-value">28/01/2024 16:20</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado</div>
+                                    <div class="info-value">✅ Activo</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button onclick="mostrarDetalles('usuario', 4)" class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                <a href="/admin/users/4/edit" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <button onclick="confirmarEliminar(4)" class="btn btn-danger btn-sm">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="mobile-card" data-rol="chofer">
+                            <div class="card-header">
+                                <div class="card-title">Roberto García Torres</div>
+                                <span class="role-badge role-chofer">🚛 Chofer</span>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item">
+                                    <div class="info-label">ID Usuario</div>
+                                    <div class="info-value">USR-005</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">roberto.garcia@siscamino.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Fecha Registro</div>
+                                    <div class="info-value">02/02/2024 08:30</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Estado</div>
+                                    <div class="info-value">✅ Activo</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button onclick="mostrarDetalles('usuario', 5)" class="btn btn-secondary btn-sm">👁️ Ver</button>
+                                <a href="/admin/users/5/edit" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <button onclick="confirmarEliminar(5)" class="btn btn-danger btn-sm">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="pagination-links">
-                    {{ $users->links('vendor.pagination.custom-tailwind') }} <!-- Usaremos una plantilla de paginación personalizada -->
-                </div>
-
-                <div class="mt-8 text-center">
-                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                        Volver al Dashboard
-                    </a>
-                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            updateStats();
+        });
+
+        function setupEventListeners() {
+            // Sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            // Close sidebar on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            if (document.getElementById('searchUsuarios')) {
+                document.getElementById('searchUsuarios').addEventListener('input', function() {
+                    filtrarUsuarios(this.value);
+                });
+            }
+
+            // Filter by role
+            if (document.getElementById('filterRol')) {
+                document.getElementById('filterRol').addEventListener('change', function() {
+                    filtrarPorRol(this.value);
+                });
+            }
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const timeOptions = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('es-ES', dateOptions);
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
+
+        function updateStats() {
+            console.log('Stats updated for user management');
+        }
+
+        function filtrarUsuarios(termino) {
+            const tableRows = document.querySelectorAll('#usuariosTableBody tr');
+            const mobileCards = document.querySelectorAll('.mobile-card');
+            
+            // Filter table rows
+            tableRows.forEach(row => {
+                const texto = row.textContent.toLowerCase();
+                if (texto.includes(termino.toLowerCase())) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filter mobile cards
+            mobileCards.forEach(card => {
+                const texto = card.textContent.toLowerCase();
+                if (texto.includes(termino.toLowerCase())) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filtrarPorRol(rol) {
+            const tableRows = document.querySelectorAll('#usuariosTableBody tr');
+            const mobileCards = document.querySelectorAll('.mobile-card');
+            
+            // Filter table rows
+            tableRows.forEach(row => {
+                const rolUsuario = row.getAttribute('data-rol');
+                if (!rol || rolUsuario === rol) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filter mobile cards
+            mobileCards.forEach(card => {
+                const rolUsuario = card.getAttribute('data-rol');
+                if (!rol || rolUsuario === rol) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function mostrarDetalles(tipo, id, datos) {
+            alert(`Mostrando detalles del ${tipo} con ID: ${id}`);
+            // Aquí puedes implementar un modal con los detalles
+        }
+
+        function confirmarEliminar(id) {
+            if (confirm('¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
+                // Aquí implementarías la lógica de eliminación
+                alert(`Usuario ${id} eliminado correctamente`);
+                // Recargar la página o actualizar la tabla
+            }
+        }
+
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
+        function logout() {
+            if (confirm('¿Está seguro de que desea cerrar sesión?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        // Enhanced mobile touch handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            if (window.innerWidth <= 768) {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left - close sidebar
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+                if (touchEndX > touchStartX + 50 && touchStartX < 20) {
+                    // Swipe right from edge - open sidebar
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close sidebar
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+            
+            // Ctrl+F to focus search
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                const searchInput = document.getElementById('searchUsuarios');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+        });
+
+        // Performance optimization: Debounce search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Apply debounce to search
+        if (document.getElementById('searchUsuarios')) {
+            document.getElementById('searchUsuarios').addEventListener('input', 
+                debounce(function() {
+                    filtrarUsuarios(this.value);
+                }, 300)
+            );
+        }
+    </script>
+    
 </body>
 </html>
