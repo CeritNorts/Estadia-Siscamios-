@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -479,10 +480,25 @@
             text-transform: uppercase;
         }
 
-        .status-disponible { background: #d4edda; color: #155724; }
-        .status-ruta { background: #cce5ff; color: #0056b3; }
-        .status-transito { background: #fff3cd; color: #856404; }
-        .status-mantenimiento { background: #f8d7da; color: #721c24; }
+        .status-disponible {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-ruta {
+            background: #cce5ff;
+            color: #0056b3;
+        }
+
+        .status-transito {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-mantenimiento {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
         /* Overlay for mobile sidebar */
         .overlay {
@@ -507,73 +523,73 @@
             .sidebar {
                 width: 300px;
             }
-            
+
             .sidebar-header {
                 padding: 2rem 1.5rem;
             }
-            
+
             .sidebar-brand {
                 font-size: 1.5rem;
             }
-            
+
             .sidebar-menu a {
                 padding: 1rem 1.5rem;
                 font-size: 1rem;
                 gap: 1rem;
             }
-            
+
             .navbar-content {
                 padding: 1rem 2rem;
             }
-            
+
             .navbar-title {
                 font-size: 1.25rem;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(4, 1fr);
                 padding: 1rem;
                 gap: 1rem;
             }
-            
+
             .stat-card {
                 padding: 1.25rem;
             }
-            
+
             .stat-number {
                 font-size: 2rem;
             }
-            
+
             .stat-label {
                 font-size: 0.9rem;
                 margin-top: 0.5rem;
             }
-            
+
             .map-container {
                 margin: 1rem;
                 margin-top: 0;
             }
-            
+
             .map-controls {
                 top: 20px;
                 right: 20px;
             }
-            
+
             .control-panel {
                 min-width: 220px;
                 max-width: 300px;
                 padding: 15px;
             }
-            
+
             .control-panel-title {
                 font-size: 0.95rem;
             }
-            
+
             .filter-btn {
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
-            
+
             .center-btn {
                 padding: 10px;
                 font-size: 0.85rem;
@@ -585,11 +601,11 @@
             .sidebar {
                 width: 260px;
             }
-            
+
             .navbar-links a {
                 font-size: 0.85rem;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(4, 1fr);
             }
@@ -600,42 +616,42 @@
             .sidebar {
                 width: 240px;
             }
-            
+
             .sidebar-header {
                 padding: 1.25rem 1rem;
             }
-            
+
             .sidebar-brand {
                 font-size: 1.1rem;
             }
-            
+
             .sidebar-menu a {
                 padding: 0.75rem 1rem;
                 font-size: 0.85rem;
                 gap: 0.5rem;
             }
-            
+
             .navbar-links {
                 gap: 0.75rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.8rem;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
             }
-            
+
             .stat-card {
                 padding: 0.75rem;
             }
-            
+
             .stat-number {
                 font-size: 1.25rem;
             }
-            
+
             .control-panel {
                 max-width: 240px;
             }
@@ -658,19 +674,19 @@
             .main-content {
                 width: 100%;
             }
-            
+
             .navbar-content {
                 padding: 0.75rem;
             }
-            
+
             .navbar-title {
                 font-size: 1rem;
             }
-            
+
             .navbar-links {
                 gap: 0.5rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.75rem;
             }
@@ -692,15 +708,15 @@
                 padding: 0.5rem;
                 gap: 0.5rem;
             }
-            
+
             .stat-card {
                 padding: 0.6rem;
             }
-            
+
             .stat-number {
                 font-size: 1.1rem;
             }
-            
+
             .stat-label {
                 font-size: 0.7rem;
             }
@@ -722,20 +738,20 @@
                 max-width: 100%;
                 padding: 10px;
             }
-            
+
             .control-panel-title {
                 font-size: 0.8rem;
             }
-            
+
             .filter-group {
                 gap: 3px;
             }
-            
+
             .filter-btn {
                 padding: 5px 8px;
                 font-size: 0.7rem;
             }
-            
+
             .center-btn {
                 padding: 7px;
                 font-size: 0.75rem;
@@ -747,7 +763,7 @@
             body {
                 font-size: 14px;
             }
-            
+
             .sidebar {
                 position: fixed;
                 transform: translateX(-100%);
@@ -763,25 +779,25 @@
             .main-content {
                 width: 100%;
             }
-            
+
             .navbar-content {
                 padding: 0.5rem;
                 min-height: 50px;
             }
-            
+
             .navbar-title {
                 font-size: 0.9rem;
             }
-            
+
             .sidebar-toggle {
                 font-size: 1.1rem;
                 padding: 0.25rem;
             }
-            
+
             .navbar-links {
                 gap: 0.25rem;
             }
-            
+
             .navbar-links a {
                 font-size: 0.7rem;
                 padding: 0.25rem;
@@ -804,15 +820,15 @@
                 padding: 0.25rem;
                 gap: 0.25rem;
             }
-            
+
             .stat-card {
                 padding: 0.5rem;
             }
-            
+
             .stat-number {
                 font-size: 1rem;
             }
-            
+
             .stat-label {
                 font-size: 0.65rem;
             }
@@ -837,50 +853,50 @@
                 padding: 8px;
                 border-radius: 8px;
             }
-            
+
             .control-panel-title {
                 font-size: 0.75rem;
             }
-            
+
             .control-header-actions {
                 gap: 2px;
             }
-            
+
             .drag-handle {
                 font-size: 12px;
                 padding: 2px;
             }
-            
+
             .minimize-btn {
                 font-size: 10px;
                 padding: 2px 4px;
             }
-            
+
             .filter-group {
                 gap: 2px;
                 margin-bottom: 6px;
             }
-            
+
             .filter-btn {
                 padding: 4px 6px;
                 font-size: 0.65rem;
                 border-radius: 12px;
             }
-            
+
             .center-btn {
                 padding: 6px;
                 font-size: 0.7rem;
                 margin-top: 4px;
             }
-            
+
             .popup-header {
                 font-size: 0.8rem;
             }
-            
+
             .popup-info {
                 font-size: 0.7rem;
             }
-            
+
             .status-badge {
                 font-size: 0.6rem;
                 padding: 1px 4px;
@@ -892,11 +908,11 @@
             .sidebar {
                 width: 240px;
             }
-            
+
             .dashboard-stats {
                 grid-template-columns: 1fr;
             }
-            
+
             .navbar-title {
                 display: none;
             }
@@ -904,21 +920,21 @@
             .datetime-display {
                 display: none;
             }
-            
+
             .control-panel {
                 min-width: 140px;
                 padding: 6px;
             }
-            
+
             .control-panel-title {
                 font-size: 0.7rem;
             }
-            
+
             .filter-btn {
                 font-size: 0.6rem;
                 padding: 3px 5px;
             }
-            
+
             .center-btn {
                 font-size: 0.65rem;
                 padding: 5px;
@@ -931,17 +947,17 @@
                 min-height: 32px;
                 min-width: 44px;
             }
-            
+
             .center-btn {
                 min-height: 36px;
             }
-            
+
             .drag-handle,
             .minimize-btn {
                 min-height: 28px;
                 min-width: 28px;
             }
-            
+
             .sidebar-toggle {
                 min-height: 36px;
                 min-width: 36px;
@@ -949,11 +965,12 @@
         }
 
         /* High DPI displays */
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        @media (-webkit-min-device-pixel-ratio: 2),
+        (min-resolution: 192dpi) {
             .control-panel {
                 border-width: 0.5px;
             }
-            
+
             .status-badge {
                 border: 0.5px solid rgba(0, 0, 0, 0.1);
             }
@@ -964,27 +981,27 @@
             .dashboard-stats {
                 display: none;
             }
-            
+
             .navbar-content {
                 padding: 0.5rem;
                 min-height: 45px;
             }
-            
+
             .map-container {
                 margin: 0.25rem;
                 margin-top: 0;
             }
-            
+
             .control-panel {
                 max-width: 200px;
                 padding: 8px;
             }
-            
+
             .filter-group {
                 flex-direction: column;
                 gap: 2px;
             }
-            
+
             .filter-btn {
                 width: 100%;
                 text-align: center;
@@ -993,13 +1010,14 @@
 
         /* Print styles */
         @media print {
+
             .sidebar,
             .navbar,
             .dashboard-stats,
             .map-controls {
                 display: none;
             }
-            
+
             .main-content,
             .content,
             .map-container {
@@ -1008,50 +1026,82 @@
                 border-radius: 0;
                 box-shadow: none;
             }
-            
+
             #map {
                 height: 100vh;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="#" class="sidebar-brand">Siscamino</a>
         </div>
-        
-         <ul class="sidebar-menu">
+
+        <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la
+                    página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="{{ route('combustible') }}">⛽ Combustible</a>
-            </li>
+
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
+
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
+            @if(Auth::check() && Auth::user()->hasRole('Administrador'))
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        ⚙️ Gestión de Usuarios
+                    </a>
+                </li>
+            @endif
         </ul>
 
         <div class="sidebar-footer">
@@ -1111,7 +1161,7 @@
             <!-- Map Container -->
             <div class="map-container">
                 <div id="map"></div>
-                
+
                 <!-- Draggable Map Controls -->
                 <div class="map-controls" id="mapControls">
                     <div class="control-panel" id="controlPanel">
@@ -1340,14 +1390,14 @@
             // Funciones para mouse
             function startDragMouse(e) {
                 if (e.target.closest('.minimize-btn')) return;
-                
+
                 isDragging = true;
                 controlPanel.classList.add('dragging');
-                
+
                 const rect = mapControls.getBoundingClientRect();
                 dragOffset.x = e.clientX - rect.left;
                 dragOffset.y = e.clientY - rect.top;
-                
+
                 document.addEventListener('mousemove', dragMouse);
                 document.addEventListener('mouseup', stopDragMouse);
                 e.preventDefault();
@@ -1368,15 +1418,15 @@
             // Funciones para touch
             function startDragTouch(e) {
                 if (e.target.closest('.minimize-btn')) return;
-                
+
                 isDragging = true;
                 controlPanel.classList.add('dragging');
-                
+
                 const touch = e.touches[0];
                 const rect = mapControls.getBoundingClientRect();
                 dragOffset.x = touch.clientX - rect.left;
                 dragOffset.y = touch.clientY - rect.top;
-                
+
                 document.addEventListener('touchmove', dragTouch, { passive: false });
                 document.addEventListener('touchend', stopDragTouch);
                 e.preventDefault();
@@ -1401,15 +1451,15 @@
                 const mapContainer = document.querySelector('.map-container');
                 const mapRect = mapContainer.getBoundingClientRect();
                 const panelRect = controlPanel.getBoundingClientRect();
-                
+
                 let newX = clientX - mapRect.left - dragOffset.x;
                 let newY = clientY - mapRect.top - dragOffset.y;
-                
+
                 // Limitar el movimiento dentro del contenedor del mapa
                 const margin = 10;
                 newX = Math.max(margin, Math.min(newX, mapRect.width - panelRect.width - margin));
                 newY = Math.max(margin, Math.min(newY, mapRect.height - panelRect.height - margin));
-                
+
                 mapControls.style.left = newX + 'px';
                 mapControls.style.top = newY + 'px';
                 mapControls.style.right = 'auto';
@@ -1432,7 +1482,7 @@
             const controlPanel = document.getElementById('controlPanel');
             let isMinimized = false;
 
-            minimizeBtn.addEventListener('click', function(e) {
+            minimizeBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 isMinimized = !isMinimized;
                 controlPanel.classList.toggle('minimized', isMinimized);
@@ -1465,29 +1515,29 @@
                 if (map) {
                     map.invalidateSize();
                 }
-                
+
                 // Reposicionar el panel de control si está fuera de los límites
                 const mapControls = document.getElementById('mapControls');
                 const mapContainer = document.querySelector('.map-container');
                 const controlPanel = document.getElementById('controlPanel');
-                
+
                 if (mapControls && mapContainer && controlPanel) {
                     const mapRect = mapContainer.getBoundingClientRect();
                     const panelRect = controlPanel.getBoundingClientRect();
                     const currentStyle = mapControls.style;
-                    
+
                     if (currentStyle.left && currentStyle.top) {
                         const currentX = parseInt(currentStyle.left);
                         const currentY = parseInt(currentStyle.top);
-                        
+
                         const margin = 10;
                         const maxX = mapRect.width - panelRect.width - margin;
                         const maxY = mapRect.height - panelRect.height - margin;
-                        
+
                         if (currentX > maxX || currentY > maxY) {
                             const newX = Math.min(currentX, maxX);
                             const newY = Math.min(currentY, maxY);
-                            
+
                             mapControls.style.left = Math.max(margin, newX) + 'px';
                             mapControls.style.top = Math.max(margin, newY) + 'px';
                         }
@@ -1497,14 +1547,14 @@
         }
 
         // Event listeners principales
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Inicializar componentes
             initMap();
             updateStats();
             simulateRealTimeUpdates();
             initDragAndDrop();
             initMinimize();
-            
+
             // Inicializar fecha y hora
             updateDateTime();
             setInterval(updateDateTime, 1000); // Actualizar cada segundo
@@ -1514,19 +1564,19 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
 
-            overlay.addEventListener('click', function() {
+            overlay.addEventListener('click', function () {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
             // Cerrar sidebar al hacer clic en un enlace (móvil)
             document.querySelectorAll('.sidebar-menu a').forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function () {
                     if (window.innerWidth <= 767) {
                         sidebar.classList.remove('active');
                         overlay.classList.remove('active');
@@ -1536,12 +1586,12 @@
 
             // Filtros
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     // Remover clase active de todos los botones
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     // Agregar clase active al botón clickeado
                     this.classList.add('active');
-                    
+
                     const filter = this.getAttribute('data-filter');
                     if (filter) {
                         filterTrucks(filter);
@@ -1556,14 +1606,14 @@
 
         // Prevenir zoom accidental en iOS
         if (isMobile) {
-            document.addEventListener('touchmove', function(e) {
+            document.addEventListener('touchmove', function (e) {
                 if (e.touches.length > 1) {
                     e.preventDefault();
                 }
             }, { passive: false });
 
             let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(e) {
+            document.addEventListener('touchend', function (e) {
                 const now = (new Date()).getTime();
                 if (now - lastTouchEnd <= 300) {
                     e.preventDefault();
@@ -1575,7 +1625,7 @@
         // Función para actualizar fecha y hora
         function updateDateTime() {
             const now = new Date();
-            
+
             // Configurar opciones de formato para México
             const dateOptions = {
                 weekday: 'long',
@@ -1584,7 +1634,7 @@
                 day: 'numeric',
                 timeZone: 'America/Mexico_City'
             };
-            
+
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -1592,15 +1642,15 @@
                 hour12: true,
                 timeZone: 'America/Mexico_City'
             };
-            
+
             // Formatear fecha y hora
             const dateStr = now.toLocaleDateString('es-MX', dateOptions);
             const timeStr = now.toLocaleTimeString('es-MX', timeOptions);
-            
+
             // Actualizar elementos del DOM
             const dateElement = document.getElementById('dateText');
             const timeElement = document.getElementById('timeText');
-            
+
             if (dateElement && timeElement) {
                 dateElement.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
                 timeElement.textContent = timeStr;
@@ -1612,7 +1662,7 @@
             // Agregar efecto visual
             const userInfo = document.querySelector('.user-info');
             userInfo.style.transform = 'scale(0.95)';
-            
+
             setTimeout(() => {
                 userInfo.style.transform = '';
                 // Aquí iría la navegación real al perfil
@@ -1648,4 +1698,5 @@
         }
     </script>
 </body>
+
 </html>
