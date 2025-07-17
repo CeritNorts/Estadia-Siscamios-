@@ -11,8 +11,7 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ChoferController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ProfileController; // ¡Nuevo controlador para el perfil!
-
+use App\Http\Controllers\ProfileController;
 
 // Ruta principal - redirige al login
 Route::get('/', function () {
@@ -28,94 +27,63 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-
-// Rutas protegidas por autenticación (middleware 'auth')
-Route::middleware(['auth'])->group(function () {
-    // Dashboard o página principal después del login
+// Rutas protegidas por autenticación con prevencion de cache tras logout
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // ----------------------------------------------------------------------
-    // Rutas del Perfil de Usuario (ACTUALIZADAS)
-    // ----------------------------------------------------------------------
+    // Rutas del perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // ----------------------------------------------------------------------
 
-    // Ruta principal del combustible
+    // Combustibles
     Route::get('/combustible', [CombustibleController::class, 'index'])->name('combustible');
-
-    // Rutas para el controlador de combustible
     Route::resource('combustibles', CombustibleController::class);
-
-    // Ruta adicional para exportar reportes
     Route::get('/combustibles/export', [CombustibleController::class, 'export'])->name('combustibles.export');
-
-    // API para obtener datos de viaje
     Route::get('/api/viajes/{id}/data', [CombustibleController::class, 'getViajeData']);
 
-    // Rutas para el controlador de camiones
+    // Camiones
     Route::resource('camiones', CamionController::class);
 
-    // Rutas para el controlador de viajes
+    // Viajes
     Route::resource('viajes', ViajeController::class);
     Route::get('/asignarViaje', [ViajeController::class, 'create'])->name('asignarViaje');
-
-    // Rutas para el controlador de documentos
-    Route::resource('documentos', DocumentoController::class);
-
-    // Rutas para el controlador de clientes
-    Route::resource('clientes', ClienteController::class);
-
-    // Rutas específicas para conectar con tus vistas de clientes
-    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
-    Route::get('/registrarCliente', [ClienteController::class, 'create'])->name('clientes.create');
-
-    // Mantenimiento routes
-    Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');
-    Route::get('/registrarMantenimiento', [MantenimientoController::class, 'create'])->name('registrarMantenimiento');
-    Route::get('/mantenimiento/search', [MantenimientoController::class, 'search'])->name('mantenimiento.search');
-
-    // Resource routes para mantenimientos
-    Route::resource('mantenimientos', MantenimientoController::class);
-
-    // Rutas para el controlador de choferes
-    Route::resource('choferes', ChoferController::class);
-
-    // Ruta para mostrar la vista de conductores conectada al controlador
-    Route::get('/conductores', [ChoferController::class, 'index'])->name('conductores.index');
-
-    // Ruta para mostrar el formulario de registro conectada al controlador
-    Route::get('/registrarConductor', [ChoferController::class, 'create'])->name('conductores.create');
-
-    // Rutas para actualización automática de viajes
     Route::post('/viajes/actualizar-estados', [ViajeController::class, 'actualizarEstados'])->name('viajes.actualizar-estados');
     Route::get('/viajes/estadisticas', [ViajeController::class, 'getEstadisticas'])->name('viajes.estadisticas');
     Route::post('/viajes/{id}/marcar-retrasado', [ViajeController::class, 'marcarRetrasado'])->name('viajes.marcar-retrasado');
     Route::get('/viajes/requieren-atencion', [ViajeController::class, 'viajesRequierenAtencion'])->name('viajes.requieren-atencion');
 
+    // Documentos
+    Route::resource('documentos', DocumentoController::class);
 
-    // ----------------------------------------------------------------------
-    // Rutas de Administración de Usuarios (NUEVAS)
-    // Protegidas por el middleware 'role:Administrador'
+    // Clientes
+    Route::resource('clientes', ClienteController::class);
+    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/registrarCliente', [ClienteController::class, 'create'])->name('clientes.create');
+
+    // Mantenimientos
+    Route::get('/mantenimiento', [MantenimientoController::class, 'dashboard'])->name('mantenimiento');
+    Route::get('/registrarMantenimiento', [MantenimientoController::class, 'create'])->name('registrarMantenimiento');
+    Route::get('/mantenimiento/search', [MantenimientoController::class, 'search'])->name('mantenimiento.search');
+    Route::resource('mantenimientos', MantenimientoController::class);
+
+    // Choferes
+    Route::resource('choferes', ChoferController::class);
+    Route::get('/conductores', [ChoferController::class, 'index'])->name('conductores.index');
+    Route::get('/registrarConductor', [ChoferController::class, 'create'])->name('conductores.create');
+
+    // Administración de usuarios
     Route::middleware(['role:Administrador'])->prefix('admin')->name('admin.')->group(function () {
-        // Ruta para listar todos los usuarios
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
-        // Ruta para mostrar el formulario de edición de un usuario
-        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-        // Ruta para procesar la actualización de un usuario (usando PUT para RESTful)
-        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-        // Ruta para crear nuevos usuarios (si la necesitas)
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
-        // Ruta para eliminar usuarios (si la necesitas)
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
-    // ----------------------------------------------------------------------
 
-
-    // Ejemplos de otras rutas protegidas por roles específicos (si las necesitas)
+    // Paneles por rol
     Route::middleware(['role:Administrador'])->group(function () {
         Route::get('/admin/panel', function () {
             return "Bienvenido al panel de Administrador";
