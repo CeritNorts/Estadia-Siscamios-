@@ -1075,36 +1075,58 @@
         </div>
 
         <ul class="sidebar-menu">
+            {{-- Panel Administrativo: Visible para todos, pero su contenido se adaptará por rol --}}
             <li>
                 <a href="/dashboard">
                     📊 Panel Administrativo
                 </a>
             </li>
+
+            {{-- Camiones: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/camiones">🚛 Camiones</a>
+                </li>
+            @endif
+
+            {{-- Viajes: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
-                <a href="/camiones" class="active">🚛 Camiones</a>
-            </li>
-            <li>
-                <a href="/viajes">
+                <a href="/viajes" class="{{ Request::is('viajes*') ? 'active' : '' }}"> {{-- Mantengo 'active' si es la página de viajes --}}
                     📋 Viajes
                 </a>
             </li>
+        
+            {{-- Mantenimiento: Visible para todos (Administrador, Supervisor, Chofer) --}}
             <li>
                 <a href="/mantenimiento">
                     🔧 Mantenimiento
                 </a>
             </li>
-            <li>
-                <a href="/conductores">
-                    👥 Conductores
-                </a>
-            </li>
-            <li>
-                <a href="/clientes">👤 Clientes</a>
-            </li>
-            <li>
-                <a href="{{ route('combustible') }}">⛽ Combustible</a>
-            </li>
+        
+            {{-- Conductores: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/conductores">
+                        👥 Conductores
+                    </a>
+                </li>
+            @endif
 
+            {{-- Clientes: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="/clientes">👤 Clientes</a>
+                </li>
+            @endif
+
+            {{-- Combustible: Solo Administrador y Supervisor --}}
+            @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
+                <li>
+                    <a href="{{ route('combustible') }}">⛽ Combustible</a>
+                </li>
+            @endif
+
+            {{-- Gestión de Usuarios: Solo Administrador --}}
             @if(Auth::check() && Auth::user()->hasRole('Administrador'))
                 <li>
                     <a href="{{ route('admin.users.index') }}">
@@ -1112,7 +1134,6 @@
                     </a>
                 </li>
             @endif
-
         </ul>
 
         <div class="sidebar-footer">
