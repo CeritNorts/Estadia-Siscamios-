@@ -1091,27 +1091,20 @@
                                         <td>
                                             <div style="display: flex; gap: 0.5rem;">
                                                 <button onclick="mostrarDetalles('viaje', {{ $viaje->id }}, {{ json_encode($viaje) }})" 
-                                                    class="btn btn-secondary btn-sm" title="Ver Detalles">👁️
-                                                </button>
-                                                {{-- Botón "Editar": Solo para Administrador y Supervisor --}}
-                                                @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                                                    <a href="{{ route('viajes.edit', $viaje->id) }}" 
-                                                        class="btn btn-warning btn-sm" 
-                                                        title="Editar">✏️</a>
-                                                @endif
-                                                {{-- Botón "Eliminar": Solo para Administrador y Supervisor --}}
-                                                @if(Auth::check() && (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Supervisor')))
-                                                    <form action="{{ route('viajes.destroy', $viaje->id) }}" 
-                                                            method="POST" 
-                                                            style="display: inline;"
-                                                            onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" 
-                                                                class="btn btn-danger btn-sm" 
-                                                                title="Eliminar">🗑️</button>
-                                                    </form>
-                                                @endif
+                                                    class="btn btn-secondary btn-sm" title="Ver Detalles">👁️</button>
+                                                <a href="{{ route('viajes.edit', $viaje->id) }}" 
+                                                   class="btn btn-warning btn-sm" 
+                                                   title="Editar">✏️</a>
+                                                <form action="{{ route('viajes.destroy', $viaje->id) }}" 
+                                                      method="POST" 
+                                                      style="display: inline;"
+                                                      onsubmit="return confirm('¿Está seguro de que desea eliminar este viaje?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-danger btn-sm" 
+                                                            title="Eliminar">🗑️</button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
